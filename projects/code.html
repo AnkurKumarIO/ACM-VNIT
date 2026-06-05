@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ACM VNIT | Projects — Technical Stack</title>
+<meta name="description" content="A registry of high-performance technical contributions, open-source initiatives, and engineering breakthroughs developed by ACM VNIT Nagpur."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "tertiary-fixed-dim": "#ffb95b",
+                    "on-primary": "#00344e",
+                    "on-surface-variant": "#bfc7d0",
+                    "error-container": "#93000a",
+                    "surface-container-lowest": "#0b0f12",
+                    "surface-container": "#1c2023",
+                    "secondary-fixed": "#c4e7ff",
+                    "on-primary-fixed": "#001e2f",
+                    "outline": "#89929a",
+                    "on-secondary-container": "#9ad9ff",
+                    "secondary-fixed-dim": "#89cff8",
+                    "outline-variant": "#3f484f",
+                    "surface-dim": "#101417",
+                    "secondary": "#89cff8",
+                    "on-tertiary-fixed": "#2a1800",
+                    "on-error": "#690005",
+                    "inverse-surface": "#e0e3e7",
+                    "surface": "#101417",
+                    "primary": "#8aceff",
+                    "on-secondary-fixed": "#001e2c",
+                    "tertiary-fixed": "#ffddb6",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-tertiary-fixed-variant": "#643f00",
+                    "surface-container-low": "#181c1f",
+                    "on-surface": "#e0e3e7",
+                    "on-background": "#e0e3e7",
+                    "tertiary-container": "#c38426",
+                    "inverse-on-surface": "#2d3134",
+                    "primary-fixed-dim": "#8aceff",
+                    "surface-container-high": "#272a2e",
+                    "on-secondary-fixed-variant": "#004c69",
+                    "inverse-primary": "#006491",
+                    "surface-variant": "#313539",
+                    "primary-fixed": "#c9e6ff",
+                    "secondary-container": "#006084",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#4298cd",
+                    "on-secondary": "#00344a",
+                    "tertiary": "#ffb95b",
+                    "on-primary-container": "#002d44",
+                    "on-tertiary": "#462a00",
+                    "on-tertiary-container": "#3d2400",
+                    "error": "#ffb4ab",
+                    "surface-container-highest": "#313539",
+                    "surface-tint": "#8aceff",
+                    "background": "#050505",
+                    "surface-bright": "#363a3d"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "base": "8px", "gutter": "24px", "xl": "80px", "sm": "12px",
+                    "margin-desktop": "64px", "md": "24px", "xs": "4px",
+                    "margin-mobile": "16px", "lg": "48px", "section-gap": "100px"
+                },
+                "fontFamily": {
+                    "display": ["Sora"], "headline": ["Sora"],
+                    "body": ["Sora"], "label": ["Sora"]
+                },
+                "fontSize": {
+                    "display-xl": ["72px", {"lineHeight": "0.95", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Sora', sans-serif; }
+
+    .blueprint-bg {
+        background-image:
+            linear-gradient(to right, rgba(138, 206, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(138, 206, 255, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    .project-card {
+        background: rgba(11, 15, 18, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(138, 206, 255, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .project-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #8aceff, transparent);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+    .project-card:hover::before { opacity: 0.7; }
+    .project-card:hover {
+        border-color: rgba(138, 206, 255, 0.3);
+        box-shadow: 0 0 30px rgba(138, 206, 255, 0.08);
+        transform: translateY(-4px);
+    }
+
+    .glass-stat {
+        background: rgba(11, 15, 18, 0.5);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(138, 206, 255, 0.08);
+        transition: all 0.3s ease;
+    }
+    .glass-stat:hover {
+        border-color: rgba(138, 206, 255, 0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body text-body-md selection:bg-primary/30 overflow-x-hidden blueprint-bg">
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<header class="bg-background/70 backdrop-blur-xl border-b border-white/[0.06] sticky top-0 z-50">
+<nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-[1440px] mx-auto">
+    <div class="flex items-center gap-2">
+        <img src="../acm-logo.png" alt="ACM Logo" class="w-7 h-7 rounded-sm opacity-90"/>
+        <span class="font-headline text-headline-lg font-bold text-primary tracking-tighter">ACM VNIT</span>
+    </div>
+    <div class="hidden md:flex items-center gap-gutter">
+        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../about_acm_vnit_z_layout_edition/code.html">About</a>
+        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../domains/code.html">Domains</a>
+        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../events/code.html">Events</a>
+        <a class="text-label-md text-primary font-semibold border-b-2 border-primary pb-1" href="#">Projects</a>
+    </div>
+    <button class="bg-primary text-on-primary px-6 py-2 rounded-full text-label-md font-semibold hover:brightness-110 transition-all active:scale-95 flex items-center gap-1">
+        Join Us <span class="material-symbols-outlined text-[16px]">north_east</span>
+    </button>
+</nav>
+</header>
+
+<main class="relative min-h-screen pt-section-gap pb-section-gap">
+<!-- Background Architectural Decor -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden opacity-5 z-0">
+    <img class="absolute top-0 right-0 w-3/4 opacity-10 blur-sm scale-150 rotate-12" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmyh1yWnYBDsPcaaIJstq0d1XTD80CLVXtMs1HW8Lcq0ANvPghqcjOeZDUtl2mrFSyEiOon-GAfU6nO3avsZCRvjqX4xWPm0VPUdoxgA9vER6HHMtGyOuZN9KEVOB2XmCQoC-eH6mfU4mIbNs3PAWGzsLsCMQn8GFaxVCn6llSQufBWe_U-iFxYIVCS7XFE_zjaHJ4wCKKDEcC81MB_k9lNraAAd6CfQ7AeqD4NkuOJLGNg8euOstoZfWyZ7idPn-W0_eKG_iwr9qF" alt="Architectural Blueprint"/>
+</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop mb-12 relative z-10">
+    <div class="grid grid-cols-12 gap-gutter">
+        <div class="col-span-12 lg:col-span-8">
+            <span class="inline-block px-3 py-1.5 border border-primary/30 rounded-sm text-label-caps text-primary uppercase tracking-widest mb-6">// Engineered for Impact</span>
+            <h1 class="font-display text-display-xl uppercase leading-[0.95] tracking-tight">BUILDING THE<br/><span class="text-primary">CORE STACK</span></h1>
+            <p class="mt-8 text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                A collection of high-performance technical contributions, open-source initiatives, and engineering breakthroughs developed by ACM VNIT Nagpur members.
+            </p>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex items-end lg:justify-end">
+            <div class="text-left lg:text-right border-l lg:border-l-0 lg:border-r border-white/10 pl-6 lg:pl-0 lg:pr-6 py-2">
+                <div class="font-display text-[56px] leading-tight font-bold text-primary">42+</div>
+                <div class="text-label-caps text-on-surface-variant uppercase tracking-widest">Live Repositories</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ SEARCH & FILTER ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-8 relative z-10">
+    <div class="flex flex-col md:flex-row gap-gutter items-center border-y border-white/5 py-6">
+        <div class="flex-1 w-full relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+            <input class="w-full bg-surface-container-low/50 border border-white/[0.08] rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary text-body-md text-sm transition-all text-on-surface placeholder:text-on-surface-variant/40" placeholder="QUERY_REPOSITORY_BY_STACK..." type="text"/>
+        </div>
+        <div class="flex gap-4 shrink-0 w-full md:w-auto">
+            <button class="flex-1 md:flex-initial bg-surface-container-low/50 border border-white/[0.08] px-6 py-4 rounded-xl text-label-caps text-on-surface flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
+                <span class="material-symbols-outlined text-[18px]">filter_list</span> ALL_CATEGORIES
+            </button>
+            <button class="flex-1 md:flex-initial bg-surface-container-low/50 border border-white/[0.08] px-6 py-4 rounded-xl text-label-caps text-on-surface flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
+                <span class="material-symbols-outlined text-[18px]">terminal</span> LATEST_FIRST
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ PROJECTS BENTO GRID ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-12 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        
+        <!-- Project 1: Featured -->
+        <div class="project-card lg:col-span-2 rounded-xl p-8 flex flex-col md:flex-row gap-8">
+            <div class="w-full md:w-1/2 aspect-video overflow-hidden rounded-lg bg-surface-container-low">
+                <img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 opacity-80 hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn6yez0CA-5_C65AoQIKQWVoDMhnTj9MHFrKpRDwG3wArwkKN9vkxMh9O6kbIf_idIi0jZVzh3bZC2mW9eDwVX-BkTig4ZFZjHHMZdMw1fLxriiR2jtX4xagI8cozvL0fonglKBgHPlw_-pncrGu_zbBSb0I0RmeqxX0GG1crCHKYpVS8pwNHeHbbiTd0brDmhimCf8Ve8lVZ9c44MVK5JdNFubnZkbmQQ3RwV76RBzKsmrkqPCvWNnaC3EAmcaV_PuBUwcqrdCHiw" alt="Lumina OS"/>
+            </div>
+            <div class="w-full md:w-1/2 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] text-primary font-mono tracking-widest uppercase">// FEATURED SYSTEM</span>
+                            <h3 class="font-headline text-headline-lg text-white mt-1">Lumina OS</h3>
+                        </div>
+                        <span class="border border-tertiary text-tertiary px-2.5 py-0.5 rounded-sm text-[10px] font-mono">CORE_SYS_01</span>
+                    </div>
+                    <p class="text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                        A microkernel-based operating system built from scratch in Rust, focusing on memory safety and real-time process scheduling for edge computing nodes.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Rust</span>
+                        <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">x86_64</span>
+                        <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">QEMU</span>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <a class="bg-primary text-on-primary w-11 h-11 rounded-full flex items-center justify-center hover:brightness-115 transition-all" href="#">
+                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">north_east</span>
+                    </a>
+                    <a class="border border-white/20 text-on-surface w-11 h-11 rounded-full flex items-center justify-center hover:bg-white/5 transition-all" href="#">
+                        <span class="material-symbols-outlined text-[20px]">code</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card rounded-xl p-8 flex flex-col">
+            <div class="mb-6 aspect-video overflow-hidden rounded-lg bg-surface-container-low">
+                <img class="w-full h-full object-cover grayscale opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT2iACUtoZKMF0ZmYJpuCsWFXNnjdtTwuflZWYuD2BaAwxzz0P2NO98zZogKryh0KCppwMPKkilOoeuFIXLJwBBMpp5wtJANk5EsPwScwgkrmY2RjXaon-gNOrtmM9Pcvs4FAAIoj_WoLSy6i414K8exW3vX7mV-HwP1wEOTqp6npV9qV1dYafRrGk9RjeGyD-qVOEcWNKeXEnyvc68lBmsAqq7zdV7FO1M-tG25juKxeXlcaNG4uKPEJEbupIUZg3ZUvCitpRBoic" alt="NeuralLink v2"/>
+            </div>
+            <h3 class="font-headline text-headline-md text-white mb-2">NeuralLink v2</h3>
+            <p class="text-body-md text-on-surface-variant mb-6 flex-grow leading-relaxed">
+                Edge AI processing framework optimized for low-power ARM architectures, reducing inference latency by 40% for computer vision tasks.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-8">
+                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">C++</span>
+                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">TensorFlow</span>
+            </div>
+            <a class="text-label-sm text-primary flex items-center gap-2 hover:gap-3 transition-all font-semibold" href="#">
+                VIEW_REPOSITORY <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card rounded-xl p-8 flex flex-col">
+            <div class="mb-6 p-4 border border-white/[0.06] bg-surface-container-low/30 rounded-lg flex items-center justify-center h-48">
+                <span class="material-symbols-outlined text-6xl text-primary/20">terminal</span>
+            </div>
+            <h3 class="font-headline text-headline-md text-white mb-2">CLI Toolbox</h3>
+            <p class="text-body-md text-on-surface-variant mb-6 flex-grow leading-relaxed">
+                A collection of developer productivity tools for automation, Git workflow management, and rapid boilerplate generation.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-8">
+                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Go</span>
+                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Cobra</span>
+            </div>
+            <a class="text-label-sm text-primary flex items-center gap-2 hover:gap-3 transition-all font-semibold" href="#">
+                VIEW_REPOSITORY <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card rounded-xl p-8 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-6">
+                    <span class="material-symbols-outlined text-primary text-[32px]">hub</span>
+                    <span class="text-label-caps text-on-surface-variant/40">// MANAGEMENT</span>
+                </div>
+                <h3 class="font-headline text-headline-md text-white mb-2">ACM Portal</h3>
+                <p class="text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                    Internal chapter management system handling event registrations, member grading, and resource allocation for 500+ students.
+                </p>
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Next.js</span>
+                    <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Postgres</span>
+                </div>
+            </div>
+            <div class="flex justify-between items-center pt-4 border-t border-white/[0.04]">
+                <div class="flex -space-x-2">
+                    <div class="w-8 h-8 rounded-full border border-background bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-on-surface">JD</div>
+                    <div class="w-8 h-8 rounded-full border border-background bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-on-surface">AS</div>
+                    <div class="w-8 h-8 rounded-full border border-background bg-primary text-on-primary flex items-center justify-center text-[10px] font-bold">+5</div>
+                </div>
+                <a class="text-on-surface-variant hover:text-primary transition-colors" href="#">
+                    <span class="material-symbols-outlined">share</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Project 5: High-Impact CTA Card -->
+        <div class="project-card rounded-xl p-8 flex flex-col justify-center items-center text-center bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
+            <div class="absolute inset-0 blueprint-bg opacity-20 pointer-events-none"></div>
+            <span class="material-symbols-outlined text-[48px] text-primary mb-4">rocket_launch</span>
+            <h3 class="font-headline text-headline-md text-white mb-3">Your Project Here?</h3>
+            <p class="text-body-md text-on-surface-variant mb-8 text-sm leading-relaxed max-w-[240px]">
+                Contribute to our technical ecosystem and architect the future of tech.
+            </p>
+            <button class="bg-primary text-on-primary px-8 py-3 rounded-full text-label-sm font-semibold hover:brightness-110 transition-all active:scale-95 flex items-center gap-1.5 shadow-[0_0_20px_rgba(138,206,255,0.15)]">
+                Start Building <span class="material-symbols-outlined text-[16px]">add</span>
+            </button>
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════ STATS SECTION ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop py-section-gap relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter border-t border-white/10 pt-12">
+        <div>
+            <div class="font-display text-[42px] leading-none font-bold text-primary mb-2">12k+</div>
+            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-wider">Lines of Code</div>
+        </div>
+        <div>
+            <div class="font-display text-[42px] leading-none font-bold text-primary mb-2">156</div>
+            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-wider">Pull Requests</div>
+        </div>
+        <div>
+            <div class="font-display text-[42px] leading-none font-bold text-primary mb-2">24</div>
+            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-wider">Active Authors</div>
+        </div>
+        <div>
+            <div class="font-display text-[42px] leading-none font-bold text-primary mb-2">89%</div>
+            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-wider">Test Coverage</div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bg-surface-container-lowest border-t border-white/[0.05] w-full relative z-10">
+<div class="px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto py-xl">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
+        <div class="space-y-4">
+            <div class="flex items-center gap-2">
+                <img src="../acm-logo.png" alt="ACM" class="w-6 h-6 rounded-sm opacity-80"/>
+                <span class="font-headline text-headline-md text-primary font-bold tracking-tighter">ACM VNIT</span>
+            </div>
+            <p class="max-w-xs text-on-surface-variant text-label-sm leading-relaxed">Advancing Computing as a Science & Profession. Empowering student innovators at VNIT Nagpur since 2009.</p>
+            <div class="flex gap-3 pt-2">
+                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">public</span>
+                </a>
+                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">code</span>
+                </a>
+                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">share</span>
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-col gap-3">
+            <span class="text-on-surface text-label-md font-semibold mb-1">Navigate</span>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../about_acm_vnit_z_layout_edition/code.html">About</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../domains/code.html">Domains</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../events/code.html">Events</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Projects</a>
+        </div>
+        <div class="flex flex-col gap-3">
+            <span class="text-on-surface text-label-md font-semibold mb-1">Legal</span>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Privacy Policy</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Code of Conduct</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Contact Us</a>
+        </div>
+        <div class="flex flex-col gap-3">
+            <span class="text-on-surface text-label-md font-semibold mb-1">Location</span>
+            <p class="text-on-surface-variant text-label-sm leading-relaxed">
+                VNIT Campus, S Ambazari Rd,<br/>
+                Nagpur, Maharashtra 440010
+            </p>
+        </div>
+    </div>
+    <div class="mt-lg pt-md border-t border-white/[0.05] flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-on-surface-variant text-label-sm">© 2024 ACM VNIT. Architecting the Future.</p>
+        <div class="flex gap-md items-center">
+            <span class="material-symbols-outlined text-on-surface-variant/30 hover:text-primary cursor-pointer transition-colors">hub</span>
+            <span class="material-symbols-outlined text-on-surface-variant/30 hover:text-primary cursor-pointer transition-colors">code</span>
+        </div>
+    </div>
+</div>
+</footer>
+
+<script>
+    // Micro-interactions for project cards hover coordinates
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+            card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        });
+    });
+
+    // Atmospheric parallax on scroll
+    window.addEventListener('scroll', () => {
+        const bg = document.querySelector('.blueprint-bg');
+        if (bg) bg.style.backgroundPositionY = -(window.pageYOffset * 0.05) + 'px';
+    });
+</script>
+</body>
+</html>

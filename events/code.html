@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ACM VNIT | Technical Events &amp; Workshops</title>
+<meta name="description" content="A chronological log of high-performance technical workshops, collaborative hackathons, and industry guest lectures hosted by ACM VNIT Nagpur."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "tertiary-fixed-dim": "#ffb95b",
+                    "on-primary": "#00344e",
+                    "on-surface-variant": "#bfc7d0",
+                    "error-container": "#93000a",
+                    "surface-container-lowest": "#0b0f12",
+                    "surface-container": "#1c2023",
+                    "secondary-fixed": "#c4e7ff",
+                    "on-primary-fixed": "#001e2f",
+                    "outline": "#89929a",
+                    "on-secondary-container": "#9ad9ff",
+                    "secondary-fixed-dim": "#89cff8",
+                    "outline-variant": "#3f484f",
+                    "surface-dim": "#101417",
+                    "secondary": "#89cff8",
+                    "on-tertiary-fixed": "#2a1800",
+                    "on-error": "#690005",
+                    "inverse-surface": "#e0e3e7",
+                    "surface": "#101417",
+                    "primary": "#8aceff",
+                    "on-secondary-fixed": "#001e2c",
+                    "tertiary-fixed": "#ffddb6",
+                    "on-primary-fixed-variant": "#004c6e",
+                    "on-tertiary-fixed-variant": "#643f00",
+                    "surface-container-low": "#181c1f",
+                    "on-surface": "#e0e3e7",
+                    "on-background": "#e0e3e7",
+                    "tertiary-container": "#c38426",
+                    "inverse-on-surface": "#2d3134",
+                    "primary-fixed-dim": "#8aceff",
+                    "surface-container-high": "#272a2e",
+                    "on-secondary-fixed-variant": "#004c69",
+                    "inverse-primary": "#006491",
+                    "surface-variant": "#313539",
+                    "primary-fixed": "#c9e6ff",
+                    "secondary-container": "#006084",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#4298cd",
+                    "on-secondary": "#00344a",
+                    "tertiary": "#ffb95b",
+                    "on-primary-container": "#002d44",
+                    "on-tertiary": "#462a00",
+                    "on-tertiary-container": "#3d2400",
+                    "error": "#ffb4ab",
+                    "surface-container-highest": "#313539",
+                    "surface-tint": "#8aceff",
+                    "background": "#050505",
+                    "surface-bright": "#363a3d"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "base": "8px", "gutter": "24px", "xl": "80px", "sm": "12px",
+                    "margin-desktop": "64px", "md": "24px", "xs": "4px",
+                    "margin-mobile": "16px", "lg": "48px", "section-gap": "100px"
+                },
+                "fontFamily": {
+                    "display": ["Sora"], "headline": ["Sora"],
+                    "body": ["Sora"], "label": ["Sora"]
+                },
+                "fontSize": {
+                    "display-xl": ["72px", {"lineHeight": "0.95", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Sora', sans-serif; }
+
+    .blueprint-bg {
+        background-image:
+            linear-gradient(to right, rgba(138, 206, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(138, 206, 255, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    .event-card {
+        background: rgba(11, 15, 18, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(138, 206, 255, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .event-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #8aceff, transparent);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+    .event-card:hover::before { opacity: 0.7; }
+    .event-card:hover {
+        border-color: rgba(138, 206, 255, 0.3);
+        box-shadow: 0 0 30px rgba(138, 206, 255, 0.08);
+        transform: translateY(-4px);
+    }
+
+    .scanline {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(138, 206, 255, 0.15) 50%, transparent 100%);
+        position: absolute;
+        animation: scan 8s linear infinite;
+        pointer-events: none;
+    }
+    @keyframes scan {
+        0% { top: 0; }
+        100% { top: 100%; }
+    }
+
+    html { scroll-behavior: smooth; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body text-body-md selection:bg-primary/30 overflow-x-hidden">
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<header class="bg-background/70 backdrop-blur-xl border-b border-white/[0.06] sticky top-0 z-50">
+<nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-[1440px] mx-auto">
+    <div class="flex items-center gap-2">
+        <img src="../acm-logo.png" alt="ACM Logo" class="w-7 h-7 rounded-sm opacity-90"/>
+        <span class="font-headline text-headline-lg font-bold text-primary tracking-tighter">ACM VNIT</span>
+    </div>
+    <div class="hidden md:flex items-center gap-gutter">
+        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../about_acm_vnit_z_layout_edition/code.html">About</a>
+        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../domains/code.html">Domains</a>
+        <a class="text-label-md text-primary font-semibold border-b-2 border-primary pb-1" href="#">Events</a>
+        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../projects/code.html">Projects</a>
+    </div>
+    <button class="bg-primary text-on-primary px-6 py-2 rounded-full text-label-md font-semibold hover:brightness-110 transition-all active:scale-95 flex items-center gap-1">
+        Join Us <span class="material-symbols-outlined text-[16px]">north_east</span>
+    </button>
+</nav>
+</header>
+
+<main class="relative min-h-screen pt-section-gap pb-section-gap blueprint-bg">
+<div class="scanline"></div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop mb-section-gap">
+    <div class="grid grid-cols-12 gap-gutter items-end">
+        <div class="col-span-12 lg:col-span-8">
+            <div class="mb-6 flex items-center gap-4">
+                <span class="px-3 py-1.5 border border-primary/30 rounded-sm text-label-caps text-primary uppercase">// Engineered for Excellence</span>
+                <div class="h-[1px] flex-grow bg-white/10"></div>
+            </div>
+            <h1 class="font-display text-display-xl uppercase leading-[0.95] tracking-tight">Technical<br/><span class="text-primary">Deployments</span></h1>
+            <p class="mt-8 text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
+                A chronological log of high-performance technical workshops, collaborative hackathons, and industry guest lectures hosted by ACM VNIT Nagpur.
+            </p>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex lg:justify-end">
+            <div class="text-left lg:text-right border-l lg:border-l-0 lg:border-r border-white/10 pl-6 lg:pl-0 lg:pr-6 py-2">
+                <div class="font-display text-[56px] leading-tight font-bold text-primary">42+</div>
+                <div class="text-label-caps text-on-surface-variant uppercase tracking-widest">Events Conducted</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ FEATURED EVENT & SIDE CARDS ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop mb-section-gap">
+    <div class="grid grid-cols-12 gap-gutter">
+        <!-- Featured Event (GREP) -->
+        <div class="col-span-12 md:col-span-8 relative group overflow-hidden rounded-xl event-card h-[480px]">
+            <img class="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxKRmPlWhNAempu-A5phFmiq4doklSr1u0yL8Ex3VgWiOStzQ6H7U3JzT5I75NBQoRk4PO-QWKI8PUd6kPk1TcU1CNMD600ZLjSTdT6EkHScen3B5dPFz-VxpRiNbPFlRGxL4TRDdJH7yhfsc0cubjQootNoOrfMa4JoGihqnxDvGeXTSmK5cm_e2OcEBFF-VfUQKSQSs32voGGnimTQYl0_AJ5qrVFEKTLOf05ALvMoroojtACe1tRDjUKSm9AYSWpMqdMzRmWGug" alt="GREP Hackathon"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent p-8 md:p-10 flex flex-col justify-end z-10">
+                <div class="text-label-caps text-primary mb-3 uppercase tracking-wider">// Flagship Hackathon</div>
+                <h2 class="font-headline text-headline-lg text-white mb-3">GREP 2024</h2>
+                <p class="text-body-md text-on-surface-variant max-w-md mb-6">The ultimate test of endurance and innovation. Build, break, and rebuild in our 36-hour technical sprint.</p>
+                <div class="flex flex-wrap gap-4">
+                    <span class="px-4 py-2 bg-surface-container-low/80 border border-white/10 rounded-lg text-label-sm text-on-surface">Registration Open</span>
+                    <span class="px-4 py-2 bg-primary/10 border border-primary/30 rounded-lg text-label-sm text-primary font-semibold">MARCH 15-17</span>
+                </div>
+            </div>
+            <div class="scanline"></div>
+        </div>
+        <!-- Side Cards -->
+        <div class="col-span-12 md:col-span-4 flex flex-col gap-gutter">
+            <div class="flex-1 event-card rounded-xl p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="material-symbols-outlined text-primary text-[32px]">terminal</span>
+                    <span class="text-label-caps text-on-surface-variant/40">// Workshop</span>
+                </div>
+                <h3 class="font-headline text-headline-md text-white mb-2">DevOps Deep-Dive</h3>
+                <p class="text-body-md text-on-surface-variant">Intensive workshop on CI/CD pipelines and Kubernetes orchestration.</p>
+                <div class="mt-6 text-label-sm text-primary font-semibold">UPCOMING: FEB 22</div>
+            </div>
+            <div class="flex-1 event-card rounded-xl p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="material-symbols-outlined text-primary text-[32px]">security</span>
+                    <span class="text-label-caps text-on-surface-variant/40">// Challenge</span>
+                </div>
+                <h3 class="font-headline text-headline-md text-white mb-2">CTF Qualifiers</h3>
+                <p class="text-body-md text-on-surface-variant">Global cybersecurity challenge for aspiring penetration testers.</p>
+                <div class="mt-6 text-label-sm text-primary font-semibold">UPCOMING: FEB 28</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CHRONOLOGICAL TIMELINE ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop mb-section-gap">
+    <div class="flex items-center justify-between mb-12 border-b border-white/[0.05] pb-4">
+        <h2 class="font-headline text-headline-xl text-on-background uppercase">Event <span class="text-primary">Registry</span></h2>
+        <div class="flex gap-4">
+            <button class="text-label-md text-primary border-b-2 border-primary pb-1 uppercase font-semibold">Upcoming</button>
+            <button class="text-label-md text-on-surface-variant hover:text-white uppercase transition-colors">Archived</button>
+        </div>
+    </div>
+    <div class="space-y-12 relative">
+        <!-- Timeline Line -->
+        <div class="absolute left-[39px] top-0 bottom-0 w-[1px] bg-white/10 hidden md:block"></div>
+        
+        <!-- Event Item 1 -->
+        <div class="grid grid-cols-12 gap-gutter relative group">
+            <div class="col-span-12 md:col-span-1 flex justify-center z-10">
+                <div class="w-20 h-20 bg-background border border-primary/40 rounded-sm flex flex-col items-center justify-center group-hover:border-primary transition-colors duration-300">
+                    <span class="text-label-caps text-primary text-[10px] uppercase">Feb</span>
+                    <span class="font-headline text-2xl text-white">14</span>
+                </div>
+            </div>
+            <div class="col-span-12 md:col-span-11 event-card p-8 rounded-xl">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="px-3 py-1 border border-white/10 rounded-lg text-[10px] uppercase text-on-surface-variant/60 tracking-wider">Guest Lecture</span>
+                            <span class="px-3 py-1 border border-primary/20 bg-primary/5 rounded-lg text-[10px] uppercase text-primary tracking-wider">Cloud Arch</span>
+                        </div>
+                        <h4 class="font-headline text-headline-md text-white mb-2">Scaling to Millions: The AWS Journey</h4>
+                        <p class="text-body-md text-on-surface-variant max-w-2xl">A technical session with AWS solutions architects on managing high-availability clusters and serverless scaling strategies.</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-4 shrink-0">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">location_on</span>
+                            <span class="text-label-sm">Anna Auditorium</span>
+                        </div>
+                        <button class="px-6 py-2 border border-primary/40 text-primary rounded-full text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-all">Notify Me</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Event Item 2 -->
+        <div class="grid grid-cols-12 gap-gutter relative group">
+            <div class="col-span-12 md:col-span-1 flex justify-center z-10">
+                <div class="w-20 h-20 bg-background border border-white/10 rounded-sm flex flex-col items-center justify-center group-hover:border-primary transition-colors duration-300">
+                    <span class="text-label-caps text-on-surface-variant text-[10px] uppercase">Feb</span>
+                    <span class="font-headline text-2xl text-white">08</span>
+                </div>
+            </div>
+            <div class="col-span-12 md:col-span-11 event-card p-8 rounded-xl opacity-90 hover:opacity-100">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="px-3 py-1 border border-white/10 rounded-lg text-[10px] uppercase text-on-surface-variant/60 tracking-wider">Workshop</span>
+                            <span class="px-3 py-1 border border-secondary/20 bg-secondary/5 rounded-lg text-[10px] uppercase text-secondary tracking-wider">React.js</span>
+                        </div>
+                        <h4 class="font-headline text-headline-md text-white mb-2">Next.js 14 Internal Architecture</h4>
+                        <p class="text-body-md text-on-surface-variant max-w-2xl">Understanding the underlying mechanisms of Server Components, Hydration, and the App Router pattern.</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-4 shrink-0">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">group</span>
+                            <span class="text-label-sm">Members Only</span>
+                        </div>
+                        <button class="px-6 py-2 bg-white/5 text-on-surface-variant/40 rounded-full text-label-sm font-semibold cursor-not-allowed border border-white/5">Full Capacity</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Item 3 -->
+        <div class="grid grid-cols-12 gap-gutter relative group">
+            <div class="col-span-12 md:col-span-1 flex justify-center z-10">
+                <div class="w-20 h-20 bg-background border border-white/5 rounded-sm flex flex-col items-center justify-center opacity-40 group-hover:opacity-100 group-hover:border-primary transition-all duration-300">
+                    <span class="text-label-caps text-on-surface-variant text-[10px] uppercase">Jan</span>
+                    <span class="font-headline text-2xl text-white">20</span>
+                </div>
+            </div>
+            <div class="col-span-12 md:col-span-11 event-card p-8 rounded-xl bg-surface-container-lowest/40">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 opacity-60 group-hover:opacity-100">
+                    <div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
+                            <span class="px-3 py-1 border border-white/10 rounded-lg text-[10px] uppercase text-on-surface-variant/60 tracking-wider">Archive</span>
+                        </div>
+                        <h4 class="font-headline text-headline-md text-white mb-2">Web3 Security Audit Masterclass</h4>
+                        <p class="text-body-md text-on-surface-variant max-w-2xl">Exploration of reentrancy attacks, flash loans, and smart contract vulnerability mitigation.</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-4 shrink-0">
+                        <button class="flex items-center gap-2 text-primary text-label-sm font-semibold hover:gap-3 transition-all">
+                            View Resources
+                            <span class="material-symbols-outlined text-[18px]">arrow_right_alt</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ PROPOSE EVENT CTA ═══════════ -->
+<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop pb-section-gap">
+    <div class="event-card rounded-2xl p-12 md:p-16 relative overflow-hidden">
+        <div class="absolute inset-0 blueprint-bg opacity-30 pointer-events-none"></div>
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 border border-primary/10 rounded-full pointer-events-none"></div>
+        <div class="absolute -right-10 -bottom-10 w-60 h-60 border border-primary/20 rounded-full pointer-events-none"></div>
+        <div class="relative z-10 grid grid-cols-12 gap-gutter items-center">
+            <div class="col-span-12 md:col-span-8 space-y-4">
+                <h2 class="font-headline text-headline-xl text-white">Have an Idea for a <br class="hidden md:block"/><span class="text-primary">Collaborative Sprint?</span></h2>
+                <p class="text-body-md text-on-surface-variant max-w-xl leading-relaxed">We're always looking for industry mentors and project collaborators to build the next generation of technical solutions.</p>
+            </div>
+            <div class="col-span-12 md:col-span-4 flex md:justify-end">
+                <button class="px-8 py-4 bg-primary text-on-primary rounded-full text-label-md font-semibold hover:brightness-110 transition-all hover:shadow-[0_0_30px_rgba(138,206,255,0.3)] active:scale-95">
+                    Propose Event
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bg-surface-container-lowest border-t border-white/[0.05] w-full">
+<div class="px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto py-xl">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
+        <div class="space-y-4">
+            <div class="flex items-center gap-2">
+                <img src="../acm-logo.png" alt="ACM" class="w-6 h-6 rounded-sm opacity-80"/>
+                <span class="font-headline text-headline-md text-primary font-bold tracking-tighter">ACM VNIT</span>
+            </div>
+            <p class="max-w-xs text-on-surface-variant text-label-sm leading-relaxed">Advancing Computing as a Science & Profession. Empowering student innovators at VNIT Nagpur since 2009.</p>
+            <div class="flex gap-3 pt-2">
+                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">public</span>
+                </a>
+                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">code</span>
+                </a>
+                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">share</span>
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-col gap-3">
+            <span class="text-on-surface text-label-md font-semibold mb-1">Navigate</span>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../about_acm_vnit_z_layout_edition/code.html">About</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../domains/code.html">Domains</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Events</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../projects/code.html">Projects</a>
+        </div>
+        <div class="flex flex-col gap-3">
+            <span class="text-on-surface text-label-md font-semibold mb-1">Legal</span>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Privacy Policy</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Code of Conduct</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Contact Us</a>
+        </div>
+        <div class="flex flex-col gap-3">
+            <span class="text-on-surface text-label-md font-semibold mb-1">Connect</span>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">LinkedIn</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Instagram</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">GitHub</a>
+        </div>
+    </div>
+    <div class="mt-lg pt-md border-t border-white/[0.05] flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-on-surface-variant text-label-sm">© 2024 ACM VNIT. Architecting the Future.</p>
+        <div class="flex gap-md items-center">
+            <span class="material-symbols-outlined text-on-surface-variant/30 hover:text-primary cursor-pointer transition-colors">hub</span>
+            <span class="material-symbols-outlined text-on-surface-variant/30 hover:text-primary cursor-pointer transition-colors">code</span>
+        </div>
+    </div>
+</div>
+</footer>
+
+<script>
+    // Micro-interactions for timeline hover effects
+    document.querySelectorAll('.group').forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            const dateBadge = item.querySelector('.border-primary\\/40');
+            if (dateBadge) {
+                dateBadge.classList.add('border-primary');
+            }
+        });
+        item.addEventListener('mouseleave', () => {
+            const dateBadge = item.querySelector('.border-primary\\/40');
+            if (dateBadge) {
+                dateBadge.classList.remove('border-primary');
+            }
+        });
+    });
+
+    // Atmospheric parallax on scroll
+    window.addEventListener('scroll', () => {
+        const bg = document.querySelector('.blueprint-bg');
+        if (bg) bg.style.backgroundPositionY = -(window.pageYOffset * 0.05) + 'px';
+    });
+</script>
+</body>
+</html>

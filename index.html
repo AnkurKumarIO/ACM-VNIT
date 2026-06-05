@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACM VNIT — Architecting the Future</title>
+<meta name="description" content="ACM VNIT is the official student chapter of the Association for Computing Machinery at VNIT Nagpur, fostering innovation, engineering excellence, and a collaborative tech community.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0d0e0d;
+  color: #FEFCD9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+::selection { background: #F95F4A; color: #0d0e0d; }
+
+/* ═══════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   ═══════════════════════════════════════════ */
+:root {
+  --bg: #0d0e0d;
+  --bg-elevated: #1a1b1a;
+  --cream: #FEFCD9;
+  --accent: #F95F4A;
+  --accent-glow: rgba(249, 95, 74, 0.35);
+  --text-muted: #999999;
+  --text-dim: #666666;
+  --border-subtle: rgba(254, 252, 217, 0.08);
+  --border-dashed: rgba(153, 153, 153, 0.3);
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ═══════════════════════════════════════════
+   BACKGROUND PATTERN
+   ═══════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(45deg, rgba(254,252,217,0.015) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(254,252,217,0.015) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(254,252,217,0.015) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(254,252,217,0.015) 75%);
+  background-size: 60px 60px;
+  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEAL ANIMATIONS
+   ═══════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════
+   FLOATING PILL NAVBAR
+   ═══════════════════════════════════════════ */
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  pointer-events: none;
+}
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(254,252,217,0.15);
+  border-radius: 50px;
+  pointer-events: auto;
+}
+.nav-pill a {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.6;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+.nav-pill a:hover,
+.nav-pill a.active {
+  opacity: 1;
+  background: var(--accent);
+  color: var(--cream);
+}
+
+/* Mobile hamburger */
+.mobile-menu-btn {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(254,252,217,0.15);
+  color: var(--cream);
+  font-size: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,14,13,0.97);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.mobile-overlay.open { display: flex; }
+.mobile-overlay a {
+  font-size: 28px;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  transition: color 0.3s;
+}
+.mobile-overlay a:hover { color: var(--accent); }
+.mobile-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 28px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-pill { display: none; }
+  .mobile-menu-btn { display: flex; }
+}
+
+/* ═══════════════════════════════════════════
+   BRAND LOGOS (top corners)
+   ═══════════════════════════════════════════ */
+.brand-logos {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+}
+.brand-logos img {
+  height: 40px;
+  opacity: 0.85;
+}
+
+/* ═══════════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 8vw;
+  overflow: hidden;
+}
+.hero-text-wrap {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+}
+.hero-line-1 {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.hero-line-2 {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800;
+  color: var(--cream);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border: 1px solid rgba(249, 95, 74, 0.4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+/* Legend pins at hero bottom */
+.legend-container {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  padding: 0 8vw;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+}
+.legend-text {
+  font-size: clamp(12px, 1.4vw, 16px);
+  line-height: 1.3;
+  color: var(--cream);
+  opacity: 0.8;
+}
+.legend-text .accent { color: var(--accent); }
+
+/* CTA button in hero */
+.hero-cta {
+  position: absolute;
+  top: 28px;
+  right: 8vw;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  background: var(--accent);
+  border-radius: 50px;
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.3s, box-shadow 0.3s;
+  pointer-events: auto;
+}
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--accent-glow);
+}
+.hero-cta svg { width: 16px; height: 16px; }
+
+/* ═══════════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════════ */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(2.5rem, 6vw, 7rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.section-title .accent { color: var(--accent); }
+
+/* ═══════════════════════════════════════════
+   ABOUT SECTION
+   ═══════════════════════════════════════════ */
+.about-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 80px 8vw;
+  border-top: 1px solid var(--border-subtle);
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.about-text {
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.65;
+  color: rgba(254,252,217,0.75);
+}
+.about-text p + p { margin-top: 20px; }
+
+/* Poker card illustration for about section */
+.about-card-wrap {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+}
+.about-poker-card {
+  width: 220px;
+  height: 320px;
+  background: linear-gradient(160deg, #1e1e1e 0%, #141414 100%);
+  border: 1.5px solid rgba(254,252,217,0.12);
+  border-radius: 16px;
+  position: relative;
+  padding: 18px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  transform: rotate(var(--rotation, 0deg));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.about-poker-card:hover {
+  transform: rotate(0deg) scale(1.05);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px var(--pk-glow, rgba(249,95,74,0.15));
+}
+.about-poker-card .pk-corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+.about-poker-card .pk-corner .pk-rank {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--pk-color, var(--accent));
+}
+.about-poker-card .pk-corner .pk-suit-sm {
+  font-size: 14px;
+  color: var(--pk-color, var(--accent));
+}
+.about-poker-card .pk-corner-br {
+  align-self: flex-end;
+  transform: rotate(180deg);
+}
+.about-poker-card .pk-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.about-poker-card .pk-suit-lg {
+  font-size: 56px;
+  color: var(--pk-color, var(--accent));
+  filter: drop-shadow(0 0 20px var(--pk-glow, rgba(249,95,74,0.3)));
+  line-height: 1;
+}
+.about-poker-card .pk-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pk-color, var(--accent));
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about-card-wrap { max-width: 280px; margin: 0 auto; }
+  .about-poker-card { width: 180px; height: 260px; }
+  .about-grid.reverse { direction: ltr; }
+}
+
+/* ═══════════════════════════════════════════
+   COMMUNITY / IMPACT SECTION
+   ═══════════════════════════════════════════ */
+.community-section {
+  padding: 100px 8vw;
+  border-top: 1px solid var(--border-subtle);
+}
+.community-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  min-height: 500px;
+}
+.community-left {
+  padding: 48px 48px 48px 0;
+  border-right: 2px dashed var(--border-dashed);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.community-right {
+  padding: 48px 0 48px 48px;
+}
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+.stat-item .stat-number {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.stat-item .stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+.community-desc {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+@media (max-width: 768px) {
+  .community-grid {
+    grid-template-columns: 1fr;
+  }
+  .community-left {
+    border-right: none;
+    border-bottom: 2px dashed var(--border-dashed);
+    padding: 0 0 40px 0;
+  }
+  .community-right { padding: 40px 0 0 0; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ═══════════════════════════════════════════
+   DOMAINS — POKER CARDS ♠♣♦♥★
+   ═══════════════════════════════════════════ */
+.domains-section {
+  padding: 120px 8vw;
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+}
+.domains-intro {
+  max-width: 800px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+.domains-intro p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(254,252,217,0.6);
+  margin-top: 20px;
+}
+.poker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 36px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Individual poker card wrapper */
+.poker-card {
+  --card-color: var(--accent);
+  --card-glow: rgba(249, 95, 74, 0.2);
+  position: relative;
+  cursor: pointer;
+  perspective: 1000px;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.poker-card:hover {
+  transform: translateY(-12px);
+}
+
+/* Card face */
+.poker-face {
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  background: linear-gradient(160deg, #1a1a1a 0%, #111111 100%);
+  border: 1.5px solid color-mix(in srgb, var(--card-color) 22%, transparent);
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.4s, box-shadow 0.4s, transform 0.15s ease;
+}
+.poker-card:hover .poker-face {
+  border-color: color-mix(in srgb, var(--card-color) 50%, transparent);
+  box-shadow:
+    0 20px 60px var(--card-glow),
+    0 0 0 1px color-mix(in srgb, var(--card-color) 15%, transparent),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Inner card pattern overlay */
+.poker-face::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid color-mix(in srgb, var(--card-color) 8%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
+  transition: border-color 0.4s;
+}
+.poker-card:hover .poker-face::before {
+  border-color: color-mix(in srgb, var(--card-color) 18%, transparent);
+}
+
+/* Corner pips */
+.pk-corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  line-height: 1;
+  z-index: 2;
+}
+.pk-corner .pk-rank {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--card-color);
+  letter-spacing: -0.02em;
+}
+.pk-corner .pk-suit-sm {
+  font-size: 16px;
+  color: var(--card-color);
+}
+.pk-corner-br {
+  align-self: flex-end;
+  transform: rotate(180deg);
+}
+
+/* Center suit */
+.pk-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 2;
+}
+.pk-suit-lg {
+  font-size: 72px;
+  color: var(--card-color);
+  filter: drop-shadow(0 0 25px var(--card-glow));
+  line-height: 1;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), filter 0.4s;
+}
+.poker-card:hover .pk-suit-lg {
+  transform: scale(1.12) rotate(-3deg);
+  filter: drop-shadow(0 0 40px var(--card-glow));
+}
+.pk-domain-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--card-color) 60%, var(--cream));
+  background: color-mix(in srgb, var(--card-color) 10%, transparent);
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--card-color) 15%, transparent);
+}
+
+/* Decorative corner flourishes */
+.poker-face::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-right: 1.5px solid color-mix(in srgb, var(--card-color) 15%, transparent);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--card-color) 15%, transparent);
+  border-radius: 0 0 6px 0;
+  pointer-events: none;
+}
+
+/* Card info below */
+.poker-info {
+  margin-top: 20px;
+}
+.poker-info h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.poker-info p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.poker-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.poker-tag {
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--card-color) 20%, transparent);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--card-color);
+}
+
+/* Domain-specific colors & suits */
+.poker-card[data-domain="app"] {
+  --card-color: #4A9FF5;
+  --card-glow: rgba(74, 159, 245, 0.25);
+}
+.poker-card[data-domain="web"] {
+  --card-color: #4AE6A0;
+  --card-glow: rgba(74, 230, 160, 0.25);
+}
+.poker-card[data-domain="aiml"] {
+  --card-color: #B44AF5;
+  --card-glow: rgba(180, 74, 245, 0.25);
+}
+.poker-card[data-domain="design"] {
+  --card-color: #F54A8A;
+  --card-glow: rgba(245, 74, 138, 0.25);
+}
+.poker-card[data-domain="cybersec"] {
+  --card-color: #F5A44A;
+  --card-glow: rgba(245, 164, 74, 0.25);
+}
+
+/* ═══════════════════════════════════════════
+   EVENTS SECTION — CASSETTE CARDS
+   ═══════════════════════════════════════════ */
+.events-section {
+  padding: 120px 8vw;
+  border-top: 1px solid var(--border-subtle);
+}
+.events-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+}
+.event-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 0;
+  background: linear-gradient(145deg, rgba(249,95,74,0.08), rgba(13,14,13,1));
+  border: 1px solid rgba(249,95,74,0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+.event-featured:hover {
+  border-color: rgba(249,95,74,0.35);
+  box-shadow: 0 12px 50px rgba(249,95,74,0.1);
+}
+.event-featured-visual {
+  position: relative;
+  min-height: 350px;
+  background: linear-gradient(135deg, #1a0f0d, #0d0e0d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* Featured event poker card */
+.event-featured-poker {
+  width: 200px;
+  aspect-ratio: 5/7;
+  background: linear-gradient(160deg, #1a1a1a, #111);
+  border: 1.5px solid rgba(249,95,74,0.25);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px;
+  position: relative;
+  transform: rotate(-6deg);
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+}
+.event-featured-poker::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(249,95,74,0.1);
+  border-radius: 10px;
+  pointer-events: none;
+}
+.event-featured:hover .event-featured-poker {
+  transform: rotate(0deg) scale(1.06);
+  box-shadow: 0 16px 50px rgba(249,95,74,0.2);
+}
+.event-featured-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.event-featured-content .event-type {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.event-featured-content h3 {
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+.event-featured-content p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+.event-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.event-meta-tag {
+  padding: 8px 16px;
+  border: 1px solid rgba(254,252,217,0.1);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  opacity: 0.7;
+}
+.event-meta-tag.highlight {
+  border-color: rgba(249,95,74,0.3);
+  background: rgba(249,95,74,0.08);
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* Regular event card */
+.event-card {
+  --evt-color: var(--accent);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--evt-color) 6%, #111), #0d0e0d);
+  border: 1px solid color-mix(in srgb, var(--evt-color) 12%, transparent);
+  border-radius: 18px;
+  padding: 28px;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  position: relative;
+  overflow: hidden;
+}
+.event-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--evt-color), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.event-card:hover::before { opacity: 1; }
+.event-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--evt-color) 30%, transparent);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--evt-color) 12%, transparent);
+}
+.event-card .event-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--evt-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--evt-color) 20%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.event-card h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.event-card p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.event-card .event-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--evt-color);
+  font-weight: 600;
+}
+
+.event-card[data-event="devops"] { --evt-color: #4AE6A0; }
+.event-card[data-event="ctf"] { --evt-color: #F5A44A; }
+.event-card[data-event="web3"] { --evt-color: #B44AF5; }
+.event-card[data-event="nextjs"] { --evt-color: #4A9FF5; }
+
+@media (max-width: 768px) {
+  .events-grid { grid-template-columns: 1fr; }
+  .event-featured { grid-template-columns: 1fr; }
+  .event-featured-visual { min-height: 220px; }
+  .event-featured-content { padding: 28px; }
+}
+
+/* ═══════════════════════════════════════════
+   PROJECTS SECTION
+   ═══════════════════════════════════════════ */
+.projects-section {
+  padding: 120px 8vw;
+  border-top: 1px solid var(--border-subtle);
+}
+.projects-intro-text {
+  max-width: 700px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+.projects-intro-text p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-top: 20px;
+}
+.projects-intro-text p .accent-text { color: var(--accent); }
+.projects-intro-text p .cream-text { color: rgba(254,252,217,0.6); }
+
+.projects-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+.project-card {
+  --proj-color: var(--accent);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--proj-color) 6%, #111), #0d0e0d);
+  border: 1px solid color-mix(in srgb, var(--proj-color) 10%, transparent);
+  border-radius: 18px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  position: relative;
+  overflow: hidden;
+}
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--proj-color), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.project-card:hover::before { opacity: 1; }
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--proj-color) 30%, transparent);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--proj-color) 12%, transparent);
+}
+.project-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.project-card-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.project-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--proj-color) 20%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--proj-color);
+  background: color-mix(in srgb, var(--proj-color) 8%, transparent);
+}
+.project-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 10px;
+}
+.project-card > p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  flex-grow: 1;
+}
+.project-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+.project-tech-tag {
+  padding: 4px 10px;
+  border: 1px solid rgba(254,252,217,0.08);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+.project-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+.project-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--proj-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: gap 0.3s;
+}
+.project-link:hover { gap: 14px; }
+
+.project-card[data-proj="lumina"] { --proj-color: #F5A44A; }
+.project-card[data-proj="neural"] { --proj-color: #B44AF5; }
+.project-card[data-proj="cli"] { --proj-color: #4AE6A0; }
+.project-card[data-proj="portal"] { --proj-color: #4A9FF5; }
+
+/* CTA project card */
+.project-cta-card {
+  background: linear-gradient(145deg, rgba(249,95,74,0.08), #0d0e0d);
+  border: 1px dashed rgba(249,95,74,0.2);
+  border-radius: 18px;
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.4s;
+}
+.project-cta-card:hover {
+  border-color: rgba(249,95,74,0.4);
+  background: linear-gradient(145deg, rgba(249,95,74,0.12), #0d0e0d);
+}
+.project-cta-card .cta-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+.project-cta-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 10px;
+}
+.project-cta-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  max-width: 240px;
+}
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--accent);
+  border: none;
+  border-radius: 50px;
+  color: var(--cream);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════ */
+.site-footer {
+  padding: 80px 8vw 40px;
+  border-top: 1px solid var(--border-subtle);
+  background: #0a0b0a;
+}
+.footer-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+.footer-brand h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.footer-brand p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+.footer-socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.footer-social-link {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(254,252,217,0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+.footer-social-link:hover {
+  border-color: var(--accent);
+  background: rgba(249,95,74,0.1);
+  color: var(--accent);
+}
+.footer-column h5 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+.footer-column a {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 4px 0;
+  transition: color 0.3s;
+}
+.footer-column a:hover { color: var(--accent); }
+.footer-bottom {
+  max-width: 1400px;
+  margin: 48px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   MISC UTILITIES
+   ═══════════════════════════════════════════ */
+.divider-dashed {
+  width: 100%;
+  height: 1px;
+  border-top: 2px dashed var(--border-dashed);
+  margin: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     FLOATING PILL NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-pill">
+    <a href="#hero" class="active">Home</a>
+    <a href="#about">About</a>
+    <a href="#community">Impact</a>
+    <a href="#domains">Domains</a>
+    <a href="#events">Events</a>
+    <a href="#projects">Projects</a>
+  </div>
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-overlay" id="mobileOverlay">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="#hero" onclick="closeMobileMenu()">Home</a>
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#community" onclick="closeMobileMenu()">Impact</a>
+  <a href="#domains" onclick="closeMobileMenu()">Domains</a>
+  <a href="#events" onclick="closeMobileMenu()">Events</a>
+  <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+</div>
+
+<!-- Hero CTA -->
+<a class="hero-cta" href="#domains">
+  Explore Domains
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+</a>
+
+<!-- ═══════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-text-wrap">
+    <div class="hero-badge reveal">// ESTABLISHED 2009 — VNIT NAGPUR</div>
+    <div class="hero-line-1 reveal reveal-delay-1">we are the</div>
+    <div class="hero-line-2 reveal reveal-delay-2">association for<br>computing machinery</div>
+  </div>
+
+  <div class="legend-container">
+    <div class="legend-text reveal reveal-delay-3">
+      Established in <span class="accent">2009</span>.<br>
+      Evolving ever since.
+    </div>
+    <div class="legend-text reveal reveal-delay-4" style="text-align: right;">
+      We're not just another <span class="accent">tech chapter</span>.<br>
+      We're the <span class="accent">blueprint</span> that actually ships.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     ABOUT SECTION
+     ═══════════════════════════════════════════ -->
+<section id="about">
+  <!-- About ACM VNIT -->
+  <div class="about-section">
+    <div class="about-grid">
+      <div class="about-card-wrap reveal">
+        <div class="about-poker-card" style="--rotation: 12deg; --pk-color: #F95F4A; --pk-glow: rgba(249,95,74,0.2);">
+          <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
+          <div class="pk-center"><span class="pk-suit-lg">♠</span><span class="pk-name">ACM VNIT</span></div>
+          <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
+        </div>
+      </div>
+      <div class="about-text reveal reveal-delay-2" style="text-align: right;">
+        <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
+        <p>We don't just write code — we ask questions, build with purpose, and learn together. With a culture built on trust and innovation, we're here to build tools, solve problems, and grow as a community — because technology, at its best, brings people together.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- About VNIT -->
+  <div class="about-section">
+    <div class="about-grid reverse">
+      <div class="about-text reveal">
+        <p>Founded in 1960, Visvesvaraya National Institute of Technology (VNIT) Nagpur is one of India's premier engineering institutions, renowned for academic excellence, cutting-edge research, and a vibrant campus culture. With students from across India and beyond, VNIT offers a rigorous and inclusive learning environment.</p>
+        <p>The institute provides world-class infrastructure, distinguished faculty, and industry-connected programs designed to prepare students for global impact. From pioneering research to engineering breakthroughs, VNIT empowers students to make meaningful contributions across every field.</p>
+      </div>
+      <div class="about-card-wrap reveal reveal-delay-2">
+        <div class="about-poker-card" style="--rotation: -10deg; --pk-color: #4A9FF5; --pk-glow: rgba(74,159,245,0.2);">
+          <div class="pk-corner"><span class="pk-rank">V</span><span class="pk-suit-sm">♦</span></div>
+          <div class="pk-center"><span class="pk-suit-lg">♦</span><span class="pk-name">VNIT</span></div>
+          <div class="pk-corner pk-corner-br"><span class="pk-rank">V</span><span class="pk-suit-sm">♦</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About ACM -->
+  <div class="about-section">
+    <div class="about-grid">
+      <div class="about-card-wrap reveal">
+        <div class="about-poker-card" style="--rotation: 8deg; --pk-color: #4AE6A0; --pk-glow: rgba(74,230,160,0.2);">
+          <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
+          <div class="pk-center"><span class="pk-suit-lg">♣</span><span class="pk-name">ACM</span></div>
+          <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
+        </div>
+      </div>
+      <div class="about-text reveal reveal-delay-2" style="text-align: right;">
+        <p>The Association for Computing Machinery (ACM) is the world's largest educational and scientific computing society. Since its inception in 1947, ACM has united educators, researchers, and professionals to advance computing as a science and a profession.</p>
+        <p>It promotes the highest standards of technical excellence, fosters lifelong learning, and supports career development through a global network of conferences, publications, and professional communities. With a strong commitment to innovation and leadership, ACM continues to shape the future of computing worldwide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     COMMUNITY / IMPACT SECTION
+     ═══════════════════════════════════════════ -->
+<section class="community-section" id="community">
+  <div style="max-width: 1400px; margin: 0 auto;">
+    <div class="section-label reveal">// Community & Impact</div>
+    <div class="section-title reveal reveal-delay-1">
+      BEYOND<br><span class="accent">THE CODE</span>
+    </div>
+
+    <div class="community-grid" style="margin-top: 60px;">
+      <div class="community-left">
+        <div>
+          <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--accent); margin-bottom: 16px; text-transform: uppercase;" class="reveal">
+            Outreach & Impact
+          </h3>
+          <p class="community-desc reveal reveal-delay-1">
+            Our outreach initiatives bring the world of computing to students across Nagpur. Through interactive workshops, simplified demonstrations of algorithms and digital logic, and real-life coding examples, students discover how technology shapes the world. We believe in sparking curiosity and encouraging the next generation of builders.
+          </p>
+        </div>
+        <div class="stat-row reveal reveal-delay-2">
+          <div class="stat-item">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Years Active</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Events Held</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">10k+</div>
+            <div class="stat-label">Minds Impacted</div>
+          </div>
+        </div>
+      </div>
+      <div class="community-right">
+        <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;" class="reveal">
+          SDG — Quality <span style="color: var(--accent);">Education</span>
+        </h3>
+        <p class="community-desc reveal reveal-delay-1">
+          Aligned with UN Sustainable Development Goal 4: Quality Education. Our workshops focus on reducing the digital learning gap in rural communities around Nagpur. Participants explore modern web technologies and learn how simple digital tools can strengthen classrooms with limited resources.
+        </p>
+        <div style="margin-top: 40px;" class="reveal reveal-delay-2">
+          <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;">
+            Code of <span style="color: var(--accent);">Conduct</span>
+          </h3>
+          <p class="community-desc">
+            As the VNIT ACM Student Chapter, our values are grounded in the ACM Code of Ethics and Professional Conduct. Computing professionals have a profound impact on society and must prioritize the public good. We uphold integrity, inclusivity, and excellence in everything we build.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     DOMAINS SECTION — POKER CARDS ♠♣♦♥★
+     ═══════════════════════════════════════════ -->
+<section class="domains-section" id="domains">
+  <div class="domains-intro">
+    <div class="section-label reveal">// Technical Ecosystem</div>
+    <div class="section-title reveal reveal-delay-1" style="font-size: clamp(2.5rem, 6vw, 5rem);">
+      Architecting The<br><span class="accent">Core Specials</span>
+    </div>
+    <p class="reveal reveal-delay-2">Each domain is more than a skillset — it's a mindset. We build, break, design, analyze, and communicate — not in silos, but in sync. Because true innovation happens where disciplines intersect.</p>
+  </div>
+
+  <div class="poker-grid">
+    <!-- App Development — ♠ Spades -->
+    <div class="poker-card reveal" data-domain="app">
+      <div class="poker-face">
+        <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
+        <div class="pk-center">
+          <span class="pk-suit-lg">♠</span>
+          <span class="pk-domain-label">App Dev</span>
+        </div>
+        <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
+      </div>
+      <div class="poker-info">
+        <h3>App Development</h3>
+        <p>Engineering seamless mobile experiences across platforms with a focus on high-performance architecture and reactive UI patterns.</p>
+        <div class="poker-tags">
+          <span class="poker-tag">Flutter</span>
+          <span class="poker-tag">React Native</span>
+          <span class="poker-tag">SwiftUI</span>
+          <span class="poker-tag">Kotlin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Web Development — ♣ Clubs -->
+    <div class="poker-card reveal reveal-delay-1" data-domain="web">
+      <div class="poker-face">
+        <div class="pk-corner"><span class="pk-rank">K</span><span class="pk-suit-sm">♣</span></div>
+        <div class="pk-center">
+          <span class="pk-suit-lg">♣</span>
+          <span class="pk-domain-label">Web Dev</span>
+        </div>
+        <div class="pk-corner pk-corner-br"><span class="pk-rank">K</span><span class="pk-suit-sm">♣</span></div>
+      </div>
+      <div class="poker-info">
+        <h3>Web Development</h3>
+        <p>Building the foundational fabric of the modern web using robust full-stack frameworks and scalable architectures.</p>
+        <div class="poker-tags">
+          <span class="poker-tag">Next.js</span>
+          <span class="poker-tag">GoLang</span>
+          <span class="poker-tag">Node.js</span>
+          <span class="poker-tag">PostgreSQL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI/ML — ♦ Diamonds -->
+    <div class="poker-card reveal reveal-delay-2" data-domain="aiml">
+      <div class="poker-face">
+        <div class="pk-corner"><span class="pk-rank">Q</span><span class="pk-suit-sm">♦</span></div>
+        <div class="pk-center">
+          <span class="pk-suit-lg">♦</span>
+          <span class="pk-domain-label">AI / ML</span>
+        </div>
+        <div class="pk-corner pk-corner-br"><span class="pk-rank">Q</span><span class="pk-suit-sm">♦</span></div>
+      </div>
+      <div class="poker-info">
+        <h3>AI / Machine Learning</h3>
+        <p>Developing intelligent systems through neural networks, predictive modeling, and cutting-edge research in artificial intelligence.</p>
+        <div class="poker-tags">
+          <span class="poker-tag">PyTorch</span>
+          <span class="poker-tag">TensorFlow</span>
+          <span class="poker-tag">Python</span>
+          <span class="poker-tag">Pandas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design — ♥ Hearts -->
+    <div class="poker-card reveal reveal-delay-3" data-domain="design">
+      <div class="poker-face">
+        <div class="pk-corner"><span class="pk-rank">J</span><span class="pk-suit-sm">♥</span></div>
+        <div class="pk-center">
+          <span class="pk-suit-lg">♥</span>
+          <span class="pk-domain-label">Design</span>
+        </div>
+        <div class="pk-corner pk-corner-br"><span class="pk-rank">J</span><span class="pk-suit-sm">♥</span></div>
+      </div>
+      <div class="poker-info">
+        <h3>Design</h3>
+        <p>The visual blueprint. Crafting user-first interfaces and motion graphics that marry modern aesthetics with functional purpose.</p>
+        <div class="poker-tags">
+          <span class="poker-tag">Figma</span>
+          <span class="poker-tag">After Effects</span>
+          <span class="poker-tag">Blender</span>
+          <span class="poker-tag">UI/UX</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cybersecurity — ★ Star -->
+    <div class="poker-card reveal reveal-delay-4" data-domain="cybersec">
+      <div class="poker-face">
+        <div class="pk-corner"><span class="pk-rank">10</span><span class="pk-suit-sm">★</span></div>
+        <div class="pk-center">
+          <span class="pk-suit-lg">★</span>
+          <span class="pk-domain-label">CyberSec</span>
+        </div>
+        <div class="pk-corner pk-corner-br"><span class="pk-rank">10</span><span class="pk-suit-sm">★</span></div>
+      </div>
+      <div class="poker-info">
+        <h3>Cybersecurity</h3>
+        <p>Securing the perimeter. Offensive and defensive security research, penetration testing, and vulnerability assessment.</p>
+        <div class="poker-tags">
+          <span class="poker-tag">Burp Suite</span>
+          <span class="poker-tag">OWASP</span>
+          <span class="poker-tag">CTF</span>
+          <span class="poker-tag">Wireshark</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     EVENTS SECTION
+     ═══════════════════════════════════════════ -->
+<section class="events-section" id="events">
+  <div style="max-width: 1400px; margin: 0 auto;">
+    <div class="section-label reveal">// Engineered for Excellence</div>
+    <div class="section-title reveal reveal-delay-1">
+      Technical<br><span class="accent">Deployments</span>
+    </div>
+
+    <div class="events-grid">
+      <!-- Featured Event: GREP -->
+      <div class="event-featured reveal">
+        <div class="event-featured-visual">
+          <div class="event-featured-poker">
+            <div class="pk-corner"><span class="pk-rank" style="color: var(--accent);">G</span><span class="pk-suit-sm" style="color: var(--accent);">♠</span></div>
+            <div class="pk-center" style="gap: 6px;">
+              <span class="pk-suit-lg" style="font-size: 48px; color: var(--accent); filter: drop-shadow(0 0 20px rgba(249,95,74,0.3));">♠</span>
+              <span class="pk-domain-label" style="color: var(--accent); border-color: rgba(249,95,74,0.2); background: rgba(249,95,74,0.08); font-size: 9px;">GREP 2024</span>
+            </div>
+            <div class="pk-corner pk-corner-br"><span class="pk-rank" style="color: var(--accent);">G</span><span class="pk-suit-sm" style="color: var(--accent);">♠</span></div>
+          </div>
+        </div>
+        <div class="event-featured-content">
+          <span class="event-type">// Flagship Hackathon</span>
+          <h3>GREP 2024</h3>
+          <p>The ultimate test of endurance and innovation. Build, break, and rebuild in our 36-hour technical sprint — where ideas meet implementation at velocity.</p>
+          <div class="event-meta">
+            <span class="event-meta-tag">36-Hour Sprint</span>
+            <span class="event-meta-tag highlight">Registration Open</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event: DevOps Deep-Dive -->
+      <div class="event-card reveal" data-event="devops">
+        <div class="event-icon">⚡</div>
+        <h4>DevOps Deep-Dive</h4>
+        <p>Intensive workshop on CI/CD pipelines, Kubernetes orchestration, and cloud-native deployment strategies.</p>
+        <div class="event-date">UPCOMING → FEB 22</div>
+      </div>
+
+      <!-- Event: CTF Qualifiers -->
+      <div class="event-card reveal reveal-delay-1" data-event="ctf">
+        <div class="event-icon">🛡️</div>
+        <h4>CTF Qualifiers</h4>
+        <p>Global cybersecurity challenge for aspiring penetration testers. Reentrancy attacks, flash loans, and smart contract audits.</p>
+        <div class="event-date">UPCOMING → FEB 28</div>
+      </div>
+
+      <!-- Event: Web3 Security -->
+      <div class="event-card reveal reveal-delay-2" data-event="web3">
+        <div class="event-icon">🔮</div>
+        <h4>Web3 Security Audit</h4>
+        <p>Exploration of reentrancy attacks, flash loans, and smart contract vulnerability mitigation in decentralized systems.</p>
+        <div class="event-date">ARCHIVED → JAN 20</div>
+      </div>
+
+      <!-- Event: Next.js Architecture -->
+      <div class="event-card reveal reveal-delay-3" data-event="nextjs">
+        <div class="event-icon">🧩</div>
+        <h4>Next.js 14 Internals</h4>
+        <p>Understanding Server Components, Hydration, and the App Router pattern — deep-diving into the architecture of modern React.</p>
+        <div class="event-date">ARCHIVED → FEB 08</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PROJECTS SECTION
+     ═══════════════════════════════════════════ -->
+<section class="projects-section" id="projects">
+  <div class="projects-intro-text">
+    <div class="section-label reveal">// Engineered for Impact</div>
+    <div class="section-title reveal reveal-delay-1" style="font-size: clamp(2.5rem, 6vw, 5rem);">
+      Building The<br><span class="accent">Core Stack</span>
+    </div>
+    <p class="reveal reveal-delay-2">
+      <span class="accent-text">At ACM VNIT, we conduct structured project cycles throughout the year to foster innovation, hands-on learning, and creative problem-solving. </span>
+      <span class="cream-text">These projects reflect the diversity of technologies explored within the chapter and encourage members to push boundaries, experiment boldly, and grow through real-world application.</span>
+    </p>
+  </div>
+
+  <div class="projects-grid">
+    <!-- Lumina OS -->
+    <div class="project-card reveal" data-proj="lumina" style="grid-column: span 2;">
+      <div class="project-card-header">
+        <span class="project-card-id">// FEATURED SYSTEM</span>
+        <div class="project-card-icon">⚙️</div>
+      </div>
+      <h3>Lumina OS</h3>
+      <p>A microkernel-based operating system built from scratch in Rust, focusing on memory safety and real-time process scheduling for edge computing nodes.</p>
+      <div class="project-tech-tags">
+        <span class="project-tech-tag">Rust</span>
+        <span class="project-tech-tag">x86_64</span>
+        <span class="project-tech-tag">QEMU</span>
+      </div>
+      <div class="project-card-footer">
+        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+      </div>
+    </div>
+
+    <!-- NeuralLink v2 -->
+    <div class="project-card reveal reveal-delay-1" data-proj="neural">
+      <div class="project-card-header">
+        <span class="project-card-id">PROJ_02</span>
+        <div class="project-card-icon">🧠</div>
+      </div>
+      <h3>NeuralLink v2</h3>
+      <p>Edge AI processing framework optimized for low-power ARM architectures, reducing inference latency by 40%.</p>
+      <div class="project-tech-tags">
+        <span class="project-tech-tag">C++</span>
+        <span class="project-tech-tag">TensorFlow</span>
+      </div>
+      <div class="project-card-footer">
+        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+      </div>
+    </div>
+
+    <!-- CLI Toolbox -->
+    <div class="project-card reveal reveal-delay-2" data-proj="cli">
+      <div class="project-card-header">
+        <span class="project-card-id">PROJ_03</span>
+        <div class="project-card-icon">💻</div>
+      </div>
+      <h3>CLI Toolbox</h3>
+      <p>Developer productivity tools for automation, Git workflow management, and rapid boilerplate generation.</p>
+      <div class="project-tech-tags">
+        <span class="project-tech-tag">Go</span>
+        <span class="project-tech-tag">Cobra</span>
+      </div>
+      <div class="project-card-footer">
+        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+      </div>
+    </div>
+
+    <!-- ACM Portal -->
+    <div class="project-card reveal reveal-delay-3" data-proj="portal">
+      <div class="project-card-header">
+        <span class="project-card-id">PROJ_04</span>
+        <div class="project-card-icon">🌐</div>
+      </div>
+      <h3>ACM Portal</h3>
+      <p>Internal chapter management system handling event registrations, member grading, and resource allocation for 500+ students.</p>
+      <div class="project-tech-tags">
+        <span class="project-tech-tag">Next.js</span>
+        <span class="project-tech-tag">Postgres</span>
+      </div>
+      <div class="project-card-footer">
+        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+      </div>
+    </div>
+
+    <!-- CTA Card -->
+    <div class="project-cta-card reveal reveal-delay-4">
+      <div class="cta-icon">🚀</div>
+      <h3>Your Project Here?</h3>
+      <p>Contribute to our technical ecosystem and architect the future of tech.</p>
+      <button class="btn-accent">Start Building +</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="site-footer" id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h2>ACM VNIT</h2>
+      <p>Architecting the future through precision engineering and collaborative innovation. The premier technical chapter of VNIT Nagpur.</p>
+      <div class="footer-socials">
+        <a class="footer-social-link" href="#" aria-label="Website">🌐</a>
+        <a class="footer-social-link" href="#" aria-label="GitHub">💻</a>
+        <a class="footer-social-link" href="#" aria-label="LinkedIn">🔗</a>
+        <a class="footer-social-link" href="#" aria-label="Instagram">📷</a>
+      </div>
+    </div>
+    <div class="footer-column">
+      <h5>Navigate</h5>
+      <a href="#about">About Us</a>
+      <a href="#domains">Domains</a>
+      <a href="#events">Events</a>
+      <a href="#projects">Projects</a>
+    </div>
+    <div class="footer-column">
+      <h5>Chapter</h5>
+      <a href="#">ACM International</a>
+      <a href="#">Student Chapter</a>
+      <a href="#">Code of Conduct</a>
+      <a href="#">Archive</a>
+    </div>
+    <div class="footer-column">
+      <h5>Connect</h5>
+      <a href="#">LinkedIn</a>
+      <a href="#">Instagram</a>
+      <a href="#">GitHub</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 ACM VNIT. Architecting the Future.</span>
+    <div style="display: flex; gap: 24px;">
+      <a href="#" style="color: var(--text-dim); transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">Privacy Policy</a>
+      <a href="#" style="color: var(--text-dim); transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT — Scroll Animations & Interactions
+     ═══════════════════════════════════════════ -->
+<script>
+  // ───── Scroll Reveal with IntersectionObserver ─────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ───── Active Nav Link on Scroll ─────
+  const sections = document.querySelectorAll('section, .hero');
+  const navLinks = document.querySelectorAll('.nav-pill a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id || entry.target.closest('section')?.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('#hero, #about, #community, #domains, #events, #projects').forEach(s => navObserver.observe(s));
+
+  // ───── Mobile Menu ─────
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+  const mobileClose = document.getElementById('mobileClose');
+
+  mobileBtn?.addEventListener('click', () => mobileOverlay.classList.add('open'));
+  mobileClose?.addEventListener('click', () => mobileOverlay.classList.remove('open'));
+  function closeMobileMenu() {
+    mobileOverlay.classList.remove('open');
+  }
+
+  // ───── Cassette Card Tilt on Hover ─────
+  document.querySelectorAll('.cassette-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const body = card.querySelector('.cassette-body');
+      if (body) {
+        body.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+      }
+    });
+    card.addEventListener('mouseleave', () => {
+      const body = card.querySelector('.cassette-body');
+      if (body) {
+        body.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+        body.style.transition = 'transform 0.5s ease';
+      }
+    });
+    card.addEventListener('mouseenter', () => {
+      const body = card.querySelector('.cassette-body');
+      if (body) body.style.transition = 'transform 0.1s ease';
+    });
+  });
+
+  // ───── Smooth Background Pattern Shift ─────
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.pageYOffset;
+        document.body.style.setProperty('--scroll', scrollY + 'px');
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // ───── Nav Pill Hide on Scroll Down, Show on Scroll Up ─────
+  let lastScroll = 0;
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    if (currentScroll > lastScroll && currentScroll > 100) {
+      navbar.style.transform = 'translateX(-50%) translateY(-100px)';
+      navbar.style.transition = 'transform 0.4s ease';
+    } else {
+      navbar.style.transform = 'translateX(-50%) translateY(0)';
+      navbar.style.transition = 'transform 0.4s ease';
+    }
+    lastScroll = currentScroll;
+  });
+</script>
+</body>
+</html>

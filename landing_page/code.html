@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ACM VIT | ARCHITECTING THE FUTURE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Include Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#201f1f",
+                    "surface-bright": "#3a3939",
+                    "on-error": "#690005",
+                    "on-surface": "#e5e2e1",
+                    "primary-container": "#ff6b52",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary-container": "#454747",
+                    "background": "#131313",
+                    "secondary-fixed-dim": "#c6c6c7",
+                    "on-secondary-fixed-variant": "#454747",
+                    "primary-fixed": "#ffdad4",
+                    "on-primary": "#660700",
+                    "tertiary-fixed": "#75f7e6",
+                    "tertiary": "#55dbca",
+                    "primary": "#ffb4a6",
+                    "on-background": "#e5e2e1",
+                    "surface-container-low": "#1c1b1b",
+                    "on-tertiary-fixed": "#00201c",
+                    "on-tertiary-container": "#003934",
+                    "on-secondary-fixed": "#1a1c1c",
+                    "surface": "#131313",
+                    "inverse-on-surface": "#313030",
+                    "error-container": "#93000a",
+                    "surface-variant": "#353534",
+                    "surface-tint": "#ffb4a6",
+                    "primary-fixed-dim": "#ffb4a6",
+                    "surface-container-highest": "#353534",
+                    "outline": "#a88a84",
+                    "inverse-primary": "#ae311e",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-container": "#b4b5b5",
+                    "on-secondary": "#2f3131",
+                    "tertiary-container": "#00ad9e",
+                    "on-primary-container": "#6a0700",
+                    "tertiary-fixed-dim": "#55dbca",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#131313",
+                    "on-primary-fixed-variant": "#8c1808",
+                    "surface-container-high": "#2a2a2a",
+                    "secondary": "#c6c6c7",
+                    "on-tertiary": "#003732",
+                    "on-surface-variant": "#e1bfb9",
+                    "secondary-fixed": "#e2e2e2",
+                    "outline-variant": "#59413d",
+                    "on-tertiary-fixed-variant": "#005049",
+                    "on-primary-fixed": "#3f0300",
+                    "surface-container-lowest": "#0e0e0e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-edge": "40px",
+                    "section-gap": "120px",
+                    "unit": "8px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "nav-link": ["Inter"],
+                    "headline-xl": ["Sora"],
+                    "label-caps": ["Inter"],
+                    "headline-lg": ["Sora"],
+                    "headline-lg-mobile": ["Sora"],
+                    "body-md": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "nav-link": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-xl": ["80px", {"lineHeight": "0.9", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "headline-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.1", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-grid {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .wireframe-mask {
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary selection:text-on-primary overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="docked full-width top-0 sticky z-50 bg-background/80 backdrop-blur-xl border-b border-white/10">
+<div class="flex justify-between items-center w-full px-margin-edge py-6 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-2">
+<span class="font-headline-lg text-primary tracking-tighter">ACM VIT</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-nav-link text-nav-link uppercase text-primary border-b border-primary pb-1 transition-colors duration-300" href="#">About</a>
+<a class="font-nav-link text-nav-link uppercase text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Domains</a>
+<a class="font-nav-link text-nav-link uppercase text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Events</a>
+<a class="font-nav-link text-nav-link uppercase text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Projects</a>
+<a class="font-nav-link text-nav-link uppercase text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">ACM-W</a>
+</div>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-caps uppercase scale-95 active:scale-90 transition-transform flex items-center gap-2">
+                Join Us
+                <span class="material-symbols-outlined text-[18px]">north_east</span>
+</button>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-end justify-start overflow-hidden pt-24 pb-32">
+<!-- Background Wireframe Decorative Elements -->
+<div class="absolute inset-0 z-0 kinetic-grid opacity-20"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-40 wireframe-mask pointer-events-none">
+<img alt="Architectural Blueprint" class="w-full h-full object-cover grayscale invert" data-alt="A highly detailed 3D architectural blueprint of a modern university building floating in a dark digital void. The structure is rendered in glowing cyan wireframes with technical annotations and callouts pointing to specific facade sections. Subtle coral highlights illuminate architectural features like a central monument and seating area. The overall aesthetic is high-tech, industrial, and sophisticated, utilizing extreme contrast against a deep black background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKxjSLdiewx0k03HGMtqudsn9oP7wNxgA-6gay7IvkB4bAM6FjHhTbuJjIN1aSxCwYFMzgW32UqeygFxG1mxho2CVgMoe-hZeDGB906WEpRC-rM9G1rMFLN0wJzsLcMDujUXV_KGFoj1XWZ15fGFEsa7p5yLR6k08qnQQf-D5FGDpKzDrVi6xKFxSfmU9Qj8GVfNMbgUhutK5FM6JQlgtZx-9WCKGABfd3a-TuaZUFyI5pBRVP-E1GpN-3cO5L-FGMMo8HUvIT9cwz"/>
+</div>
+<div class="relative z-10 px-margin-edge w-full max-w-[1440px] mx-auto">
+<div class="max-w-4xl space-y-8">
+<div class="inline-block border border-primary/40 px-4 py-1 rounded-none font-body-md text-primary text-[12px] uppercase tracking-widest">
+                        // ESTABLISHED 2009
+                    </div>
+<h1 class="font-headline-xl text-headline-xl uppercase">
+                        WE ARE THE ASSOCIATION FOR <span class="text-primary">COMPUTING MACHINERY</span>
+</h1>
+<p class="text-on-surface-variant max-w-xl font-body-md text-body-md">
+                        The premier technical chapter of VIT, dedicated to fostering a culture of rigorous engineering and radical innovation. We build the systems that define the next decade.
+                    </p>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-10 right-margin-edge flex flex-col items-center gap-4 text-primary/40">
+<span class="font-label-caps vertical-text rotate-180 mb-4 tracking-widest uppercase">SCROLL TO NAVIGATE</span>
+<div class="w-[1px] h-24 bg-gradient-to-b from-primary/60 to-transparent"></div>
+</div>
+</section>
+<!-- About Us Section -->
+<section class="py-section-gap relative">
+<div class="px-margin-edge max-w-[1440px] mx-auto grid grid-cols-12 gap-gutter items-center">
+<div class="col-span-12 md:col-span-5 space-y-8">
+<span class="font-label-caps text-primary uppercase tracking-[0.2em] block">// MISSION STATEMENT</span>
+<h2 class="font-headline-lg text-headline-lg uppercase">Architecting Technical <span class="text-primary">Excellence</span>.</h2>
+<p class="text-on-surface-variant font-body-md">
+                        ACM VIT isn't just a chapter; it's an engineering ecosystem. We prioritize deep technical mastery over superficial trends, focusing on the foundational systems that power modern society. From compiler design to distributed systems, we bridge the gap between academic theory and industrial reality.
+                    </p>
+<div class="flex gap-6 pt-4">
+<div class="border-l-2 border-primary pl-4">
+<h4 class="font-headline-lg text-[24px] uppercase">Integrity</h4>
+<p class="text-[14px] text-on-surface-variant">Code that stands the test of time.</p>
+</div>
+<div class="border-l-2 border-primary pl-4">
+<h4 class="font-headline-lg text-[24px] uppercase">Precision</h4>
+<p class="text-[14px] text-on-surface-variant">Optimized to the last byte.</p>
+</div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-6 md:col-start-7 relative">
+<div class="aspect-square bg-surface-container-low border border-white/10 relative overflow-hidden group">
+<img alt="Technical Workshop" class="w-full h-full object-cover mix-blend-luminosity opacity-60 group-hover:opacity-100 transition-opacity duration-700" data-alt="A cinematic, low-light photograph of a high-tech engineering workshop where developers are collaborating over glowing screens. The room is filled with hardware prototypes, server racks, and whiteboards covered in complex architectural diagrams. Sharp architectural lighting creates deep shadows and high-contrast highlights in a modern industrial setting. The color palette is dominated by deep blacks and cool grays, with intense orange-red light spilling from the monitors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy5lt17bZ7pZm9G6O-XH_z3xF8Wi9nhIx9t1ySH_W_m0PsLw76WC0lt0RQ--xKegMV3bzQYwJyNRc0GNj3bRqkWxogAJDo_WMAd6ik-DYEgg22FvXlGsb8KW_bJAxWWYtwTNo7pxz9jG66vFo8ppT9p6ELtJdnaKIJerqCcsU1OfoJTnDHDl7gGQ8eZFZ4B9ufXLxLzGfFgrhdpzEI-SD-cDgtp0cm9AmQ_J0NWOzT3EV4jqil3kHOw2lJnSz4NcJAIc_F4j6r5HR3"/>
+<div class="absolute inset-0 border-[20px] border-background pointer-events-none"></div>
+<div class="absolute bottom-8 right-8 bg-background p-6 border border-white/10">
+<span class="font-headline-xl text-[48px] text-primary block leading-none">01</span>
+<span class="font-label-caps uppercase tracking-widest text-[10px]">CORE DIRECTIVE</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Our Impact Stats -->
+<section class="py-section-gap bg-surface-container-lowest border-y border-white/5 relative overflow-hidden">
+<!-- Decorative background text -->
+<div class="absolute top-1/2 left-0 -translate-y-1/2 font-headline-xl text-[200px] text-white/[0.02] whitespace-nowrap pointer-events-none select-none">
+                IMPACT STATISTICS 2024
+            </div>
+<div class="px-margin-edge max-w-[1440px] mx-auto relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter text-center md:text-left">
+<div class="space-y-2 p-10 border border-white/5 hover:border-primary/20 transition-colors group">
+<div class="text-primary font-headline-xl text-[72px] leading-tight">15+</div>
+<div class="font-label-caps text-on-surface-variant tracking-[0.3em] uppercase">Years of Heritage</div>
+<p class="text-[14px] text-on-surface opacity-60 pt-4">Building a legacy of excellence since the chapter's inception at VIT.</p>
+</div>
+<div class="space-y-2 p-10 border border-white/5 hover:border-primary/20 transition-colors bg-surface-container-low group">
+<div class="text-primary font-headline-xl text-[72px] leading-tight">500+</div>
+<div class="font-label-caps text-on-surface-variant tracking-[0.3em] uppercase">Major Events</div>
+<p class="text-[14px] text-on-surface opacity-60 pt-4">From international hackathons to intimate technical deep-dives.</p>
+</div>
+<div class="space-y-2 p-10 border border-white/5 hover:border-primary/20 transition-colors group">
+<div class="text-primary font-headline-xl text-[72px] leading-tight">10k+</div>
+<div class="font-label-caps text-on-surface-variant tracking-[0.3em] uppercase">Minds Impacted</div>
+<p class="text-[14px] text-on-surface opacity-60 pt-4">Empowering the next generation of global technology leaders.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured News Section (Bento Grid) -->
+<section class="py-section-gap">
+<div class="px-margin-edge max-w-[1440px] mx-auto">
+<div class="flex justify-between items-end mb-16">
+<div class="space-y-4">
+<span class="font-label-caps text-primary uppercase tracking-[0.2em] block">// DOCUMENTATION &amp; NEWS</span>
+<h2 class="font-headline-lg text-headline-lg uppercase">System <span class="text-primary">Logs</span></h2>
+</div>
+<button class="hidden md:flex items-center gap-2 font-label-caps uppercase text-on-surface hover:text-primary transition-colors pb-2 border-b border-white/20">
+                        View Archive <span class="material-symbols-outlined text-[18px]">trending_flat</span>
+</button>
+</div>
+<div class="grid grid-cols-12 grid-rows-2 gap-gutter h-auto md:h-[700px]">
+<!-- Primary Feature -->
+<div class="col-span-12 md:col-span-8 row-span-2 relative group overflow-hidden border border-white/10">
+<img alt="Cybersecurity Event" class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105" data-alt="A sharp, technical macro shot of server hardware with glowing blue and coral LED status indicators in a dark data center. The focus is razor-sharp on a specific circuit component, while the background falls into a soft bokeh of digital light. The lighting is moody and cinematic, emphasizing a futuristic, high-tech industrial atmosphere with deep blacks and rich orange-pink accent colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw7lYk4LP7XtOts_6vv9deTFk7rYreLIE4O1Ur6KkW7GU-z8P-9zKnfb-bIaCWskwol-wMhSIE6djsySzge3HSoa4HHXPzs05_6XOqmHub5YXEoG4M5r1abcWMZrZkgqlJJ-jzVUCwNvNxcHMsNcu-A1Bw2Pk-Bio1X4AGgFjQYD8GdDbW9C0n_n1Tev_LxZ3gngPBbcckW4RuFbYYijb9GrIljBy0VD0KaS53HjyBLIZIJK8HiRjol3Ngwt0yoZ2SuIj53Y6n375J"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 space-y-4">
+<span class="bg-primary/20 text-primary border border-primary/40 px-3 py-1 font-body-md text-[12px] uppercase">Cyber Sentinel 2024</span>
+<h3 class="font-headline-lg text-[32px] uppercase">Securing the Decentralized Frontier</h3>
+<p class="max-w-xl text-on-surface-variant">Our flagship cybersecurity symposium returns this fall, focusing on post-quantum cryptography and zero-trust architectures.</p>
+<a class="inline-flex items-center gap-2 text-primary font-label-caps uppercase tracking-widest pt-4" href="#">
+                                Read Documentation <span class="material-symbols-outlined">arrow_forward_ios</span>
+</a>
+</div>
+</div>
+<!-- Secondary Items -->
+<div class="col-span-12 md:col-span-4 row-span-1 bg-surface-container-low border border-white/10 p-8 flex flex-col justify-between hover:bg-surface-container transition-colors group">
+<div>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-primary text-[32px]">terminal</span>
+<span class="text-on-surface-variant font-body-md text-[12px]">MAR 24, 2024</span>
+</div>
+<h4 class="font-headline-lg text-[20px] uppercase group-hover:text-primary transition-colors">Kernel Deep Dive: Modern OS Internals</h4>
+</div>
+<p class="text-on-surface-variant text-[14px]">A comprehensive workshop series exploring memory management and scheduler optimization.</p>
+</div>
+<div class="col-span-12 md:col-span-4 row-span-1 bg-surface-container-low border border-white/10 p-8 flex flex-col justify-between hover:bg-surface-container transition-colors group">
+<div>
+<div class="flex justify-between items-start mb-6">
+<span class="material-symbols-outlined text-primary text-[32px]">architecture</span>
+<span class="text-on-surface-variant font-body-md text-[12px]">APR 12, 2024</span>
+</div>
+<h4 class="font-headline-lg text-[20px] uppercase group-hover:text-primary transition-colors">ACM-W: Women in Systems Engineering</h4>
+</div>
+<p class="text-on-surface-variant text-[14px]">Spotlighting the architects behind the world's most resilient software infrastructures.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-section-gap">
+<div class="px-margin-edge max-w-[1440px] mx-auto text-center space-y-10 border border-primary/20 bg-primary/5 py-24 relative overflow-hidden">
+<div class="absolute inset-0 kinetic-grid opacity-10 pointer-events-none"></div>
+<h2 class="font-headline-xl text-[64px] uppercase relative z-10">Ready to <span class="text-primary underline decoration-2 underline-offset-8">Build</span>?</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto font-body-md relative z-10">
+                    We are looking for engineers, designers, and thinkers who aren't afraid to break things to make them better. Recruitment for the 2024-25 cycle is now open.
+                </p>
+<div class="flex flex-col md:flex-row items-center justify-center gap-6 relative z-10 pt-6">
+<button class="bg-primary text-on-primary px-12 py-4 rounded-full font-label-caps uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-2">
+                        Initialize Application <span class="material-symbols-outlined">bolt</span>
+</button>
+<button class="border border-white/20 text-on-surface px-12 py-4 rounded-full font-label-caps uppercase tracking-widest hover:bg-white/5 transition-colors">
+                        View Open Domains
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="full-width bg-surface-container-lowest border-t border-white/5">
+<div class="grid grid-cols-12 gap-gutter px-margin-edge py-section-gap max-w-[1440px] mx-auto">
+<div class="col-span-12 md:col-span-4 space-y-6">
+<div class="font-headline-lg text-primary text-[32px] tracking-tighter">ACM VIT</div>
+<p class="text-on-surface-variant text-body-md pr-8">
+                    Architecting the future through precision engineering and collaborative innovation. The first choice for technologists.
+                </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">public</span>
+</a>
+<a class="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</a>
+<a class="w-10 h-10 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</a>
+</div>
+</div>
+<div class="col-span-6 md:col-span-2 space-y-6">
+<h5 class="font-label-caps text-on-surface uppercase tracking-widest">NAVIGATE</h5>
+<ul class="space-y-4 font-body-md text-[14px]">
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">About Us</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">Domains</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">Events</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">Projects</a></li>
+</ul>
+</div>
+<div class="col-span-6 md:col-span-2 space-y-6">
+<h5 class="font-label-caps text-on-surface uppercase tracking-widest">CHAPTER</h5>
+<ul class="space-y-4 font-body-md text-[14px]">
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">ACM-W</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">ACM International</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">Student Chapter</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all" href="#">Archive</a></li>
+</ul>
+</div>
+<div class="col-span-12 md:col-span-4 space-y-6">
+<h5 class="font-label-caps text-on-surface uppercase tracking-widest">QUARTERLY REPORT</h5>
+<p class="text-[14px] text-on-surface-variant">Stay updated with our latest engineering releases and technical articles.</p>
+<div class="flex border-b border-white/20 pb-2">
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-md text-[14px] placeholder:opacity-30" placeholder="ENGR_EMAIL@DOMAIN.COM" type="email"/>
+<button class="text-primary hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="col-span-12 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-body-md text-body-md text-on-surface-variant opacity-80">© 2024 ACM VIT. ARCHITECTING THE FUTURE.</span>
+<div class="flex gap-8">
+<a class="font-body-md text-[12px] uppercase text-on-surface-variant hover:text-primary transition-all" href="#">Privacy Policy</a>
+<a class="font-body-md text-[12px] uppercase text-on-surface-variant hover:text-primary transition-all" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and parallax effects
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            // Subtle shift for grid background or floating elements if needed
+            const grid = document.querySelector('.kinetic-grid');
+            if(grid) {
+                grid.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
+            }
+        });
+
+        // Horizontal scroll animation for impact text in background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const bgText = document.querySelector('.absolute.font-headline-xl');
+            if(bgText) {
+                bgText.style.transform = `translateY(-50%) translateX(${scrolled * 0.1}px)`;
+            }
+        });
+    </script>
+</body></html>
