@@ -407,6 +407,19 @@ body::before {
   color: var(--pk-color, var(--accent));
   opacity: 0.7;
 }
+.about-designed-card {
+  width: min(280px, 72vw);
+  aspect-ratio: 1054 / 1492;
+  object-fit: contain;
+  border-radius: 18px;
+  transform: rotate(var(--rotation, 0deg));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s;
+  filter: drop-shadow(0 25px 60px rgba(0,0,0,0.6));
+}
+.about-designed-card:hover {
+  transform: rotate(0deg) scale(1.05);
+  filter: drop-shadow(0 30px 80px rgba(0,0,0,0.7)) drop-shadow(0 0 34px var(--card-glow, rgba(249,95,74,0.16)));
+}
 
 @media (max-width: 768px) {
   .about-grid {
@@ -415,6 +428,7 @@ body::before {
   }
   .about-card-wrap { max-width: 280px; margin: 0 auto; }
   .about-poker-card { width: 180px; height: 260px; }
+  .about-designed-card { width: min(220px, 72vw); }
   .about-grid.reverse { direction: ltr; }
 }
 
@@ -1153,11 +1167,7 @@ body::before {
   <div class="about-section">
     <div class="about-grid">
       <div class="about-card-wrap reveal">
-        <div class="about-poker-card" style="--rotation: 12deg; --pk-color: #F95F4A; --pk-glow: rgba(249,95,74,0.2);">
-          <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-          <div class="pk-center"><span class="pk-suit-lg">♠</span><span class="pk-name">ACM VNIT</span></div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-        </div>
+        <img class="about-designed-card" src="acm card.png" alt="ACM VNIT card" style="--rotation: 12deg; --card-glow: rgba(249,95,74,0.18);">
       </div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
         <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
@@ -1174,11 +1184,7 @@ body::before {
         <p>The institute provides world-class infrastructure, distinguished faculty, and industry-connected programs designed to prepare students for global impact. From pioneering research to engineering breakthroughs, VNIT empowers students to make meaningful contributions across every field.</p>
       </div>
       <div class="about-card-wrap reveal reveal-delay-2">
-        <div class="about-poker-card" style="--rotation: -10deg; --pk-color: #4A9FF5; --pk-glow: rgba(74,159,245,0.2);">
-          <div class="pk-corner"><span class="pk-rank">V</span><span class="pk-suit-sm">♦</span></div>
-          <div class="pk-center"><span class="pk-suit-lg">♦</span><span class="pk-name">VNIT</span></div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">V</span><span class="pk-suit-sm">♦</span></div>
-        </div>
+        <img class="about-designed-card" src="VNIT LOGO CARD.png" alt="VNIT logo card" style="--rotation: -10deg; --card-glow: rgba(74,159,245,0.18);">
       </div>
     </div>
   </div>
@@ -1187,11 +1193,7 @@ body::before {
   <div class="about-section">
     <div class="about-grid">
       <div class="about-card-wrap reveal">
-        <div class="about-poker-card" style="--rotation: 8deg; --pk-color: #4AE6A0; --pk-glow: rgba(74,230,160,0.2);">
-          <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
-          <div class="pk-center"><span class="pk-suit-lg">♣</span><span class="pk-name">ACM</span></div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
-        </div>
+        <img class="about-designed-card" src="acm global card.png" alt="ACM global card" style="--rotation: 8deg; --card-glow: rgba(74,230,160,0.18);">
       </div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
         <p>The Association for Computing Machinery (ACM) is the world's largest educational and scientific computing society. Since its inception in 1947, ACM has united educators, researchers, and professionals to advance computing as a science and a profession.</p>
