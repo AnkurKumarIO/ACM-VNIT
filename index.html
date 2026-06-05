@@ -714,7 +714,6 @@ body::before {
   .stat-row { grid-template-columns: 1fr 1fr; }
 }
 
-/* ═══════════════════════════════════════════
 /* ═════════════════════════════════════════════
    DOMAINS — CARD DEALER ANIMATION
    ═════════════════════════════════════════════ */
@@ -844,6 +843,7 @@ body::before {
   }
   .domain-card-inner { height:0; padding-bottom:140%; }
 }
+/* ═══════════════════════════════════════════
    EVENTS SECTION — CASSETTE CARDS
    ═══════════════════════════════════════════ */
 .events-section {
@@ -854,14 +854,14 @@ body::before {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
   margin-top: 60px;
 }
 .event-featured {
-  grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr;
+  grid-column: 1 / -1;
   gap: 0;
   background: linear-gradient(145deg, #071e38 0%, #010C18 100%);
   border: 1.5px solid var(--border-gold);
@@ -885,13 +885,13 @@ body::before {
 }
 .event-featured-visual {
   position: relative;
-  min-height: 350px;
+  min-height: 240px;
   background: linear-gradient(135deg, #041b37, #031224);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .event-featured-poker {
   width: 220px;
@@ -1470,57 +1470,7 @@ body::before {
   <div class="about-section">
     <div class="about-grid">
       <div class="about-card-wrap reveal">
-<<<<<<< HEAD
-        <div class="about-poker-card" style="--rotation: 12deg;">
-          <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-          <div class="pk-body">
-            <div class="pk-side-panel pk-left">
-              <div class="pk-side-item" title="Data Structures">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="17" width="18" height="5" rx="1"/></svg>
-              </div>
-              <div class="pk-side-item" title="Algorithms">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
-              </div>
-              <div class="pk-side-item" title="Dynamic Programming">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
-              </div>
-              <div class="pk-side-item" title="Graphs">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.2 16.2l7.6-7.6M18 9v6M9 18h6"/></svg>
-              </div>
-              <div class="pk-side-item" title="Trees">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><circle cx="6" cy="15" r="3"/><circle cx="18" cy="15" r="3"/><path d="M10.2 7.4L7.8 12.6M13.8 7.4l2.4 5.2"/></svg>
-              </div>
-            </div>
-            <div class="pk-center-wrap">
-              <div class="pk-spade-frame">
-                <svg class="pk-spade-bg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C11.5 2 6 9 6 12.5C6 15 8 17 10.5 17C11.5 17 12 16.5 12 16.5C12 16.5 12.5 17 13.5 17C16 17 18 15 18 12.5C18 9 12.5 2 12 2ZM12 15C12 15.5 11 19 9.5 22H14.5C13 19 12 15.5 12 15Z"/></svg>
-                <img src="acm-logo.png" alt="ACM Logo" class="pk-center-logo">
-              </div>
-              <div class="pk-name">ACM VNIT</div>
-            </div>
-            <div class="pk-side-panel pk-right">
-              <div class="pk-side-item" title="GitHub">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-              </div>
-              <div class="pk-side-item" title="LeetCode">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              </div>
-              <div class="pk-side-item" title="VS Code">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-              </div>
-              <div class="pk-side-item" title="Codeforces">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="11"/><rect x="10" y="3" width="4" height="18"/><rect x="17" y="13" width="4" height="8"/></svg>
-              </div>
-              <div class="pk-side-item" title="Linux">
-                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              </div>
-            </div>
-          </div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-        </div>
-=======
         <img class="about-designed-card" src="acm card.png" alt="ACM VNIT card" style="--rotation: 12deg; --card-glow: rgba(249,95,74,0.18);">
->>>>>>> fc05e802dc229fb94b2be4e69706e63045df06b7
       </div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
         <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
@@ -1537,36 +1487,7 @@ body::before {
         <p>The institute provides world-class infrastructure, distinguished faculty, and industry-connected programs designed to prepare students for global impact. From pioneering research to engineering breakthroughs, VNIT empowers students to make meaningful contributions across every field.</p>
       </div>
       <div class="about-card-wrap reveal reveal-delay-2">
-<<<<<<< HEAD
-        <div class="about-poker-card navy-card" style="--rotation: -10deg;">
-          <div class="pk-corner"><span class="pk-rank">V</span><span class="pk-suit-sm">◇</span></div>
-          <div class="pk-center">
-            <div class="pk-academic-crest">
-              <svg class="pk-crest-svg" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-                <!-- Outer double border -->
-                <circle cx="50" cy="50" r="44" stroke="var(--gold)" stroke-width="1.5"/>
-                <circle cx="50" cy="50" r="40" stroke="var(--gold)" stroke-dasharray="3 2" stroke-width="1"/>
-                
-                <!-- Gear outline representing VNIT -->
-                <circle cx="50" cy="50" r="24" stroke="var(--accent)" stroke-width="2"/>
-                <!-- Gear teeth -->
-                <path d="M50 22v8M50 70v8M22 50h8M70 50h8M30.2 30.2l5.6 5.6M64.2 64.2l5.6 5.6M30.2 69.8l5.6-5.6M64.2 35.8l5.6-5.6" stroke="var(--accent)" stroke-width="2.5"/>
-                
-                <!-- Open book inside -->
-                <path d="M38 52h10v12H38zM52 52h10v12H52z" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
-                <path d="M48 56c-2-2-6-2-8-2M52 56c2-2 6-2 8-2" stroke="var(--gold)" stroke-width="1.5"/>
-                
-                <!-- Flame at top -->
-                <path d="M50 36c0-6 4-8 4-8s-6 4-4 8" fill="var(--gold)"/>
-              </svg>
-            </div>
-            <div class="pk-name" style="margin-top: 12px; color: var(--gold);">VNIT Nagpur</div>
-          </div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">V</span><span class="pk-suit-sm">◇</span></div>
-        </div>
-=======
         <img class="about-designed-card" src="VNIT LOGO CARD.png" alt="VNIT logo card" style="--rotation: -10deg; --card-glow: rgba(74,159,245,0.18);">
->>>>>>> fc05e802dc229fb94b2be4e69706e63045df06b7
       </div>
     </div>
   </div>
@@ -1575,29 +1496,7 @@ body::before {
   <div class="about-section">
     <div class="about-grid">
       <div class="about-card-wrap reveal">
-<<<<<<< HEAD
-        <div class="about-poker-card" style="--rotation: 8deg;">
-          <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
-          <div class="pk-center pk-stats-layout">
-            <div class="pk-stat-box">
-              <span class="pk-stat-num">100K+</span>
-              <span class="pk-stat-lbl">Members</span>
-            </div>
-            <div class="pk-stat-divider">◇</div>
-            <div class="pk-stat-box">
-              <span class="pk-stat-num">190+</span>
-              <span class="pk-stat-lbl">Chapters</span>
-            </div>
-            <div class="pk-stat-divider">◇</div>
-            <div class="pk-stat-box">
-              <span class="pk-stat-lbl-large">Global Community</span>
-            </div>
-          </div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
-        </div>
-=======
         <img class="about-designed-card" src="acm global card.png" alt="ACM global card" style="--rotation: 8deg; --card-glow: rgba(74,230,160,0.18);">
->>>>>>> fc05e802dc229fb94b2be4e69706e63045df06b7
       </div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
         <p>The Association for Computing Machinery (ACM) is the world's largest educational and scientific computing society. Since its inception in 1947, ACM has united educators, researchers, and professionals to advance computing as a science and a profession.</p>
@@ -1662,7 +1561,6 @@ body::before {
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
 <!-- ════════════════════════════════════════════════
      DOMAINS SECTION — CARD DEALER
      ════════════════════════════════════════════════ -->
@@ -1697,6 +1595,7 @@ body::before {
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════
      EVENTS SECTION
      ═══════════════════════════════════════════ -->
 <section class="events-section" id="events">
