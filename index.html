@@ -7,7 +7,7 @@
 <meta name="description" content="ACM VNIT is the official student chapter of the Association for Computing Machinery at VNIT Nagpur, fostering innovation, engineering excellence, and a collaborative tech community.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
    RESET & BASE
@@ -16,30 +16,41 @@
 html { scroll-behavior: smooth; }
 body {
   font-family: 'Inter', sans-serif;
-  background: #0d0e0d;
-  color: #FEFCD9;
+  background: #010C18;
+  color: #F5F0E8;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 img { max-width: 100%; display: block; }
-::selection { background: #F95F4A; color: #0d0e0d; }
+::selection { background: #C9A84C; color: #010C18; }
+
+h1, h2, h3, h4, h5, h6, .section-title {
+  font-family: 'Sora', sans-serif;
+}
 
 /* ═══════════════════════════════════════════
    CSS CUSTOM PROPERTIES
    ═══════════════════════════════════════════ */
 :root {
-  --bg: #0d0e0d;
-  --bg-elevated: #1a1b1a;
-  --cream: #FEFCD9;
-  --accent: #F95F4A;
-  --accent-glow: rgba(249, 95, 74, 0.35);
-  --text-muted: #999999;
-  --text-dim: #666666;
-  --border-subtle: rgba(254, 252, 217, 0.08);
-  --border-dashed: rgba(153, 153, 153, 0.3);
+  --bg: #010C18;
+  --bg-elevated: #041628;
+  --cream: #F5F0E8;
+  --accent: #6CB6E3;
+  --accent-glow: rgba(108, 182, 227, 0.28);
+  --gold: #C9A84C;
+  --gold-light: #E8C87A;
+  --gold-glow: rgba(201, 168, 76, 0.45);
+  --navy: #041628;
+  --white: #FFFFFF;
+  --text-muted: #8A9EB8;
+  --text-dim: #4A6078;
+  --border-subtle: rgba(201, 168, 76, 0.1);
+  --border-dashed: rgba(201, 168, 76, 0.2);
+  --border-gold: rgba(201, 168, 76, 0.3);
   --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: 'Sora', sans-serif;
 }
 
 /* ═══════════════════════════════════════════
@@ -50,12 +61,12 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(45deg, rgba(254,252,217,0.015) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(254,252,217,0.015) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(254,252,217,0.015) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(254,252,217,0.015) 75%);
-  background-size: 60px 60px;
-  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+    linear-gradient(45deg, rgba(201,168,76,0.025) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(201,168,76,0.025) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(201,168,76,0.025) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(201,168,76,0.025) 75%);
+  background-size: 48px 48px;
+  background-position: 0 0, 0 24px, 24px -24px, -24px 0px;
   pointer-events: none;
   z-index: 0;
 }
@@ -93,24 +104,50 @@ body::before {
 .nav-pill {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(254,252,217,0.15);
+  padding: 6px 16px;
+  background: rgba(1, 12, 24, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.35);
   border-radius: 50px;
   pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201,168,76,0.08) inset;
+}
+.nav-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px;
+}
+.nav-logo {
+  height: 20px;
+  width: 20px;
+  object-fit: contain;
+}
+.nav-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+.nav-brand-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--gold);
+  opacity: 0.4;
+  margin-right: 12px;
 }
 .nav-pill a {
   display: inline-block;
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 8px 14px;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--cream);
-  opacity: 0.6;
+  opacity: 0.7;
   border-radius: 50px;
   transition: all 0.3s ease;
   white-space: nowrap;
@@ -118,8 +155,8 @@ body::before {
 .nav-pill a:hover,
 .nav-pill a.active {
   opacity: 1;
-  background: var(--accent);
-  color: var(--cream);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
 }
 
 /* Mobile hamburger */
@@ -128,9 +165,9 @@ body::before {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.45);
+  background: rgba(3, 18, 36, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(254,252,217,0.15);
+  border: 1px solid var(--border-gold);
   color: var(--cream);
   font-size: 20px;
   cursor: pointer;
@@ -142,7 +179,7 @@ body::before {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(13,14,13,0.97);
+  background: rgba(3, 18, 36, 0.98);
   z-index: 999;
   flex-direction: column;
   align-items: center;
@@ -151,8 +188,9 @@ body::before {
 }
 .mobile-overlay.open { display: flex; }
 .mobile-overlay a {
+  font-family: var(--font-heading);
   font-size: 28px;
-  font-weight: 300;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--cream);
@@ -216,10 +254,11 @@ body::before {
 .hero-line-1 {
   font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 800;
-  color: var(--accent);
+  color: var(--gold);
   text-transform: uppercase;
   line-height: 1;
   letter-spacing: -0.03em;
+  text-shadow: 0 0 40px var(--gold-glow);
 }
 .hero-line-2 {
   font-size: clamp(2.5rem, 8vw, 5rem);
@@ -232,13 +271,14 @@ body::before {
 .hero-badge {
   display: inline-block;
   padding: 6px 16px;
-  border: 1px solid rgba(249, 95, 74, 0.4);
+  border: 1px solid rgba(201, 168, 76, 0.45);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--gold-light);
   margin-bottom: 24px;
+  background: rgba(201, 168, 76, 0.05);
 }
 
 /* Legend pins at hero bottom */
@@ -294,7 +334,7 @@ body::before {
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--gold);
   margin-bottom: 16px;
 }
 .section-title {
@@ -329,7 +369,7 @@ body::before {
 .about-text {
   font-size: clamp(14px, 1.6vw, 18px);
   line-height: 1.65;
-  color: rgba(254,252,217,0.75);
+  color: rgba(248,246,240,0.75);
 }
 .about-text p + p { margin-top: 20px; }
 
@@ -345,43 +385,99 @@ body::before {
   perspective: 900px;
 }
 .about-poker-card {
-  width: 220px;
-  height: 320px;
-  background: linear-gradient(160deg, #1e1e1e 0%, #141414 100%);
-  border: 1.5px solid rgba(254,252,217,0.12);
-  border-radius: 16px;
+  width: 240px;
+  height: 340px;
+  background: var(--cream);
+  border: 1px solid var(--navy);
+  border-radius: 12px;
   position: relative;
-  padding: 18px;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  padding: 12px;
+  box-shadow: 0 15px 45px rgba(3, 18, 36, 0.25);
   transform: rotate(var(--rotation, 0deg));
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: var(--navy);
+}
+.about-poker-card::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.about-poker-card.navy-card {
+  background: var(--navy);
+  border-color: var(--gold);
+  color: var(--cream);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+}
+.about-poker-card.navy-card::before {
+  border-color: rgba(216, 185, 126, 0.4);
 }
 .about-poker-card:hover {
   transform: rotate(0deg) scale(1.05);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px var(--pk-glow, rgba(249,95,74,0.15));
+  box-shadow: 0 25px 60px rgba(3, 18, 36, 0.35);
+}
+.about-poker-card.navy-card:hover {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
 }
 .about-poker-card .pk-corner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
   line-height: 1;
+  z-index: 2;
 }
 .about-poker-card .pk-corner .pk-rank {
-  font-size: 18px;
+  font-family: var(--font-heading);
+  font-size: 20px;
   font-weight: 800;
-  color: var(--pk-color, var(--accent));
+  color: inherit;
 }
 .about-poker-card .pk-corner .pk-suit-sm {
-  font-size: 14px;
-  color: var(--pk-color, var(--accent));
+  font-size: 16px;
+  color: inherit;
+  margin-top: 2px;
 }
 .about-poker-card .pk-corner-br {
   align-self: flex-end;
   transform: rotate(180deg);
+}
+.about-poker-card .pk-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  margin: 8px 0;
+  overflow: hidden;
+  z-index: 2;
+}
+.about-poker-card .pk-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+.about-poker-card .pk-side-item {
+  color: rgba(8, 42, 87, 0.4);
+  transition: color 0.3s, transform 0.3s;
+}
+.about-poker-card.navy-card .pk-side-item {
+  color: rgba(248, 246, 240, 0.4);
+}
+.about-poker-card .pk-side-item:hover {
+  color: var(--accent);
+  transform: scale(1.15);
+}
+.about-poker-card .pk-side-icon {
+  width: 16px;
+  height: 16px;
 }
 .about-poker-card .pk-center {
   flex: 1;
@@ -390,20 +486,121 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  z-index: 2;
+  position: relative;
+  width: 100%;
 }
-.about-poker-card .pk-suit-lg {
-  font-size: 56px;
-  color: var(--pk-color, var(--accent));
-  filter: drop-shadow(0 0 20px var(--pk-glow, rgba(249,95,74,0.3)));
-  line-height: 1;
+.about-poker-card .pk-center-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.about-poker-card .pk-spade-frame {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about-poker-card .pk-spade-bg {
+  position: absolute;
+  inset: 0;
+  color: var(--navy);
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 12px rgba(8, 42, 87, 0.25));
+}
+.about-poker-card.navy-card .pk-spade-bg {
+  color: var(--cream);
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+.about-poker-card .pk-center-logo {
+  position: relative;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  padding: 4px;
+}
+.about-poker-card .pk-academic-crest {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about-poker-card .pk-crest-svg {
+  width: 100%;
+  height: 100%;
 }
 .about-poker-card .pk-name {
+  font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--pk-color, var(--accent));
-  opacity: 0.7;
+  color: var(--navy);
+  margin-top: 4px;
+}
+.about-poker-card.navy-card .pk-name {
+  color: var(--gold);
+}
+.about-poker-card .pk-stats-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0 10px;
+}
+.about-poker-card .pk-stat-box {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.about-poker-card .pk-stat-num {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+}
+.about-poker-card.navy-card .pk-stat-num {
+  color: var(--cream);
+}
+.about-poker-card .pk-stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin-top: 1px;
+}
+.about-poker-card .pk-stat-lbl-large {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--navy);
+  margin-top: 2px;
+}
+.about-poker-card.navy-card .pk-stat-lbl-large {
+  color: var(--gold);
+}
+.about-poker-card .pk-stat-divider {
+  font-size: 10px;
+  color: var(--gold);
+  margin: 2px 0;
 }
 
 @media (max-width: 768px) {
@@ -450,8 +647,9 @@ body::before {
 .stat-item .stat-number {
   font-size: clamp(36px, 5vw, 56px);
   font-weight: 800;
-  color: var(--accent);
+  color: var(--gold);
   line-height: 1;
+  text-shadow: 0 0 30px var(--gold-glow);
 }
 .stat-item .stat-label {
   font-family: var(--font-mono);
@@ -705,32 +903,42 @@ body::before {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 0;
-  background: linear-gradient(145deg, rgba(249,95,74,0.08), rgba(13,14,13,1));
-  border: 1px solid rgba(249,95,74,0.15);
+  background: linear-gradient(145deg, #071e38 0%, #010C18 100%);
+  border: 1.5px solid var(--border-gold);
   border-radius: 20px;
   overflow: hidden;
   transition: border-color 0.4s, box-shadow 0.4s;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(201,168,76,0.08);
+  position: relative;
+}
+.event-featured::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(216, 185, 126, 0.15);
+  border-radius: 12px;
+  pointer-events: none;
 }
 .event-featured:hover {
-  border-color: rgba(249,95,74,0.35);
-  box-shadow: 0 12px 50px rgba(249,95,74,0.1);
+  border-color: var(--gold);
+  box-shadow: 0 20px 60px var(--gold-glow);
 }
 .event-featured-visual {
   position: relative;
   min-height: 350px;
-  background: linear-gradient(135deg, #1a0f0d, #0d0e0d);
+  background: linear-gradient(135deg, #041b37, #031224);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-right: 1px solid var(--border-subtle);
 }
-/* Featured event poker card */
 .event-featured-poker {
-  width: 200px;
-  aspect-ratio: 5/7;
-  background: linear-gradient(160deg, #1a1a1a, #111);
-  border: 1.5px solid rgba(249,95,74,0.25);
-  border-radius: 16px;
+  width: 220px;
+  height: 320px;
+  background: var(--cream);
+  border: 1.5px solid var(--navy);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -738,34 +946,38 @@ body::before {
   position: relative;
   transform: rotate(-6deg);
   transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  color: var(--navy);
 }
 .event-featured-poker::before {
   content: '';
   position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(249,95,74,0.1);
-  border-radius: 10px;
+  inset: 6px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
   pointer-events: none;
 }
 .event-featured:hover .event-featured-poker {
   transform: rotate(0deg) scale(1.06);
-  box-shadow: 0 16px 50px rgba(249,95,74,0.2);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
 }
 .event-featured-content {
   padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  z-index: 3;
 }
 .event-featured-content .event-type {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--gold);
   margin-bottom: 12px;
 }
 .event-featured-content h3 {
+  font-family: var(--font-heading);
   font-size: clamp(28px, 3vw, 36px);
   font-weight: 800;
   text-transform: uppercase;
@@ -786,85 +998,117 @@ body::before {
 }
 .event-meta-tag {
   padding: 8px 16px;
-  border: 1px solid rgba(254,252,217,0.1);
-  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
   font-family: var(--font-mono);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--cream);
-  opacity: 0.7;
+  opacity: 0.8;
+  background: rgba(108, 182, 227, 0.04);
 }
 .event-meta-tag.highlight {
-  border-color: rgba(249,95,74,0.3);
-  background: rgba(249,95,74,0.08);
-  color: var(--accent);
+  border-color: rgba(216, 185, 126, 0.3);
+  background: rgba(216, 185, 126, 0.08);
+  color: var(--gold);
   opacity: 1;
 }
 
 /* Regular event card */
 .event-card {
-  --evt-color: var(--accent);
-  background: linear-gradient(145deg, color-mix(in srgb, var(--evt-color) 6%, #111), #0d0e0d);
-  border: 1px solid color-mix(in srgb, var(--evt-color) 12%, transparent);
-  border-radius: 18px;
-  padding: 28px;
+  background: linear-gradient(145deg, #071e38 0%, #010C18 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 12px;
+  padding: 24px;
   transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(201,168,76,0.06);
 }
+/* Badge clip slot at the top center */
 .event-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--evt-color), transparent);
-  opacity: 0;
-  transition: opacity 0.4s;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 6px;
+  background: rgba(216, 185, 126, 0.25);
+  border-radius: 3px;
+  border: 1px solid var(--border-gold);
+  z-index: 2;
 }
-.event-card:hover::before { opacity: 1; }
 .event-card:hover {
   transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--evt-color) 30%, transparent);
-  box-shadow: 0 12px 40px color-mix(in srgb, var(--evt-color) 12%, transparent);
+  border-color: var(--gold);
+  box-shadow: 0 16px 40px var(--gold-glow);
+}
+/* Subtle golden inner card border */
+.event-card::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(216, 185, 126, 0.15);
+  border-radius: 8px;
+  pointer-events: none;
+  transition: border-color 0.4s;
+}
+.event-card:hover::after {
+  border-color: rgba(216, 185, 126, 0.3);
 }
 .event-card .event-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--evt-color) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--evt-color) 20%, transparent);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(108, 182, 227, 0.08);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  margin-bottom: 20px;
+  font-size: 20px;
+  margin: 12px auto 16px;
+  color: var(--accent);
+  position: relative;
+  z-index: 3;
 }
 .event-card h4 {
+  font-family: var(--font-heading);
   font-size: 18px;
   font-weight: 700;
   color: var(--cream);
   margin-bottom: 8px;
   text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  z-index: 3;
 }
 .event-card p {
   font-size: 13px;
   line-height: 1.6;
   color: var(--text-muted);
   margin-bottom: 20px;
+  text-align: center;
+  position: relative;
+  z-index: 3;
 }
 .event-card .event-date {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.12em;
-  color: var(--evt-color);
+  color: var(--gold);
   font-weight: 600;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+  background: rgba(216, 185, 126, 0.08);
+  padding: 4px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
 }
-
-.event-card[data-event="devops"] { --evt-color: #4AE6A0; }
-.event-card[data-event="ctf"] { --evt-color: #F5A44A; }
-.event-card[data-event="web3"] { --evt-color: #B44AF5; }
-.event-card[data-event="nextjs"] { --evt-color: #4A9FF5; }
 
 @media (max-width: 768px) {
   .events-grid { grid-template-columns: 1fr; }
@@ -873,9 +1117,7 @@ body::before {
   .event-featured-content { padding: 28px; }
 }
 
-/* ═══════════════════════════════════════════
-   PROJECTS SECTION
-   ═══════════════════════════════════════════ */
+/* Projects Section / GitHub-Inspired repository showcase */
 .projects-section {
   padding: 120px 8vw;
   border-top: 1px solid var(--border-subtle);
@@ -891,7 +1133,7 @@ body::before {
   margin-top: 20px;
 }
 .projects-intro-text p .accent-text { color: var(--accent); }
-.projects-intro-text p .cream-text { color: rgba(254,252,217,0.6); }
+.projects-intro-text p .cream-text { color: rgba(248, 246, 240, 0.65); }
 
 .projects-grid {
   max-width: 1400px;
@@ -901,31 +1143,32 @@ body::before {
   gap: 32px;
 }
 .project-card {
-  --proj-color: var(--accent);
-  background: linear-gradient(145deg, color-mix(in srgb, var(--proj-color) 6%, #111), #0d0e0d);
-  border: 1px solid color-mix(in srgb, var(--proj-color) 10%, transparent);
-  border-radius: 18px;
-  padding: 28px;
+  --proj-color: var(--gold);
+  background: linear-gradient(160deg, #071e38 0%, #010C18 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(201,168,76,0.06);
 }
 .project-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--proj-color), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), transparent);
   opacity: 0;
   transition: opacity 0.4s;
 }
 .project-card:hover::before { opacity: 1; }
 .project-card:hover {
   transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--proj-color) 30%, transparent);
-  box-shadow: 0 12px 40px color-mix(in srgb, var(--proj-color) 12%, transparent);
+  border-color: var(--gold);
+  box-shadow: 0 15px 40px var(--gold-glow);
 }
 .project-card-header {
   display: flex;
@@ -941,19 +1184,20 @@ body::before {
   color: var(--text-dim);
 }
 .project-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--proj-color) 20%, transparent);
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  color: var(--proj-color);
-  background: color-mix(in srgb, var(--proj-color) 8%, transparent);
+  font-size: 20px;
+  color: var(--accent);
+  background: rgba(108, 182, 227, 0.08);
 }
 .project-card h3 {
-  font-size: 22px;
+  font-family: var(--font-heading);
+  font-size: 20px;
   font-weight: 700;
   color: var(--cream);
   margin-bottom: 10px;
@@ -972,13 +1216,14 @@ body::before {
 }
 .project-tech-tag {
   padding: 4px 10px;
-  border: 1px solid rgba(254,252,217,0.08);
+  border: 1px solid var(--border-subtle);
   border-radius: 6px;
   font-family: var(--font-mono);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-dim);
+  background: rgba(108, 182, 227, 0.02);
 }
 .project-card-footer {
   display: flex;
@@ -993,42 +1238,39 @@ body::before {
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--proj-color);
+  color: var(--accent);
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 600;
   transition: gap 0.3s;
 }
-.project-link:hover { gap: 14px; }
-
-.project-card[data-proj="lumina"] { --proj-color: #F5A44A; }
-.project-card[data-proj="neural"] { --proj-color: #B44AF5; }
-.project-card[data-proj="cli"] { --proj-color: #4AE6A0; }
-.project-card[data-proj="portal"] { --proj-color: #4A9FF5; }
+.project-link:hover { gap: 14px; color: var(--gold); }
 
 /* CTA project card */
 .project-cta-card {
-  background: linear-gradient(145deg, rgba(249,95,74,0.08), #0d0e0d);
-  border: 1px dashed rgba(249,95,74,0.2);
-  border-radius: 18px;
-  padding: 40px 28px;
+  background: linear-gradient(145deg, rgba(108, 182, 227, 0.05), #031224);
+  border: 1px dashed var(--border-gold);
+  border-radius: 8px;
+  padding: 40px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   transition: all 0.4s;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 .project-cta-card:hover {
-  border-color: rgba(249,95,74,0.4);
-  background: linear-gradient(145deg, rgba(249,95,74,0.12), #0d0e0d);
+  border-color: var(--accent);
+  background: linear-gradient(145deg, rgba(108, 182, 227, 0.08), #031224);
 }
 .project-cta-card .cta-icon {
   font-size: 40px;
   margin-bottom: 16px;
 }
 .project-cta-card h3 {
+  font-family: var(--font-heading);
   font-size: 20px;
   font-weight: 700;
   color: var(--cream);
@@ -1044,13 +1286,14 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
+  padding: 10px 24px;
   background: var(--accent);
   border: none;
   border-radius: 50px;
-  color: var(--cream);
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--navy);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1059,6 +1302,8 @@ body::before {
 .btn-accent:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px var(--accent-glow);
+  background: var(--gold);
+  color: var(--navy);
 }
 
 /* ═══════════════════════════════════════════
@@ -1066,8 +1311,8 @@ body::before {
    ═══════════════════════════════════════════ */
 .site-footer {
   padding: 80px 8vw 40px;
-  border-top: 1px solid var(--border-subtle);
-  background: #0a0b0a;
+  border-top: 1.5px solid var(--border-gold);
+  background: #00080f;
 }
 .footer-grid {
   max-width: 1400px;
@@ -1076,53 +1321,89 @@ body::before {
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 48px;
 }
-.footer-brand h2 {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--accent);
-  letter-spacing: -0.02em;
-  margin-bottom: 12px;
+.footer-logos-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
 }
-.footer-brand p {
-  font-size: 14px;
-  line-height: 1.7;
+.footer-logo {
+  height: 44px;
+  width: 44px;
+  object-fit: contain;
+}
+.footer-logos-divider {
+  font-size: 16px;
+  color: var(--gold);
+}
+.footer-vnit-crest {
+  height: 44px;
+  width: 44px;
+  color: var(--accent);
+}
+.footer-titles {
+  margin-bottom: 16px;
+}
+.footer-inst {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  line-height: 1.3;
+}
+.footer-chap {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 4px;
+  letter-spacing: -0.02em;
+}
+.footer-desc {
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--text-muted);
-  max-width: 320px;
+  max-width: 340px;
 }
 .footer-socials {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 .footer-social-link {
   width: 38px;
   height: 38px;
-  border: 1px solid rgba(254,252,217,0.08);
-  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s;
-  font-size: 14px;
+  font-size: 16px;
+  background: rgba(108, 182, 227, 0.02);
+  color: var(--text-muted);
 }
 .footer-social-link:hover {
   border-color: var(--accent);
-  background: rgba(249,95,74,0.1);
+  background: rgba(108, 182, 227, 0.08);
   color: var(--accent);
+  transform: translateY(-2px);
 }
 .footer-column h5 {
+  font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--gold);
   margin-bottom: 16px;
 }
 .footer-column a {
   display: block;
   font-size: 13px;
   color: var(--text-muted);
-  padding: 4px 0;
+  padding: 6px 0;
   transition: color 0.3s;
 }
 .footer-column a:hover { color: var(--accent); }
@@ -1167,6 +1448,11 @@ body::before {
      ═══════════════════════════════════════════ -->
 <nav class="navbar" id="navbar">
   <div class="nav-pill">
+    <div class="nav-brand-container">
+      <img src="acm-logo.png" alt="ACM Logo" class="nav-logo">
+      <span class="nav-title">ACM VNIT</span>
+    </div>
+    <span class="nav-brand-divider"></span>
     <a href="#hero" class="active">Home</a>
     <a href="#about">About</a>
     <a href="#community">Impact</a>
@@ -1224,9 +1510,51 @@ body::before {
   <div class="about-section">
     <div class="about-grid">
       <div class="about-card-wrap reveal">
-        <div class="about-poker-card" style="--rotation: 12deg; --pk-color: #F95F4A; --pk-glow: rgba(249,95,74,0.2);">
+        <div class="about-poker-card" style="--rotation: 12deg;">
           <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-          <div class="pk-center"><span class="pk-suit-lg">♠</span><span class="pk-name">ACM VNIT</span></div>
+          <div class="pk-body">
+            <div class="pk-side-panel pk-left">
+              <div class="pk-side-item" title="Data Structures">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="5" rx="1"/><rect x="3" y="10" width="18" height="5" rx="1"/><rect x="3" y="17" width="18" height="5" rx="1"/></svg>
+              </div>
+              <div class="pk-side-item" title="Algorithms">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
+              </div>
+              <div class="pk-side-item" title="Dynamic Programming">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+              </div>
+              <div class="pk-side-item" title="Graphs">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.2 16.2l7.6-7.6M18 9v6M9 18h6"/></svg>
+              </div>
+              <div class="pk-side-item" title="Trees">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><circle cx="6" cy="15" r="3"/><circle cx="18" cy="15" r="3"/><path d="M10.2 7.4L7.8 12.6M13.8 7.4l2.4 5.2"/></svg>
+              </div>
+            </div>
+            <div class="pk-center-wrap">
+              <div class="pk-spade-frame">
+                <svg class="pk-spade-bg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C11.5 2 6 9 6 12.5C6 15 8 17 10.5 17C11.5 17 12 16.5 12 16.5C12 16.5 12.5 17 13.5 17C16 17 18 15 18 12.5C18 9 12.5 2 12 2ZM12 15C12 15.5 11 19 9.5 22H14.5C13 19 12 15.5 12 15Z"/></svg>
+                <img src="acm-logo.png" alt="ACM Logo" class="pk-center-logo">
+              </div>
+              <div class="pk-name">ACM VNIT</div>
+            </div>
+            <div class="pk-side-panel pk-right">
+              <div class="pk-side-item" title="GitHub">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              </div>
+              <div class="pk-side-item" title="LeetCode">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="pk-side-item" title="VS Code">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <div class="pk-side-item" title="Codeforces">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="11"/><rect x="10" y="3" width="4" height="18"/><rect x="17" y="13" width="4" height="8"/></svg>
+              </div>
+              <div class="pk-side-item" title="Linux">
+                <svg class="pk-side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+            </div>
+          </div>
           <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
         </div>
       </div>
@@ -1245,10 +1573,31 @@ body::before {
         <p>The institute provides world-class infrastructure, distinguished faculty, and industry-connected programs designed to prepare students for global impact. From pioneering research to engineering breakthroughs, VNIT empowers students to make meaningful contributions across every field.</p>
       </div>
       <div class="about-card-wrap reveal reveal-delay-2">
-        <div class="about-poker-card" style="--rotation: -10deg; --pk-color: #4A9FF5; --pk-glow: rgba(74,159,245,0.2);">
-          <div class="pk-corner"><span class="pk-rank">V</span><span class="pk-suit-sm">♦</span></div>
-          <div class="pk-center"><span class="pk-suit-lg">♦</span><span class="pk-name">VNIT</span></div>
-          <div class="pk-corner pk-corner-br"><span class="pk-rank">V</span><span class="pk-suit-sm">♦</span></div>
+        <div class="about-poker-card navy-card" style="--rotation: -10deg;">
+          <div class="pk-corner"><span class="pk-rank">V</span><span class="pk-suit-sm">◇</span></div>
+          <div class="pk-center">
+            <div class="pk-academic-crest">
+              <svg class="pk-crest-svg" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <!-- Outer double border -->
+                <circle cx="50" cy="50" r="44" stroke="var(--gold)" stroke-width="1.5"/>
+                <circle cx="50" cy="50" r="40" stroke="var(--gold)" stroke-dasharray="3 2" stroke-width="1"/>
+                
+                <!-- Gear outline representing VNIT -->
+                <circle cx="50" cy="50" r="24" stroke="var(--accent)" stroke-width="2"/>
+                <!-- Gear teeth -->
+                <path d="M50 22v8M50 70v8M22 50h8M70 50h8M30.2 30.2l5.6 5.6M64.2 64.2l5.6 5.6M30.2 69.8l5.6-5.6M64.2 35.8l5.6-5.6" stroke="var(--accent)" stroke-width="2.5"/>
+                
+                <!-- Open book inside -->
+                <path d="M38 52h10v12H38zM52 52h10v12H52z" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
+                <path d="M48 56c-2-2-6-2-8-2M52 56c2-2 6-2 8-2" stroke="var(--gold)" stroke-width="1.5"/>
+                
+                <!-- Flame at top -->
+                <path d="M50 36c0-6 4-8 4-8s-6 4-4 8" fill="var(--gold)"/>
+              </svg>
+            </div>
+            <div class="pk-name" style="margin-top: 12px; color: var(--gold);">VNIT Nagpur</div>
+          </div>
+          <div class="pk-corner pk-corner-br"><span class="pk-rank">V</span><span class="pk-suit-sm">◇</span></div>
         </div>
       </div>
     </div>
@@ -1258,9 +1607,23 @@ body::before {
   <div class="about-section">
     <div class="about-grid">
       <div class="about-card-wrap reveal">
-        <div class="about-poker-card" style="--rotation: 8deg; --pk-color: #4AE6A0; --pk-glow: rgba(74,230,160,0.2);">
+        <div class="about-poker-card" style="--rotation: 8deg;">
           <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
-          <div class="pk-center"><span class="pk-suit-lg">♣</span><span class="pk-name">ACM</span></div>
+          <div class="pk-center pk-stats-layout">
+            <div class="pk-stat-box">
+              <span class="pk-stat-num">100K+</span>
+              <span class="pk-stat-lbl">Members</span>
+            </div>
+            <div class="pk-stat-divider">◇</div>
+            <div class="pk-stat-box">
+              <span class="pk-stat-num">190+</span>
+              <span class="pk-stat-lbl">Chapters</span>
+            </div>
+            <div class="pk-stat-divider">◇</div>
+            <div class="pk-stat-box">
+              <span class="pk-stat-lbl-large">Global Community</span>
+            </div>
+          </div>
           <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♣</span></div>
         </div>
       </div>
@@ -1340,7 +1703,7 @@ body::before {
   </div>
 
   <div class="poker-grid">
-    <!-- App Development — ♠ Spades -->
+    <!-- App Development — Spade A -->
     <div class="poker-card reveal" data-domain="app">
       <div class="poker-face">
         <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
@@ -1362,7 +1725,7 @@ body::before {
       </div>
     </div>
 
-    <!-- Web Development — ♣ Clubs -->
+    <!-- Web Development — Club K -->
     <div class="poker-card reveal reveal-delay-1" data-domain="web">
       <div class="poker-face">
         <div class="pk-corner"><span class="pk-rank">K</span><span class="pk-suit-sm">♣</span></div>
@@ -1384,7 +1747,7 @@ body::before {
       </div>
     </div>
 
-    <!-- AI/ML — ♦ Diamonds -->
+    <!-- AI/ML — Diamond Q -->
     <div class="poker-card reveal reveal-delay-2" data-domain="aiml">
       <div class="poker-face">
         <div class="pk-corner"><span class="pk-rank">Q</span><span class="pk-suit-sm">♦</span></div>
@@ -1406,7 +1769,7 @@ body::before {
       </div>
     </div>
 
-    <!-- Design — ♥ Hearts -->
+    <!-- Design — Heart J -->
     <div class="poker-card reveal reveal-delay-3" data-domain="design">
       <div class="poker-face">
         <div class="pk-corner"><span class="pk-rank">J</span><span class="pk-suit-sm">♥</span></div>
@@ -1428,7 +1791,7 @@ body::before {
       </div>
     </div>
 
-    <!-- Cybersecurity — ★ Star -->
+    <!-- Cybersecurity — Star 10 -->
     <div class="poker-card reveal reveal-delay-4" data-domain="cybersec">
       <div class="poker-face">
         <div class="pk-corner"><span class="pk-rank">10</span><span class="pk-suit-sm">★</span></div>
@@ -1467,12 +1830,12 @@ body::before {
       <div class="event-featured reveal">
         <div class="event-featured-visual">
           <div class="event-featured-poker">
-            <div class="pk-corner"><span class="pk-rank" style="color: var(--accent);">G</span><span class="pk-suit-sm" style="color: var(--accent);">♠</span></div>
-            <div class="pk-center" style="gap: 6px;">
-              <span class="pk-suit-lg" style="font-size: 48px; color: var(--accent); filter: drop-shadow(0 0 20px rgba(249,95,74,0.3));">♠</span>
-              <span class="pk-domain-label" style="color: var(--accent); border-color: rgba(249,95,74,0.2); background: rgba(249,95,74,0.08); font-size: 9px;">GREP 2024</span>
+            <div class="pk-corner"><span class="pk-rank">G</span><span class="pk-suit-sm">♠</span></div>
+            <div class="pk-center" style="gap: 8px;">
+              <span class="pk-suit-lg" style="font-size: 48px; filter: drop-shadow(0 4px 10px rgba(8,42,87,0.15));">♠</span>
+              <span class="pk-domain-label" style="color: var(--navy); border-color: rgba(8,42,87,0.15); background: rgba(8,42,87,0.05); font-size: 9px;">GREP 2024</span>
             </div>
-            <div class="pk-corner pk-corner-br"><span class="pk-rank" style="color: var(--accent);">G</span><span class="pk-suit-sm" style="color: var(--accent);">♠</span></div>
+            <div class="pk-corner pk-corner-br"><span class="pk-rank">G</span><span class="pk-suit-sm">♠</span></div>
           </div>
         </div>
         <div class="event-featured-content">
@@ -1540,8 +1903,10 @@ body::before {
     <!-- Lumina OS -->
     <div class="project-card reveal" data-proj="lumina" style="grid-column: span 2;">
       <div class="project-card-header">
-        <span class="project-card-id">// FEATURED SYSTEM</span>
-        <div class="project-card-icon">⚙️</div>
+        <span class="project-card-id">// Edge Research</span>
+        <div class="project-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
       </div>
       <h3>Lumina OS</h3>
       <p>A microkernel-based operating system built from scratch in Rust, focusing on memory safety and real-time process scheduling for edge computing nodes.</p>
@@ -1551,15 +1916,27 @@ body::before {
         <span class="project-tech-tag">QEMU</span>
       </div>
       <div class="project-card-footer">
-        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
+            Rust
+          </span>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
+            <span>★ 142</span>
+            <span>⑂ 28</span>
+          </span>
+        </div>
+        <a class="project-link" href="#">view_repository →</a>
       </div>
     </div>
 
     <!-- NeuralLink v2 -->
     <div class="project-card reveal reveal-delay-1" data-proj="neural">
       <div class="project-card-header">
-        <span class="project-card-id">PROJ_02</span>
-        <div class="project-card-icon">🧠</div>
+        <span class="project-card-id">// Machine Intelligence</span>
+        <div class="project-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
       </div>
       <h3>NeuralLink v2</h3>
       <p>Edge AI processing framework optimized for low-power ARM architectures, reducing inference latency by 40%.</p>
@@ -1568,15 +1945,27 @@ body::before {
         <span class="project-tech-tag">TensorFlow</span>
       </div>
       <div class="project-card-footer">
-        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--gold);"></span>
+            C++
+          </span>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
+            <span>★ 96</span>
+            <span>⑂ 12</span>
+          </span>
+        </div>
+        <a class="project-link" href="#">view_repository →</a>
       </div>
     </div>
 
     <!-- CLI Toolbox -->
     <div class="project-card reveal reveal-delay-2" data-proj="cli">
       <div class="project-card-header">
-        <span class="project-card-id">PROJ_03</span>
-        <div class="project-card-icon">💻</div>
+        <span class="project-card-id">// Developer Tooling</span>
+        <div class="project-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
       </div>
       <h3>CLI Toolbox</h3>
       <p>Developer productivity tools for automation, Git workflow management, and rapid boilerplate generation.</p>
@@ -1585,15 +1974,27 @@ body::before {
         <span class="project-tech-tag">Cobra</span>
       </div>
       <div class="project-card-footer">
-        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
+            Go
+          </span>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
+            <span>★ 68</span>
+            <span>⑂ 18</span>
+          </span>
+        </div>
+        <a class="project-link" href="#">view_repository →</a>
       </div>
     </div>
 
     <!-- ACM Portal -->
     <div class="project-card reveal reveal-delay-3" data-proj="portal">
       <div class="project-card-header">
-        <span class="project-card-id">PROJ_04</span>
-        <div class="project-card-icon">🌐</div>
+        <span class="project-card-id">// Chapter Infrastructure</span>
+        <div class="project-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
       </div>
       <h3>ACM Portal</h3>
       <p>Internal chapter management system handling event registrations, member grading, and resource allocation for 500+ students.</p>
@@ -1602,7 +2003,17 @@ body::before {
         <span class="project-tech-tag">Postgres</span>
       </div>
       <div class="project-card-footer">
-        <a class="project-link" href="#">VIEW_REPOSITORY →</a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
+            TypeScript
+          </span>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
+            <span>★ 45</span>
+            <span>⑂ 7</span>
+          </span>
+        </div>
+        <a class="project-link" href="#">view_repository →</a>
       </div>
     </div>
 
@@ -1622,8 +2033,22 @@ body::before {
 <footer class="site-footer" id="contact">
   <div class="footer-grid">
     <div class="footer-brand">
-      <h2>ACM VNIT</h2>
-      <p>Architecting the future through precision engineering and collaborative innovation. The premier technical chapter of VNIT Nagpur.</p>
+      <div class="footer-logos-wrap">
+        <img src="acm-logo.png" alt="ACM Logo" class="footer-logo">
+        <span class="footer-logos-divider">◇</span>
+        <svg class="footer-vnit-crest" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+          <circle cx="50" cy="50" r="44" stroke="var(--gold)" stroke-width="2"/>
+          <circle cx="50" cy="50" r="24" stroke="var(--accent)" stroke-width="3"/>
+          <path d="M50 22v8M50 70v8M22 50h8M70 50h8" stroke="var(--accent)" stroke-width="4"/>
+          <path d="M38 52h24v12H38z" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <path d="M50 36c0-6 4-8 4-8s-6 4-4 8" fill="var(--gold)"/>
+        </svg>
+      </div>
+      <div class="footer-titles">
+        <div class="footer-inst">Association for Computing Machinery</div>
+        <div class="footer-chap">VNIT Nagpur Student Chapter</div>
+      </div>
+      <p class="footer-desc">Architecting the future through precision engineering and collaborative innovation. The premier technical chapter of VNIT Nagpur.</p>
       <div class="footer-socials">
         <a class="footer-social-link" href="#" aria-label="Website">🌐</a>
         <a class="footer-social-link" href="#" aria-label="GitHub">💻</a>
