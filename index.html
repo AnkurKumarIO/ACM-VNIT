@@ -78,6 +78,8 @@ body::before {
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 .reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+.reveal-delay-7 { transition-delay: 0.7s; }
 
 /* ═══════════════════════════════════════════
    FLOATING PILL NAVBAR
@@ -484,208 +486,135 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════
-   DOMAINS — POKER CARDS ♠♣♦♥★
-   ═══════════════════════════════════════════ */
+/* ═════════════════════════════════════════════
+   DOMAINS — CARD DEALER ANIMATION
+   ═════════════════════════════════════════════ */
 .domains-section {
-  padding: 120px 8vw;
+  position: relative;
+  background: transparent;
   border-top: 1px solid var(--border-subtle);
+}
+.domains-inner {
   position: relative;
-}
-.domains-intro {
-  max-width: 800px;
-  margin: 0 auto 80px;
-  text-align: center;
-}
-.domains-intro p {
-  font-size: 16px;
-  line-height: 1.7;
-  color: rgba(254,252,217,0.6);
-  margin-top: 20px;
-}
-.poker-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 36px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Individual poker card wrapper */
-.poker-card {
-  --card-color: var(--accent);
-  --card-glow: rgba(249, 95, 74, 0.2);
-  position: relative;
-  cursor: pointer;
-  perspective: 1000px;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.poker-card:hover {
-  transform: translateY(-12px);
-}
-
-/* Card face */
-.poker-face {
   width: 100%;
-  aspect-ratio: 5 / 7;
-  background: linear-gradient(160deg, #1a1a1a 0%, #111111 100%);
-  border: 1.5px solid color-mix(in srgb, var(--card-color) 22%, transparent);
-  border-radius: 18px;
-  position: relative;
+  height: 100vh;
   overflow: hidden;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: border-color 0.4s, box-shadow 0.4s, transform 0.15s ease;
+  background: transparent;
 }
-.poker-card:hover .poker-face {
-  border-color: color-mix(in srgb, var(--card-color) 50%, transparent);
-  box-shadow:
-    0 20px 60px var(--card-glow),
-    0 0 0 1px color-mix(in srgb, var(--card-color) 15%, transparent),
-    inset 0 1px 0 rgba(255,255,255,0.04);
-}
-
-/* Inner card pattern overlay */
-.poker-face::before {
-  content: '';
+.domains-header {
   position: absolute;
-  inset: 8px;
-  border: 1px solid color-mix(in srgb, var(--card-color) 8%, transparent);
-  border-radius: 12px;
+  top: 4vh; left: 6vw; right: 6vw;
+  z-index: 20;
   pointer-events: none;
-  transition: border-color 0.4s;
 }
-.poker-card:hover .poker-face::before {
-  border-color: color-mix(in srgb, var(--card-color) 18%, transparent);
-}
-
-/* Corner pips */
-.pk-corner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  line-height: 1;
-  z-index: 2;
-}
-.pk-corner .pk-rank {
-  font-size: 22px;
+.domains-header .section-label { margin-bottom: 8px; }
+.domains-header h2 {
+  font-size: clamp(1.6rem, 3.8vw, 3rem);
   font-weight: 900;
-  color: var(--card-color);
-  letter-spacing: -0.02em;
-}
-.pk-corner .pk-suit-sm {
-  font-size: 16px;
-  color: var(--card-color);
-}
-.pk-corner-br {
-  align-self: flex-end;
-  transform: rotate(180deg);
-}
-
-/* Center suit */
-.pk-center {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  z-index: 2;
-}
-.pk-suit-lg {
-  font-size: 72px;
-  color: var(--card-color);
-  filter: drop-shadow(0 0 25px var(--card-glow));
-  line-height: 1;
-  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), filter 0.4s;
-}
-.poker-card:hover .pk-suit-lg {
-  transform: scale(1.12) rotate(-3deg);
-  filter: drop-shadow(0 0 40px var(--card-glow));
-}
-.pk-domain-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--card-color) 60%, var(--cream));
-  background: color-mix(in srgb, var(--card-color) 10%, transparent);
-  padding: 4px 12px;
-  border-radius: 4px;
-  border: 1px solid color-mix(in srgb, var(--card-color) 15%, transparent);
-}
-
-/* Decorative corner flourishes */
-.poker-face::after {
-  content: '';
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border-right: 1.5px solid color-mix(in srgb, var(--card-color) 15%, transparent);
-  border-bottom: 1.5px solid color-mix(in srgb, var(--card-color) 15%, transparent);
-  border-radius: 0 0 6px 0;
-  pointer-events: none;
-}
-
-/* Card info below */
-.poker-info {
-  margin-top: 20px;
-}
-.poker-info h3 {
-  font-size: 20px;
-  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
   color: var(--cream);
-  margin-bottom: 8px;
 }
-.poker-info p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-muted);
+.domains-header h2 .accent { color: var(--accent); }
+.domains-header p {
+  margin-top: 10px;
+  font-size: clamp(11px, 1vw, 13px);
+  line-height: 1.65;
+  color: #666677;
+  max-width: 480px;
 }
-.poker-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
-}
-.poker-tag {
-  padding: 4px 10px;
-  border: 1px solid color-mix(in srgb, var(--card-color) 20%, transparent);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--card-color);
-}
+.domains-divider,
+.domains-scroll-hint,
+.domains-deck-label { display: none; }
+.domains-stage { position: absolute; inset: 0; z-index: 10; }
 
-/* Domain-specific colors & suits */
-.poker-card[data-domain="app"] {
-  --card-color: #4A9FF5;
-  --card-glow: rgba(74, 159, 245, 0.25);
+/* Individual card */
+.domain-card {
+  position: absolute;
+  cursor: pointer; outline: none;
+  perspective: 1200px; will-change: transform;
+  -webkit-user-select: none; user-select: none;
 }
-.poker-card[data-domain="web"] {
-  --card-color: #4AE6A0;
-  --card-glow: rgba(74, 230, 160, 0.25);
+.domain-card-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.4,0,0.2,1);
+  will-change: transform;
 }
-.poker-card[data-domain="aiml"] {
-  --card-color: #B44AF5;
-  --card-glow: rgba(180, 74, 245, 0.25);
+.domain-card:hover .domain-card-inner,
+.domain-card.kb-flipped .domain-card-inner { transform: rotateY(180deg); }
+.domain-card-face {
+  position: absolute; inset: 0; border-radius: 16px;
+  overflow: hidden;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: linear-gradient(155deg,#1e1e1e 0%,#111 100%);
+  display: flex; flex-direction: column;
+  padding: clamp(10px,1.2vw,18px);
 }
-.poker-card[data-domain="design"] {
-  --card-color: #F54A8A;
-  --card-glow: rgba(245, 74, 138, 0.25);
+.domain-card-face::before {
+  content:''; position:absolute; inset:8px; border-radius:10px;
+  border:1px solid rgba(255,255,255,0.06); pointer-events:none;
 }
-.poker-card[data-domain="cybersec"] {
-  --card-color: #F5A44A;
-  --card-glow: rgba(245, 164, 74, 0.25);
+.domain-card-front { justify-content: space-between; }
+.domain-card-back  {
+  gap:10px; transform:rotateY(180deg);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
 }
-
-/* ═══════════════════════════════════════════
+.dc-corner {
+  display:flex; flex-direction:column;
+  align-items:flex-start; line-height:1; gap:1px; z-index:2;
+}
+.dc-corner-br { align-self:flex-end; transform:rotate(180deg); }
+.dc-rank     { font-weight:900; line-height:1; font-size:clamp(18px,1.5vw,20px); }
+.dc-suit-sm  { line-height:1; font-size:clamp(18px,1.2vw,16px); }
+.dc-centre {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:8px; z-index:2;
+}
+.dc-suit-lg { line-height:1; font-size:clamp(60px,5vw,68px); pointer-events:none; }
+.dc-title {
+  font-weight:800; text-transform:uppercase; text-align:center;
+  line-height:1.15; letter-spacing:0.04em; white-space:pre-line;
+  color:var(--cream); font-size:clamp(11px,1.1vw,15px);
+}
+.dc-back-title {
+  font-weight:800; text-transform:uppercase; letter-spacing:0.12em;
+  text-align:center; padding-bottom:8px; flex-shrink:0; z-index:2;
+  font-size:clamp(10px,1vw,13px);
+}
+.dc-back-desc {
+  flex:1; line-height:1.65; color:#9999aa; z-index:2;
+  font-size:clamp(13px, 1.3vw, 12px);
+}
+.dc-tags { display:flex; flex-wrap:wrap; gap:5px; z-index:2; }
+.dc-tag {
+  font-family:var(--font-mono); font-size:10px;
+  text-transform:uppercase; letter-spacing:0.06em;
+  padding:3px 7px; border-radius:4px;
+}
+.dc-suit-watermark {
+  text-align:center; font-size:16px; opacity:0.22;
+  flex-shrink:0; z-index:2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .domain-card-inner { transition: none; }
+}
+@media (max-width: 768px) {
+  .domains-inner { height:auto !important; overflow:visible; }
+  .domains-divider,.domains-scroll-hint,.domains-deck-label { display:none !important; }
+  .domains-header {
+    position:relative; top:auto; left:auto; right:auto;
+    padding:40px 6vw 24px;
+  }
+  .domains-stage  { position:relative; inset:auto; padding:0 4vw 40px; }
+  .domain-card {
+    position:relative !important;
+    width:100% !important; height:auto !important;
+    transform:none !important; margin-bottom:16px;
+  }
+  .domain-card-inner { height:0; padding-bottom:140%; }
+}
    EVENTS SECTION — CASSETTE CARDS
    ═══════════════════════════════════════════ */
 .events-section {
@@ -1328,131 +1257,40 @@ body::before {
 </section>
 
 <!-- ═══════════════════════════════════════════
-     DOMAINS SECTION — POKER CARDS ♠♣♦♥★
-     ═══════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════
+     DOMAINS SECTION — CARD DEALER
+     ════════════════════════════════════════════════ -->
 <section class="domains-section" id="domains">
-  <div class="domains-intro">
-    <div class="section-label reveal">// Technical Ecosystem</div>
-    <div class="section-title reveal reveal-delay-1" style="font-size: clamp(2.5rem, 6vw, 5rem);">
-      Architecting The<br><span class="accent">Core Specials</span>
-    </div>
-    <p class="reveal reveal-delay-2">Each domain is more than a skillset — it's a mindset. We build, break, design, analyze, and communicate — not in silos, but in sync. Because true innovation happens where disciplines intersect.</p>
-  </div>
+  <div class="domains-inner" id="domains-inner">
 
-  <div class="poker-grid">
-    <!-- App Development — ♠ Spades -->
-    <div class="poker-card reveal" data-domain="app">
-      <div class="poker-face">
-        <div class="pk-corner"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-        <div class="pk-center">
-          <span class="pk-suit-lg">♠</span>
-          <span class="pk-domain-label">App Dev</span>
-        </div>
-        <div class="pk-corner pk-corner-br"><span class="pk-rank">A</span><span class="pk-suit-sm">♠</span></div>
-      </div>
-      <div class="poker-info">
-        <h3>App Development</h3>
-        <p>Engineering seamless mobile experiences across platforms with a focus on high-performance architecture and reactive UI patterns.</p>
-        <div class="poker-tags">
-          <span class="poker-tag">Flutter</span>
-          <span class="poker-tag">React Native</span>
-          <span class="poker-tag">SwiftUI</span>
-          <span class="poker-tag">Kotlin</span>
-        </div>
-      </div>
+    <!-- Header -->
+    <div class="domains-header" id="domains-header">
+      <div class="section-label">// Technical Ecosystem</div>
+      <h2>Architecting The <span class="accent">Core Specials</span></h2>
+      <p>Each domain is more than a skillset — it’s a mindset. Build, break, design, and communicate — not in silos, but in sync.</p>
     </div>
 
-    <!-- Web Development — ♣ Clubs -->
-    <div class="poker-card reveal reveal-delay-1" data-domain="web">
-      <div class="poker-face">
-        <div class="pk-corner"><span class="pk-rank">K</span><span class="pk-suit-sm">♣</span></div>
-        <div class="pk-center">
-          <span class="pk-suit-lg">♣</span>
-          <span class="pk-domain-label">Web Dev</span>
-        </div>
-        <div class="pk-corner pk-corner-br"><span class="pk-rank">K</span><span class="pk-suit-sm">♣</span></div>
-      </div>
-      <div class="poker-info">
-        <h3>Web Development</h3>
-        <p>Building the foundational fabric of the modern web using robust full-stack frameworks and scalable architectures.</p>
-        <div class="poker-tags">
-          <span class="poker-tag">Next.js</span>
-          <span class="poker-tag">GoLang</span>
-          <span class="poker-tag">Node.js</span>
-          <span class="poker-tag">PostgreSQL</span>
-        </div>
-      </div>
+    <!-- Right-panel divider -->
+    <div class="domains-divider"></div>
+
+    <!-- Scroll hint (left) -->
+    <div class="domains-scroll-hint">
+      <span>Scroll to Deal</span>
+      <div class="hint-line"></div>
     </div>
 
-    <!-- AI/ML — ♦ Diamonds -->
-    <div class="poker-card reveal reveal-delay-2" data-domain="aiml">
-      <div class="poker-face">
-        <div class="pk-corner"><span class="pk-rank">Q</span><span class="pk-suit-sm">♦</span></div>
-        <div class="pk-center">
-          <span class="pk-suit-lg">♦</span>
-          <span class="pk-domain-label">AI / ML</span>
-        </div>
-        <div class="pk-corner pk-corner-br"><span class="pk-rank">Q</span><span class="pk-suit-sm">♦</span></div>
-      </div>
-      <div class="poker-info">
-        <h3>AI / Machine Learning</h3>
-        <p>Developing intelligent systems through neural networks, predictive modeling, and cutting-edge research in artificial intelligence.</p>
-        <div class="poker-tags">
-          <span class="poker-tag">PyTorch</span>
-          <span class="poker-tag">TensorFlow</span>
-          <span class="poker-tag">Python</span>
-          <span class="poker-tag">Pandas</span>
-        </div>
-      </div>
+    <!-- Deck label (right) -->
+    <div class="domains-deck-label">
+      <div class="hint-line"></div>
+      <span>Deck</span>
     </div>
 
-    <!-- Design — ♥ Hearts -->
-    <div class="poker-card reveal reveal-delay-3" data-domain="design">
-      <div class="poker-face">
-        <div class="pk-corner"><span class="pk-rank">J</span><span class="pk-suit-sm">♥</span></div>
-        <div class="pk-center">
-          <span class="pk-suit-lg">♥</span>
-          <span class="pk-domain-label">Design</span>
-        </div>
-        <div class="pk-corner pk-corner-br"><span class="pk-rank">J</span><span class="pk-suit-sm">♥</span></div>
-      </div>
-      <div class="poker-info">
-        <h3>Design</h3>
-        <p>The visual blueprint. Crafting user-first interfaces and motion graphics that marry modern aesthetics with functional purpose.</p>
-        <div class="poker-tags">
-          <span class="poker-tag">Figma</span>
-          <span class="poker-tag">After Effects</span>
-          <span class="poker-tag">Blender</span>
-          <span class="poker-tag">UI/UX</span>
-        </div>
-      </div>
-    </div>
+    <!-- Stage: JS absolutely positions all 8 cards here -->
+    <div class="domains-stage" id="domains-stage"></div>
 
-    <!-- Cybersecurity — ★ Star -->
-    <div class="poker-card reveal reveal-delay-4" data-domain="cybersec">
-      <div class="poker-face">
-        <div class="pk-corner"><span class="pk-rank">10</span><span class="pk-suit-sm">★</span></div>
-        <div class="pk-center">
-          <span class="pk-suit-lg">★</span>
-          <span class="pk-domain-label">CyberSec</span>
-        </div>
-        <div class="pk-corner pk-corner-br"><span class="pk-rank">10</span><span class="pk-suit-sm">★</span></div>
-      </div>
-      <div class="poker-info">
-        <h3>Cybersecurity</h3>
-        <p>Securing the perimeter. Offensive and defensive security research, penetration testing, and vulnerability assessment.</p>
-        <div class="poker-tags">
-          <span class="poker-tag">Burp Suite</span>
-          <span class="poker-tag">OWASP</span>
-          <span class="poker-tag">CTF</span>
-          <span class="poker-tag">Wireshark</span>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
      EVENTS SECTION
      ═══════════════════════════════════════════ -->
 <section class="events-section" id="events">
@@ -1663,6 +1501,13 @@ body::before {
 </footer>
 
 <!-- ═══════════════════════════════════════════
+     GSAP + ScrollTrigger (CDN)
+     ═══════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>gsap.registerPlugin(ScrollTrigger);</script>
+
+<!-- ═══════════════════════════════════════════
      JAVASCRIPT — Scroll Animations & Interactions
      ═══════════════════════════════════════════ -->
 <script>
@@ -1708,7 +1553,217 @@ body::before {
     mobileOverlay.classList.remove('open');
   }
 
-  // ───── Cassette Card Tilt on Hover ─────
+  // ───── Domain Card Dealer (GSAP ScrollTrigger) ─────
+  (function initDomains() {
+    const DOMAINS_DATA = [
+      { id:'app',        rank:'A',  suit:'♠', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
+        title:'App Development',         shortTitle:'App\nDevelopment',
+        desc:'Engineering seamless mobile experiences across platforms with a focus on high-performance architecture and reactive UI patterns.',
+        tags:['Flutter','React Native','SwiftUI','Kotlin'] },
+      { id:'web',        rank:'K',  suit:'♣', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
+        title:'Web Development',         shortTitle:'Web\nDevelopment',
+        desc:'Building the foundational fabric of the modern web using robust full-stack frameworks and scalable architectures.',
+        tags:['Next.js','GoLang','Node.js','PostgreSQL'] },
+      { id:'aiml',       rank:'Q',  suit:'♦', color:'#B44AF5', glow:'rgba(180,74,245,0.35)',
+        title:'AI / Machine Learning',   shortTitle:'AI / Machine\nLearning',
+        desc:'Developing intelligent systems through neural networks, predictive modeling, and cutting-edge research in artificial intelligence.',
+        tags:['PyTorch','TensorFlow','Python','Pandas'] },
+      { id:'design',     rank:'J',  suit:'♥', color:'#F54A8A', glow:'rgba(245,74,138,0.35)',
+        title:'Design',                  shortTitle:'Design',
+        desc:'The visual blueprint. Crafting user-first interfaces and motion graphics that marry modern aesthetics with functional purpose.',
+        tags:['Figma','After Effects','Blender','UI/UX'] },
+      { id:'cybersec',   rank:'10', suit:'★', color:'#F5A44A', glow:'rgba(245,164,74,0.35)',
+        title:'Cybersecurity',           shortTitle:'Cyber\nSecurity',
+        desc:'Securing the perimeter. Offensive and defensive security research, penetration testing, and vulnerability assessment.',
+        tags:['Burp Suite','OWASP','CTF','Wireshark'] },
+      { id:'cp',         rank:'9',  suit:'♣', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
+        title:'Competitive Programming', shortTitle:'Competitive\nProgramming',
+        desc:'Sharpening algorithmic thinking through coding contests, data structures, optimization techniques, and problem-solving under pressure.',
+        tags:['C++','Codeforces','LeetCode','DSA'] },
+      { id:'opensource', rank:'8',  suit:'♦', color:'#F5D44A', glow:'rgba(245,212,74,0.35)',
+        title:'Open Source Development', shortTitle:'Open Source\nDevelopment',
+        desc:'Building impactful software collaboratively through open-source contributions, version control workflows, and community-driven innovation.',
+        tags:['Git','GitHub','Linux','GSSoC'] },
+      { id:'clouddevops',rank:'7',  suit:'♠', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
+        title:'Cloud & DevOps',          shortTitle:'Cloud &\nDevOps',
+        desc:'Automating deployment pipelines, managing cloud infrastructure, and ensuring scalable, reliable software delivery.',
+        tags:['AWS','Docker','Kubernetes','CI/CD'] },
+    ];
+
+    function makeCard(d) {
+      const wrap = document.createElement('div');
+      wrap.className = 'domain-card';
+      wrap.setAttribute('tabindex', '0');
+      wrap.setAttribute('role', 'button');
+      wrap.setAttribute('aria-label', d.title + ' — hover or Enter to flip');
+      const inner = document.createElement('div');
+      inner.className = 'domain-card-inner';
+
+      // Front face
+      const front = document.createElement('div');
+      front.className = 'domain-card-face domain-card-front';
+      front.style.cssText = 'border:1.5px solid ' + d.color + '40;box-shadow:0 8px 28px #00000099;';
+      front.innerHTML =
+        '<div class="dc-corner">' +
+          '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
+          '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
+        '</div>' +
+        '<div class="dc-centre">' +
+          '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
+          '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle.replace('\n','\n') + '</span>' +
+        '</div>' +
+        '<div class="dc-corner dc-corner-br">' +
+          '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
+          '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
+        '</div>';
+
+      // Back face
+      const back = document.createElement('div');
+      back.className = 'domain-card-face domain-card-back';
+      back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';';
+      const tagsHtml = d.tags.map(function(t) {
+        return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '12;color:' + d.color + '">' + t + '</span>';
+      }).join('');
+      back.innerHTML =
+        '<div class="dc-back-title" style="color:' + d.color + ';text-shadow:0 0 12px ' + d.glow + ';border-bottom:1px solid ' + d.color + '30">' + d.title + '</div>' +
+        '<p class="dc-back-desc">' + d.desc + '</p>' +
+        '<div class="dc-tags">' + tagsHtml + '</div>' +
+        '<div class="dc-suit-watermark" style="color:' + d.color + '">' + d.suit + '</div>';
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      wrap.appendChild(inner);
+
+      // Flip on hover is handled by CSS :hover — no JS needed.
+      // Keyboard: Enter/Space toggles kb-flipped for accessibility.
+      wrap.addEventListener('keydown', function(e) {
+        if (e.key==='Enter' || e.key===' ') { e.preventDefault(); wrap.classList.toggle('kb-flipped'); }
+        if (e.key==='Escape') wrap.classList.remove('kb-flipped');
+      });
+      wrap.addEventListener('blur', function() { wrap.classList.remove('kb-flipped'); });
+      return wrap;
+    }
+
+    const stage   = document.getElementById('domains-stage');
+    const section = document.querySelector('.domains-section');
+    const header  = document.getElementById('domains-header');
+    if (!stage || !section || !header) return;
+
+    const cardEls = DOMAINS_DATA.map(function(d) {
+      const el = makeCard(d);
+      stage.appendChild(el);
+      return el;
+    });
+
+    // Wait for GSAP + ScrollTrigger to be available
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      console.warn('GSAP not loaded — domains dealer skipped');
+      return;
+    }
+
+    const isMobile = window.matchMedia('(max-width:768px)').matches;
+
+    // ── MOBILE: simple stagger ──────────────────────────────────────
+    if (isMobile) {
+      var vw = stage.clientWidth, pad = 14, cols = 2;
+      var cw = (vw - pad*(cols+1))/cols, ch = cw*(7/5);
+      cardEls.forEach(function(el, i) {
+        el.style.position = 'relative';
+        el.style.width    = cw + 'px';
+        el.style.height   = ch + 'px';
+        el.style.marginBottom = '14px';
+        gsap.set(el, { opacity:0, y:40 });
+      });
+      ScrollTrigger.create({
+        trigger: section, start:'top 72%',
+        onEnter: function() {
+          gsap.to(cardEls, { opacity:1, y:0, stagger:0.08, duration:0.6, ease:'power3.out' });
+        }
+      });
+      return;
+    }
+
+    // ── DESKTOP: full dealer animation ────────────────────────────
+    var VW = window.innerWidth, VH = window.innerHeight, N = cardEls.length;
+    var COLS = 4, ROWS = 2;
+    var RIGHT_PANEL_W = Math.max(VW*0.20, 180);
+    var LEFT_W        = VW - RIGHT_PANEL_W;
+    var HEADER_H      = Math.round(VH*0.22);
+    var GRID_PAD_L    = Math.round(VW*0.06);
+    var GRID_GAP      = 14;
+    var GRID_TOP      = HEADER_H + 10;
+    var GRID_AVAIL_H  = VH - 16 - GRID_TOP;
+    var GRID_AVAIL_W  = LEFT_W - GRID_PAD_L - 20;
+    var CH_h = (GRID_AVAIL_H - GRID_GAP*(ROWS-1)) / ROWS;
+    var CH_w = ((GRID_AVAIL_W - GRID_GAP*(COLS-1)) / COLS) * (7/5);
+    var CH   = Math.floor(Math.min(CH_h, CH_w));
+    var CW   = Math.floor(CH*(5/7));
+
+    // Total grid width — used to centre across the full viewport
+    var TOTAL_GRID_W  = COLS*CW + (COLS-1)*GRID_GAP;
+    var GRID_OFFSET_X = Math.round((VW - TOTAL_GRID_W) / 2);   // centred
+
+    var gridPos = cardEls.map(function(_, i) {
+      return {
+        x: GRID_OFFSET_X + (i%COLS)*(CW+GRID_GAP),
+        y: GRID_TOP   + Math.floor(i/COLS)*(CH+GRID_GAP),
+        w: CW, h: CH
+      };
+    });
+
+    var PANEL_CX = LEFT_W + RIGHT_PANEL_W/2;
+    var DECK_W   = Math.min(CW*0.92, RIGHT_PANEL_W-20);
+    var DECK_H   = DECK_W*(7/5);
+    var MID      = (N-1)/2;
+
+    var pilePos = cardEls.map(function(_, i) {
+      var d = i - MID;
+      return { x: PANEL_CX-DECK_W/2+d*2.5, y: VH/2-DECK_H/2+d*1.5,
+               w: DECK_W, h: DECK_H, rotation: d*3.5,
+               scale: 1-Math.abs(d)*0.01, zIndex: N-i };
+    });
+
+    var SPOT_W = DECK_W*1.1, SPOT_H = SPOT_W*(7/5);
+    var SPOT_X = PANEL_CX - SPOT_W/2, SPOT_Y = VH*0.12;
+
+    // Set initial states
+    gsap.set(header, { opacity:0, y:20 });
+    cardEls.forEach(function(el, i) {
+      var p = pilePos[i];
+      gsap.set(el, { x:p.x, y:p.y, width:p.w, height:p.h,
+        rotation:p.rotation, scale:p.scale, zIndex:p.zIndex,
+        opacity:1, transformOrigin:'center center' });
+    });
+
+    var tl = gsap.timeline({ paused:true });
+    tl.to(header, { opacity:1, y:0, duration:0.06, ease:'power2.out' }, 0);
+
+    var W_START=0.07, W_END=0.96, PER=(W_END-W_START)/N;
+    cardEls.forEach(function(el, i) {
+      var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
+      var g=gridPos[i];
+      tl.to(el, { x:SPOT_X, y:SPOT_Y, width:SPOT_W, height:SPOT_H,
+        rotation:0, scale:1, zIndex:1000+i, opacity:1,
+        duration:wm1-ws, ease:'power2.out' }, ws);
+      tl.to(el, { y:SPOT_Y-7, duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1);
+      tl.to(el, { y:SPOT_Y,   duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1+(wm2-wm1)*0.5);
+      tl.to(el, { x:g.x, y:g.y, width:g.w, height:g.h,
+        rotation:0, scale:1, zIndex:i+1, opacity:1,
+        duration:we-wm2, ease:'power3.inOut' }, wm2);
+    });
+
+    ScrollTrigger.create({
+      trigger: section, start:'top top',
+      end: '+=' + (VH*5),
+      pin:true, scrub:1.5, anticipatePin:1,
+      animation: tl,
+      invalidateOnRefresh:true,
+      onRefresh: function() { tl.invalidate(); }
+    });
+
+  })();
+
+  // ───── Cassette Card Tilt on Hover ─────  // ───── Cassette Card Tilt on Hover ─────
   document.querySelectorAll('.cassette-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
