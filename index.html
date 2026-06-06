@@ -1735,9 +1735,159 @@ body::before {
     transform: none !important;
   }
 }
+/* ═══════════════════════════════════════════
+   INTRO VIDEO LOADING SCREEN
+   ═══════════════════════════════════════════ */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #010C18;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+  /* default cursor visible */
+  cursor: default;
+}
+#intro-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Smooth fluid canvas ──────────────────────────────────────
+   Sits above video. mix-blend-mode:screen means black=invisible,
+   colours add to what's in the video frame — pure overlay glow.
+────────────────────────────────────────────────────────────── */
+#intro-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
+}
+
+/* Unmute nudge — shown briefly when audio is blocked */
+#intro-unmute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 20px 36px;
+  text-align: center;
+  color: #F5F0E8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: opacity 0.4s ease;
+}
+#intro-unmute span {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+#intro-unmute.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#intro-skip {
+  position: absolute;
+  bottom: clamp(20px, 4vh, 40px);
+  right: clamp(20px, 4vw, 48px);
+  z-index: 10;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50px;
+  color: #F5F0E8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  cursor: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+#intro-skip:hover {
+  background: rgba(201,168,76,0.18);
+  border-color: rgba(201,168,76,0.5);
+  color: #C9A84C;
+}
+/* Prevent body scroll while intro is visible */
+body.intro-active { overflow: hidden; }
+/* ── Burst transition circle ───────────────────────────────────────── */
+#intro-burst {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  pointer-events: none;
+  overflow: hidden;
+}
+#intro-burst-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #4ab8f5 35%, #0a1628 100%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+#intro-burst-circle.expand {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════
+     INTRO VIDEO LOADING SCREEN
+     ═══════════════════════════════════════════ -->
+<div id="intro-overlay" role="dialog" aria-label="Intro video">
+  <video
+    id="intro-video"
+    src="introvid.mp4"
+    autoplay
+    playsinline
+    preload="auto"
+    aria-hidden="true"
+  ></video>
+
+  <!-- Fluid ripple canvas — drawn over video, mix-blend-mode:screen -->
+  <canvas id="intro-fluid-canvas" aria-hidden="true"></canvas>
+
+  <!-- Unmute nudge -->
+  <div id="intro-unmute" class="hidden">
+    <span>🔊</span>
+    Click anywhere to unmute
+  </div>
+
+  <button id="intro-skip" aria-label="Skip intro">Skip ↓</button>
+</div>
+
+</div>
+
+<!-- Burst circle that expands on click -->
+<div id="intro-burst">
+  <div id="intro-burst-circle"></div>
+</div>
 
 <!-- ═══════════════════════════════════════════
      FLOATING PILL NAVBAR
@@ -2840,6 +2990,160 @@ body::before {
       });
     });
   })();
+  // ───── Intro: Video → Burst → Home ─────
+  (function initIntro() {
+    var overlay   = document.getElementById('intro-overlay');
+    var video     = document.getElementById('intro-video');
+    var skip      = document.getElementById('intro-skip');
+    var canvas    = document.getElementById('intro-fluid-canvas');
+    var unmutBtn  = document.getElementById('intro-unmute');
+    var burst     = document.getElementById('intro-burst');
+    var burstCirc = document.getElementById('intro-burst-circle');
+
+    if (!overlay || !video || !canvas) return;
+
+    document.body.classList.add('intro-active');
+    var dismissed = false;
+
+    /* ── Burst then reveal ──────────────────────────────────── */
+    function triggerBurst(e) {
+      if (dismissed) return;
+      dismissed = true;
+
+      /* Get click/trigger position — default to centre if triggered by skip */
+      var cx = (e && e.clientX) ? e.clientX : window.innerWidth  / 2;
+      var cy = (e && e.clientY) ? e.clientY : window.innerHeight / 2;
+
+      if (burstCirc) {
+        var diag = Math.sqrt(
+          window.innerWidth  * window.innerWidth +
+          window.innerHeight * window.innerHeight
+        ) * 2.2;
+        burstCirc.style.width  = diag + 'px';
+        burstCirc.style.height = diag + 'px';
+        burstCirc.style.left   = cx + 'px';
+        burstCirc.style.top    = cy + 'px';
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            burstCirc.classList.add('expand');
+          });
+        });
+      }
+
+      /* After burst covers screen — remove overlay, fade burst out */
+      setTimeout(function() {
+        overlay.remove();
+        document.body.classList.remove('intro-active');
+        if (burst) {
+          burst.style.transition = 'opacity 0.4s ease';
+          burst.style.opacity    = '0';
+          setTimeout(function() { burst.remove(); }, 420);
+        }
+      }, 680);
+    }
+
+    /* ── Click anywhere on the video overlay to trigger burst ── */
+    overlay.addEventListener('click', function(e) {
+      /* Don't trigger if clicking unmute button */
+      if (e.target === unmutBtn || (unmutBtn && unmutBtn.contains(e.target))) return;
+      /* Don't trigger if video is muted and click is to unmute */
+      if (video.muted) { video.muted = false; if (unmutBtn) unmutBtn.classList.add('hidden'); return; }
+      triggerBurst(e);
+    });
+
+    /* Skip button: burst from centre of skip button */
+    skip.addEventListener('click', function(e) {
+      e.stopPropagation();
+      triggerBurst(e);
+    });
+
+    /* Video ends naturally → burst from centre */
+    video.addEventListener('ended', function() { triggerBurst(null); });
+    video.addEventListener('error', function() { triggerBurst(null); });
+
+    /* Safety: auto-dismiss after 60s */
+    setTimeout(function() { triggerBurst(null); }, 60000);
+
+    /* ── Audio ──────────────────────────────────────────────── */
+    video.muted = false;
+    var pp = video.play();
+    if (pp !== undefined) {
+      pp.catch(function() {
+        video.muted = true;
+        video.play().catch(function() { triggerBurst(null); });
+        if (unmutBtn) {
+          unmutBtn.classList.remove('hidden');
+          unmutBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            video.muted = false;
+            unmutBtn.classList.add('hidden');
+          }, { once: true });
+        }
+      });
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FLUID PAINT TRAIL
+    ═══════════════════════════════════════════════════════════ */
+    var ctx = canvas.getContext('2d');
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2, hasMoved = false;
+    document.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; hasMoved = true; });
+
+    var NUM_POINTS = 6, points = [], fluidActive = true;
+    for (var i = 0; i < NUM_POINTS; i++) {
+      var lag = 0.04 + i * 0.045;
+      points.push({ x: mouseX, y: mouseY, vx: 0, vy: 0, lag: lag,
+        damp: 0.72 - i * 0.04, hue: [270,22,190,290,30,200][i],
+        size: 38 - i * 3.5, alpha: 0.18 - i * 0.015 });
+    }
+
+    function paintPoint(p, prevX, prevY) {
+      var dx = p.x - prevX, dy = p.y - prevY;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 0.5) return;
+      var speed = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
+      var intensity = Math.min(speed / 8, 1);
+      var brushSize = p.size * (0.6 + intensity * 0.8);
+      var hue = p.hue, alpha = p.alpha * (0.4 + intensity * 0.6);
+      var steps = Math.max(1, Math.floor(dist / (brushSize * 0.4)));
+      for (var s = 0; s <= steps; s++) {
+        var t = s / steps, bx = prevX + dx*t, by = prevY + dy*t;
+        var grad = ctx.createRadialGradient(bx, by, 0, bx, by, brushSize);
+        grad.addColorStop(0,   'hsla('+hue+',100%,65%,'+alpha.toFixed(3)+')');
+        grad.addColorStop(0.4, 'hsla('+hue+',90%,45%,'+(alpha*0.5).toFixed(3)+')');
+        grad.addColorStop(1,   'hsla('+hue+',80%,20%,0)');
+        ctx.beginPath(); ctx.arc(bx, by, brushSize, 0, Math.PI*2);
+        ctx.fillStyle = grad; ctx.fill();
+      }
+    }
+
+    var prevPositions = points.map(function(p) { return { x: p.x, y: p.y }; });
+    function loop() {
+      if (!fluidActive) return;
+      requestAnimationFrame(loop);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(0,0,0,0.22)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (!hasMoved) return;
+      ctx.globalCompositeOperation = 'lighter';
+      for (var i = 0; i < NUM_POINTS; i++) {
+        var p = points[i], prev = prevPositions[i];
+        p.vx += (mouseX - p.x) * p.lag; p.vy += (mouseY - p.y) * p.lag;
+        p.vx *= p.damp; p.vy *= p.damp;
+        var newX = p.x + p.vx, newY = p.y + p.vy;
+        paintPoint(p, prev.x, prev.y);
+        prev.x = p.x; prev.y = p.y; p.x = newX; p.y = newY;
+      }
+    }
+    video.addEventListener('ended', function() { fluidActive = false; });
+    loop();
+  })();
+
+
 </script>
 </body>
 </html>
