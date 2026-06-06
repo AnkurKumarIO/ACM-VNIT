@@ -889,26 +889,37 @@ body::before {
   overflow: hidden;
   /* padding scales with card width (GSAP sets width) */
   padding: clamp(8px, 5%, 18px);
+  /* Thick black outer border on every card face */
+  box-sizing: border-box;
+  border: 4px solid #000 !important;
 }
 .domain-card-face::before {
   content: '';
   position: absolute;
+  /* thin inner border sits just inside the thick outer border */
   inset: 8px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.18);
   pointer-events: none;
+  z-index: 3;
 }
 
 .domain-card-front { justify-content: space-between; }
 .domain-card-back {
   gap: 6%;
   transform: rotateY(180deg);
+  /* Restored original dark theme */
+  background: linear-gradient(155deg, #1e1e1e 0%, #111 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
   /* overflow auto on back so text never clips */
   overflow-y: auto;
   scrollbar-width: none;
 }
 .domain-card-back::-webkit-scrollbar { display: none; }
+.domain-card-back::before {
+  border-color: rgba(255,255,255,0.06) !important;
+  border-width: 1.5px !important;
+}
 
 /* ── Front face elements ── */
 .dc-corner {
@@ -956,7 +967,48 @@ body::before {
   font-size: 0.78em;
 }
 
-/* ── Back face elements ── */
+/* ── Image front face ── */
+.dc-img-front {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+/* ── Domain name label BELOW the card (not overlaid) ── */
+.dc-name-label {
+  position: absolute;
+  /* sits right below the card bottom edge */
+  top: 100%;
+  left: -8px;
+  right: -8px;
+  margin-top: 8px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  /* prevent clipping by parent */
+  overflow: visible;
+  opacity: 0;
+  visibility: hidden;
+}
+.dc-name-label-text {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  line-height: 1.2;
+  /* scale with the card's font-size set by GSAP */
+  font-size: 0.88em;
+  white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+
+/* ── Back face elements (dark theme restored) ── */
 .dc-back-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -997,6 +1049,17 @@ body::before {
   opacity: 0.22;
   flex-shrink: 0;
   z-index: 2;
+}
+
+/* Mobile: name label below each card in the grid */
+@media (max-width: 768px) {
+  .dc-name-label {
+    position: static;
+    margin-top: 6px;
+    display: block;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }
 
 /* ── Scroll hint / deck label (desktop only) ── */
@@ -2350,7 +2413,7 @@ body.intro-active { overflow: hidden; }
       </div>
       <div class="about-v-divider reveal"></div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
-        <div class="about-section-headline">ACM-VNIT</div>
+        <div class="about-section-headline">ACM</div>
         <p>The Association for Computing Machinery (ACM) is the world's largest educational and scientific computing society. Since its inception in 1947, ACM has united educators, researchers, and professionals to advance computing as a science and a profession.</p>
         <p>It promotes the highest standards of technical excellence, fosters lifelong learning, and supports career development through a global network of conferences, publications, and professional communities. With a strong commitment to innovation and leadership, ACM continues to shape the future of computing worldwide.</p>
       </div>
@@ -2850,6 +2913,18 @@ body.intro-active { overflow: hidden; }
         tags:['AWS','Docker','Kubernetes','CI/CD'] },
     ];
 
+    // Cards that use a custom image for the front face
+    var CARD_IMAGES = {
+      'app':        'card-app-dev.jpg',
+      'aiml':       'card-aiml.jpg',
+      'cybersec':   'card-cybersec.jpg',
+      'clouddevops':'card-cloud-devops.jpg',
+      'web':        'card-web-dev.jpg',
+      'cp':         'card-cp.jpg',
+      'opensource': 'card-opensource.jpg',
+      'design':     'card-design.jpg'
+    };
+
     function makeCard(d) {
       var wrap  = document.createElement('div');
       wrap.className = 'domain-card';
@@ -2863,22 +2938,30 @@ body.intro-active { overflow: hidden; }
       // Front face
       var front = document.createElement('div');
       front.className = 'domain-card-face domain-card-front';
-      front.style.cssText = 'border:1.5px solid ' + d.color + '40;box-shadow:0 8px 28px #00000099;';
-      front.innerHTML =
-        '<div class="dc-corner">' +
-          '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
-          '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
-        '</div>' +
-        '<div class="dc-centre">' +
-          '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
-          '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle + '</span>' +
-        '</div>' +
-        '<div class="dc-corner dc-corner-br">' +
-          '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
-          '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
-        '</div>';
 
-      // Back face
+      if (CARD_IMAGES[d.id]) {
+        // Image-based front: full bleed photo card — NO name overlay
+        front.style.cssText = 'box-shadow:0 8px 28px #00000099;padding:0;background:#000;';
+        front.innerHTML = '<img class="dc-img-front" src="' + CARD_IMAGES[d.id] + '" alt="' + d.title + '" draggable="false">';
+      } else {
+        // Default icon front
+        front.style.cssText = 'box-shadow:0 8px 28px #00000099;';
+        front.innerHTML =
+          '<div class="dc-corner">' +
+            '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
+            '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
+          '</div>' +
+          '<div class="dc-centre">' +
+            '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
+            '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle + '</span>' +
+          '</div>' +
+          '<div class="dc-corner dc-corner-br">' +
+            '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
+            '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
+          '</div>';
+      }
+
+      // Back face — restored original dark theme
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
       back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';';
@@ -2893,7 +2976,13 @@ body.intro-active { overflow: hidden; }
 
       inner.appendChild(front);
       inner.appendChild(back);
+
+      // Name label sits BELOW the card (outside domain-card-inner, inside domain-card)
+      var nameLabel = document.createElement('div');
+      nameLabel.className = 'dc-name-label';
+      nameLabel.innerHTML = '<span class="dc-name-label-text" style="color:' + d.color + '">' + d.title + '</span>';
       wrap.appendChild(inner);
+      wrap.appendChild(nameLabel);
 
       wrap.addEventListener('keydown', function(e) {
         if (e.key==='Enter'||e.key===' ') { e.preventDefault(); wrap.classList.toggle('kb-flipped'); }
@@ -2958,7 +3047,7 @@ body.intro-active { overflow: hidden; }
       var GAP    = Math.max(VW * 0.013, 10); // inter-card gap
 
       var G_TOP  = HDR_BOTTOM + PAD_BELOW;
-      var G_BOT  = VH - 20;
+      var G_BOT  = VH - 48; /* extra 28px so name labels below row-2 cards stay visible */
       var G_H    = G_BOT - G_TOP;
       var G_W    = VW - H_PAD * 2;           // full width minus equal margins
 
@@ -2989,9 +3078,11 @@ body.intro-active { overflow: hidden; }
       var GRID_START_Y = G_TOP + Math.max(0, Math.floor((G_H - GRID_TOTAL_H) / 2));
 
       var gridPos = cardEls.map(function(_, i) {
+        var row = Math.floor(i / COLS);
+        var yOffset = (row === 0) ? -24 : 0;
         return {
           x: GRID_START_X + (i % COLS) * (CW + GAP),
-          y: GRID_START_Y + Math.floor(i / COLS) * (CH + GAP),
+          y: GRID_START_Y + row * (CH + GAP) + yOffset,
           w: CW,
           h: CH
         };
@@ -3053,6 +3144,11 @@ body.intro-active { overflow: hidden; }
         var wm2 = wm1 + PER * 0.22;
         var we  = ws  + PER;
         var g   = geo.gridPos[i];
+        var lbl = el.querySelector('.dc-name-label');
+
+        if (lbl) {
+          tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
+        }
 
         /* 1. Rise to spotlight */
         tl.to(el, {
@@ -3073,6 +3169,11 @@ body.intro-active { overflow: hidden; }
           fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
           duration: we - wm2, ease: 'power3.inOut'
         }, wm2);
+
+        if (lbl) {
+          tl.set(lbl, { visibility: 'visible' }, wm2);
+          tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
+        }
       });
 
       return tl;
@@ -3094,6 +3195,10 @@ body.intro-active { overflow: hidden; }
           opacity: 1,
           transformOrigin: 'center center'
         });
+        var lbl = el.querySelector('.dc-name-label');
+        if (lbl) {
+          gsap.set(lbl, { opacity: 0, visibility: 'hidden' });
+        }
       });
     }
 
@@ -3124,6 +3229,10 @@ body.intro-active { overflow: hidden; }
         cardEls.forEach(function(el, i) {
           var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
           var g=geo.gridPos[i];
+          var lbl = el.querySelector('.dc-name-label');
+          if (lbl) {
+            tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
+          }
           tl.to(el, { x:geo.SPOT_X, y:geo.SPOT_Y, width:geo.SPOT_W, height:geo.SPOT_H,
             rotation:0, scale:1, zIndex:1000+i, opacity:1,
             duration:wm1-ws, ease:'power2.out' }, ws);
@@ -3133,6 +3242,10 @@ body.intro-active { overflow: hidden; }
             rotation:0, scale:1, zIndex:i+1, opacity:1,
             fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
             duration:we-wm2, ease:'power3.inOut' }, wm2);
+          if (lbl) {
+            tl.set(lbl, { visibility: 'visible' }, wm2);
+            tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
+          }
         });
         tl.invalidate();
       }
