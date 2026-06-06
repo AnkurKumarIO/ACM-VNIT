@@ -967,6 +967,12 @@ body::before {
   font-size: 0.78em;
 }
 
+/* ── Back face elements ── */
+.domain-card-back::before {
+  border-color: rgba(255,255,255,0.06) !important;
+  border-width: 1.5px !important;
+}
+
 /* ── Image front face ── */
 .dc-img-front {
   position: absolute;
@@ -1006,6 +1012,17 @@ body::before {
   font-size: 0.88em;
   white-space: nowrap;
   text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+
+/* Mobile: name label visible below each card in the grid */
+@media (max-width: 768px) {
+  .dc-name-label {
+    position: static;
+    margin-top: 6px;
+    display: block;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }
 
 /* ── Back face elements (dark theme restored) ── */
@@ -2036,6 +2053,160 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════
+   COMPREHENSIVE MOBILE FIXES (≤ 768px)
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Nav brand: hide on mobile (hamburger handles nav) ── */
+  .nav-brand-fixed { display: none; }
+
+  /* ── Hero CTA: move below fold so it doesn't clash with hamburger ── */
+  .hero-cta {
+    position: relative;
+    top: auto; right: auto;
+    display: inline-flex;
+    margin-top: 32px;
+    padding: 10px 22px;
+    font-size: 12px;
+    z-index: 10;
+  }
+
+  /* ── Hero layout ── */
+  .hero {
+    padding: 100px 6vw 0;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-text-wrap { max-width: 100%; }
+
+  /* ── Legend: stack vertically instead of side-by-side ── */
+  .legend-container {
+    position: relative;
+    bottom: auto;
+    left: auto; right: auto;
+    padding: 28px 6vw 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .legend-text { font-size: 13px; opacity: 0.85; }
+  .legend-text[style*="text-align: right"] { text-align: left !important; }
+
+  /* ── Section padding — breathable but not wasteful ── */
+  .about-section,
+  .community-section,
+  .events-section,
+  .projects-section {
+    padding: 60px 6vw;
+  }
+
+  /* ── About: single column, no vertical divider ── */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px 0;
+  }
+  .about-v-divider { display: none; }
+  .about-card-wrap { justify-self: center !important; padding: 0 !important; }
+  .about-text { text-align: left !important; direction: ltr !important; }
+
+  /* ── Projects: single column, kill span-2 ── */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .projects-grid [style*="grid-column"],
+  .project-card[style*="grid-column"] {
+    grid-column: span 1 !important;
+  }
+  .projects-section { padding: 60px 6vw; }
+
+  /* ── Events: tighten up ── */
+  .events-grid { grid-template-columns: 1fr; gap: 20px; }
+  .event-featured { grid-template-columns: 1fr; }
+  .event-featured-visual { min-height: 180px; }
+
+  /* ── Contact: disable scroll-driven animation, show form directly ── */
+  .contact-section { overflow: hidden; }
+  .contact-scroll-driver {
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 6vw 60px;
+  }
+  .contact-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    justify-content: flex-start;
+    gap: 32px;
+    overflow: visible;
+  }
+  .contact-header {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    white-space: normal;
+    text-align: center;
+    padding-bottom: 8px;
+    pointer-events: auto;
+  }
+  .contact-title { font-size: clamp(2.4rem, 11vw, 3.5rem); }
+  .laptop-wrap {
+    position: relative;
+    width: 100%;
+    transform: none !important;
+  }
+  .laptop-screen {
+    opacity: 1 !important;
+  }
+  .laptop-screen.screen-on,
+  .laptop-screen:not(.screen-on) { opacity: 1 !important; }
+  .laptop-glow { display: none; }
+  /* Show form flat — skip the 3D lid on mobile */
+  .laptop-hinge { perspective: none; }
+  .laptop-lid {
+    transform: rotateX(-8deg) !important;
+    border-radius: 14px;
+  }
+
+  /* ── Footer: single column ── */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  .footer-bottom > div {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── Cassette cards: 1 col ── */
+  .cassette-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Small phones (≤ 480px) ── */
+@media (max-width: 480px) {
+  .hero-line-1, .hero-line-2 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+  .contact-scroll-driver { padding: 70px 5vw 50px; }
+  .projects-grid { gap: 16px; }
+  .laptop-wrap { width: 100%; }
+  .screen-inner { padding: 14px 16px 12px; }
+  .screen-title { font-size: 1rem; }
+  .sf input, .sf textarea { font-size: 13px; padding: 8px 10px; }
+}
+
+/* ═══════════════════════════════════════════
    INTRO VIDEO LOADING SCREEN
    ═══════════════════════════════════════════ */
 #intro-overlay {
@@ -2295,7 +2466,7 @@ body.intro-active { overflow: hidden; }
       </div>
       <div class="about-v-divider reveal"></div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
-        <div class="about-section-headline">ACM-VNIT</div>
+        <div class="about-section-headline">ACM</div>
         <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
         <p>We don't just write code — we ask questions, build with purpose, and learn together. With a culture built on trust and innovation, we're here to build tools, solve problems, and grow as a community — because technology, at its best, brings people together.</p>
       </div>
@@ -2786,10 +2957,26 @@ body.intro-active { overflow: hidden; }
       </div>
       <p class="footer-desc">Architecting the future through precision engineering and collaborative innovation. The premier technical chapter of VNIT Nagpur.</p>
       <div class="footer-socials">
-        <a class="footer-social-link" href="#" aria-label="Website">🌐</a>
-        <a class="footer-social-link" href="#" aria-label="GitHub">💻</a>
-        <a class="footer-social-link" href="#" aria-label="LinkedIn">🔗</a>
-        <a class="footer-social-link" href="#" aria-label="Instagram">📷</a>
+        <!-- Instagram -->
+        <a class="footer-social-link" href="https://www.instagram.com/acm_vnit/" target="_blank" rel="noreferrer noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <!-- LinkedIn -->
+        <a class="footer-social-link" href="https://www.linkedin.com/company/acm-student-chapter-vnit" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M20.447 20.452H17.21v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.985V9h3.102v1.561h.046c.432-.82 1.487-1.684 3.059-1.684 3.271 0 3.873 2.153 3.873 4.954v6.621zM5.337 7.433a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6zM6.961 20.452H3.71V9h3.251v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        <!-- Discord -->
+        <a class="footer-social-link" href="https://discord.gg/KSpxVqwytZ" target="_blank" rel="noreferrer noopener" aria-label="Discord">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+        </a>
       </div>
     </div>
     <div class="footer-column">
@@ -2808,10 +2995,10 @@ body.intro-active { overflow: hidden; }
     </div>
     <div class="footer-column">
       <h5>Connect</h5>
-      <a href="#">LinkedIn</a>
-      <a href="#">Instagram</a>
-      <a href="#">GitHub</a>
-      <a href="#">Contact Us</a>
+      <a href="https://www.linkedin.com/company/acm-student-chapter-vnit" target="_blank" rel="noreferrer noopener">LinkedIn</a>
+      <a href="https://www.instagram.com/acm_vnit/" target="_blank" rel="noreferrer noopener">Instagram</a>
+      <a href="https://discord.gg/KSpxVqwytZ" target="_blank" rel="noreferrer noopener">Discord</a>
+      <a href="#contact-us">Contact Us</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -2849,21 +3036,25 @@ body.intro-active { overflow: hidden; }
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
   // ───── Active Nav Link on Scroll ─────
-  const sections = document.querySelectorAll('section, .hero');
   const navLinks = document.querySelectorAll('.nav-pill a');
+  const sectionIds = ['#hero', '#about', '#community', '#domains', '#events', '#projects', '#contact-us', '#contact'];
 
+  // Use rootMargin so active state fires as soon as the section's top
+  // crosses the upper portion of the viewport — works correctly even for
+  // very tall sections like the 350vh contact scroll-driver.
   const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const id = entry.target.id || entry.target.closest('section')?.id;
+        const activeId = id === 'contact' ? 'contact-us' : id;
         navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+          link.classList.toggle('active', link.getAttribute('href') === `#${activeId}`);
         });
       }
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0, rootMargin: '0px 0px -85% 0px' });
 
-  document.querySelectorAll('#hero, #about, #community, #domains, #events, #projects, #contact-us').forEach(s => navObserver.observe(s));
+  document.querySelectorAll(sectionIds.join(', ')).forEach(s => navObserver.observe(s));
 
   // ───── Mobile Menu ─────
   const mobileBtn = document.getElementById('mobileMenuBtn');
@@ -2875,6 +3066,24 @@ body.intro-active { overflow: hidden; }
   function closeMobileMenu() {
     mobileOverlay.classList.remove('open');
   }
+
+  // ── Contact nav: scroll to where the form is already fully open ──
+  // Animation: progress = scrolled / (driverH - viewH)
+  // Screen appears at progress > 0.75, so we jump to progress = 0.82
+  // => scrollTarget = section.offsetTop + 0.82 * (driverH - viewH)
+  document.querySelectorAll('a[href="#contact-us"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var driver = document.getElementById('contactDriver');
+      if (!driver || window.matchMedia('(max-width: 768px)').matches) return;
+      e.preventDefault();
+      var section   = document.getElementById('contact-us');
+      var driverH   = driver.offsetHeight;
+      var viewH     = window.innerHeight;
+      var scrollable = driverH - viewH;
+      var target    = section.offsetTop + 0.82 * scrollable;
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    });
+  });
 
   // ───── Domain Card Dealer (GSAP ScrollTrigger) ─────
   (function initDomains() {
@@ -2964,7 +3173,7 @@ body.intro-active { overflow: hidden; }
       // Back face — restored original dark theme
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
-      back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';';
+      back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';background:linear-gradient(155deg,#1e1e1e 0%,#111 100%);';
       var tagsHtml = d.tags.map(function(t) {
         return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '12;color:' + d.color + '">' + t + '</span>';
       }).join('');
@@ -3146,9 +3355,8 @@ body.intro-active { overflow: hidden; }
         var g   = geo.gridPos[i];
         var lbl = el.querySelector('.dc-name-label');
 
-        if (lbl) {
-          tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
-        }
+        /* Hide label at start */
+        if (lbl) { tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws); }
 
         /* 1. Rise to spotlight */
         tl.to(el, {
@@ -3170,6 +3378,7 @@ body.intro-active { overflow: hidden; }
           duration: we - wm2, ease: 'power3.inOut'
         }, wm2);
 
+        /* 4. Fade in name label as card lands */
         if (lbl) {
           tl.set(lbl, { visibility: 'visible' }, wm2);
           tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
@@ -3184,6 +3393,8 @@ body.intro-active { overflow: hidden; }
       gsap.set(header, { opacity: 0, y: 20 });
       cardEls.forEach(function(el, i) {
         var p = geo.pilePos[i];
+        var lbl = el.querySelector('.dc-name-label');
+        if (lbl) { gsap.set(lbl, { opacity: 0, visibility: 'hidden' }); }
         /* font-size = 6.5% of card width — all em-based child text scales with this */
         el.style.fontSize = Math.max(Math.round(p.w * 0.065), 9) + 'px';
         gsap.set(el, {
@@ -3371,6 +3582,12 @@ body.intro-active { overflow: hidden; }
     var glow    = document.getElementById('laptopGlow');
     var wrap    = document.getElementById('laptopWrap');
     if (!driver || !lid) return;
+
+    // On mobile skip the animation — show form fully open
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      screen.classList.add('screen-on');
+      return;
+    }
 
     var CLOSED_DEG  = -100;
     var OPEN_DEG    =   -8;
