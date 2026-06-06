@@ -22,7 +22,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Checkerboard grid overlay (matches index.html) ── */
+/* ── Checkerboard grid overlay ── */
 body::before {
   content: '';
   position: fixed;
@@ -38,19 +38,27 @@ body::before {
   z-index: 0;
 }
 
-/* ── 3-D card flip (used on hover back-face) ─ */
+/* ══════════════════════════════════════════════════════════════
+   3-D Card Flip
+   ══════════════════════════════════════════════════════════════ */
+
 .card-3d-wrapper {
   perspective: 1200px;
 }
+
 .card-3d-inner {
   transform-style: preserve-3d;
   transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
+
+/* Flip on hover, focus, or programmatic .kb-flipped class */
 .card-3d-wrapper:hover .card-3d-inner,
 .card-3d-wrapper.kb-flipped .card-3d-inner {
   transform: rotateY(180deg);
 }
+
+/* Both card faces share these rules */
 .card-face {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -58,15 +66,133 @@ body::before {
   inset: 0;
   border-radius: inherit;
 }
+
+/* Back face starts rotated — reveals on flip */
 .card-face-back {
   transform: rotateY(180deg);
 }
 
-/* ── Scrollbar styling ──────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   Domains Section — Responsive Layout
+   ══════════════════════════════════════════════════════════════ */
+
+.domains-section {
+  /* Clear any sticky navbar (80px safe default, override via CSS var if needed) */
+  padding-top: clamp(48px, 8vw, 96px);
+  padding-bottom: clamp(48px, 8vw, 96px);
+  scroll-margin-top: 80px;
+}
+
+/* ── Section header ── */
+.domains-header {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 5vw, 80px);
+  margin-bottom: clamp(28px, 4vw, 56px);
+}
+
+.domains-heading {
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+}
+
+.domains-subtext {
+  font-size: clamp(12px, 1.1vw, 15px);
+  max-width: min(520px, 90%);
+}
+
+/* ── Responsive card grid ─────────────────────────────────────
+   1 col  → < 640px   (mobile)
+   2 cols → 640px+    (tablet)
+   3 cols → 1024px+   (small desktop)
+   4 cols → 1280px+   (large desktop)
+─────────────────────────────────────────────────────────────── */
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: clamp(14px, 2vw, 24px);
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 5vw, 80px);
+  padding-bottom: clamp(16px, 3vw, 32px);
+}
+
+@media (min-width: 640px) {
+  .domains-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .domains-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1280px) {
+  .domains-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── Card wrapper ─────────────────────────────────────────────
+   Width = grid cell. Height = driven by ghost element below.
+   Hover effects use filter/box-shadow — no layout impact.
+─────────────────────────────────────────────────────────────── */
+.domain-card-wrapper {
+  transform: translateY(0); /* explicit default so JS transitions work cleanly */
+  transition:
+    filter 0.3s ease,
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+
+.domain-card-wrapper:hover,
+.domain-card-wrapper:focus-visible {
+  filter: brightness(1.08);
+  outline: none;
+}
+
+.domain-card-wrapper:focus-visible {
+  box-shadow: 0 0 0 3px #F95F4A80;
+  border-radius: 18px;
+}
+
+/* ── Intrinsic-height via ghost ───────────────────────────────
+   .card-ratio-box is position:relative. The ghost (.card-ghost)
+   is an invisible copy of the back face content that lives in
+   normal document flow, so its natural height drives the box.
+   The real flip card (.card-inner-abs) is absolute over it.
+
+   Why this approach:
+   • No fixed heights at all
+   • Back face content never clips — ghost always matches
+   • 5:7 playing card ratio enforced as minimum via aspect-ratio
+   • preserve-3d on .card-inner-abs works without conflicts
+─────────────────────────────────────────────────────────────── */
+.card-ratio-box {
+  position: relative;
+  width: 100%;
+}
+
+.card-ghost {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+  /* Must match CardBack padding and gap exactly */
+  display: flex;
+  flex-direction: column;
+  padding: clamp(12px, 1.4vw, 20px);
+  gap: clamp(8px, 1vw, 14px);
+  /* Minimum card height = 5:7 playing card ratio */
+  aspect-ratio: 5 / 7;
+}
+
+/* The real 3D card, overlaid on the ghost */
+.card-inner-abs {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar        { width: 6px; }
 ::-webkit-scrollbar-track  { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb  { background: #333; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #F95F4A; }
 
-/* ── Selection ──────────────────────────────── */
+/* ── Selection ── */
 ::selection { background: #F95F4A; color: #0a0a0a; }

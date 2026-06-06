@@ -782,16 +782,21 @@ body::before {
   background: transparent;
   border-top: 1px solid var(--border-subtle);
 }
+
+/* Inner stage: fixed viewport height, clips overflow */
 .domains-inner {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: transparent;
 }
+
+/* Header: top-left, pointer-events off so cards pass through */
 .domains-header {
   position: absolute;
-  top: 4vh; left: 6vw; right: 6vw;
+  top: 4vh;
+  left: 6vw;
+  right: 6vw;   /* symmetric — no right panel */
   z-index: 20;
   pointer-events: none;
 }
@@ -800,7 +805,7 @@ body::before {
   font-size: clamp(1.6rem, 3.8vw, 3rem);
   font-weight: 900;
   text-transform: uppercase;
-  line-height: 0.88;
+  line-height: 0.9;
   letter-spacing: -0.03em;
   color: var(--cream);
 }
@@ -812,79 +817,251 @@ body::before {
   color: #666677;
   max-width: 480px;
 }
-.domains-divider,
-.domains-scroll-hint,
-.domains-deck-label { display: none; }
-.domains-stage { position: absolute; inset: 0; z-index: 10; }
 
-/* Individual card */
+/* Right panel divider */
+.domains-divider {
+  display: none; /* shown only on md+ via JS */
+}
+
+/* Stage: cards are absolutely positioned here by GSAP */
+.domains-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* ── Individual domain card ──────────────────────────
+   Base state: GSAP sets position/size; we only define
+   the 3D flip behaviour and aesthetic here.
+   No fixed width/height — GSAP provides those.
+─────────────────────────────────────────────────── */
 .domain-card {
   position: absolute;
-  cursor: pointer; outline: none;
-  perspective: 1200px; will-change: transform;
-  -webkit-user-select: none; user-select: none;
+  cursor: pointer;
+  outline: none;
+  perspective: 1200px;
+  will-change: transform;
+  -webkit-user-select: none;
+  user-select: none;
 }
+
 .domain-card-inner {
-  position: relative; width: 100%; height: 100%;
+  position: relative;
+  width: 100%;
+  height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.75s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 .domain-card:hover .domain-card-inner,
-.domain-card.kb-flipped .domain-card-inner { transform: rotateY(180deg); }
+.domain-card.kb-flipped .domain-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Both card faces */
 .domain-card-face {
-  position: absolute; inset: 0; border-radius: 16px;
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: linear-gradient(155deg, #1e1e1e 0%, #111 100%);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  background: linear-gradient(155deg,#1e1e1e 0%,#111 100%);
-  display: flex; flex-direction: column;
-  padding: clamp(10px,1.2vw,18px);
+  /* padding scales with card width (GSAP sets width) */
+  padding: clamp(8px, 5%, 18px);
 }
 .domain-card-face::before {
-  content:''; position:absolute; inset:8px; border-radius:10px;
-  border:1px solid rgba(255,255,255,0.06); pointer-events:none;
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
 }
+
 .domain-card-front { justify-content: space-between; }
-.domain-card-back  {
-  gap:10px; transform:rotateY(180deg);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+.domain-card-back {
+  gap: 6%;
+  transform: rotateY(180deg);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  /* overflow auto on back so text never clips */
+  overflow-y: auto;
+  scrollbar-width: none;
 }
+.domain-card-back::-webkit-scrollbar { display: none; }
+
+/* ── Front face elements ── */
 .dc-corner {
-  display:flex; flex-direction:column;
-  align-items:flex-start; line-height:1; gap:1px; z-index:2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+  gap: 1px;
+  z-index: 2;
+  flex-shrink: 0;
 }
-.dc-corner-br { align-self:flex-end; transform:rotate(180deg); }
-.dc-rank     { font-weight:900; line-height:1; font-size:clamp(18px,1.5vw,20px); }
-.dc-suit-sm  { line-height:1; font-size:clamp(18px,1.2vw,16px); }
+.dc-corner-br { align-self: flex-end; transform: rotate(180deg); }
+
+/* Font sizes relative to card width via clamp:
+   small card (spotlight ~120px wide) → 13px
+   large card (grid slot ~220px wide) → 20px             */
+.dc-rank    { font-weight: 900; line-height: 1; font-size: clamp(13px, 1.5vw, 20px); }
+.dc-suit-sm { line-height: 1;                  font-size: clamp(11px, 1.2vw, 16px); }
+
 .dc-centre {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:8px; z-index:2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
 }
-.dc-suit-lg { line-height:1; font-size:clamp(60px,5vw,68px); pointer-events:none; }
+.dc-suit-lg  { line-height: 1; font-size: clamp(36px, 5vw, 68px); pointer-events: none; }
 .dc-title {
-  font-weight:800; text-transform:uppercase; text-align:center;
-  line-height:1.15; letter-spacing:0.04em; white-space:pre-line;
-  color:var(--cream); font-size:clamp(11px,1.1vw,15px);
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  white-space: pre-line;
+  color: var(--cream);
+  font-size: clamp(9px, 1.1vw, 15px);
 }
+
+/* ── Back face elements ── */
 .dc-back-title {
-  font-weight:800; text-transform:uppercase; letter-spacing:0.12em;
-  text-align:center; padding-bottom:8px; flex-shrink:0; z-index:2;
-  font-size:clamp(10px,1vw,13px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding-bottom: 6px;
+  flex-shrink: 0;
+  z-index: 2;
+  font-size: clamp(8px, 1vw, 13px);
 }
 .dc-back-desc {
-  flex:1; line-height:1.65; color:#9999aa; z-index:2;
-  font-size:clamp(13px, 1.3vw, 12px);
+  line-height: 1.6;
+  color: #9999aa;
+  z-index: 2;
+  font-size: clamp(9px, 0.85vw, 12px);
+  flex-shrink: 0;
 }
-.dc-tags { display:flex; flex-wrap:wrap; gap:5px; z-index:2; }
+.dc-tags { display: flex; flex-wrap: wrap; gap: 4px; z-index: 2; margin-top: auto; flex-shrink: 0; }
 .dc-tag {
-  font-family:var(--font-mono); font-size:10px;
-  text-transform:uppercase; letter-spacing:0.06em;
-  padding:3px 7px; border-radius:4px;
+  font-family: var(--font-mono);
+  font-size: clamp(7px, 0.65vw, 10px);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 .dc-suit-watermark {
-  text-align:center; font-size:16px; opacity:0.22;
-  flex-shrink:0; z-index:2;
+  text-align: center;
+  font-size: clamp(12px, 1.3vw, 16px);
+  opacity: 0.22;
+  flex-shrink: 0;
+  z-index: 2;
 }
+
+/* ── Scroll hint / deck label (desktop only) ── */
+.domains-scroll-hint,
+.domains-deck-label {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.domains-scroll-hint {
+  left: 2vw;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.domains-deck-label {
+  right: 1.5vw;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.domains-scroll-hint span,
+.domains-deck-label span {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.2;
+  color: var(--cream);
+  writing-mode: vertical-rl;
+}
+.domains-scroll-hint span { transform: rotate(180deg); }
+.hint-line { width: 1px; height: 56px; background: rgba(255,255,255,0.1); }
+
+/* Right-panel divider */
+.domains-divider {
+  position: absolute;
+  top: 4vh;
+  bottom: 4vh;
+  width: 1px;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* scroll hint and deck label removed — no right panel */
+.domains-scroll-hint,
+.domains-deck-label { display: none !important; }
+
+/* ── Mobile: flat scrollable grid ───────────────
+   On small screens the pinned GSAP dealer is
+   replaced by a responsive CSS grid.
+─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .domains-inner {
+    height: auto;
+    overflow: visible;
+  }
+  .domains-header {
+    position: relative;
+    top: auto; left: auto; right: auto;
+    padding: 40px 6vw 24px;
+  }
+  .domains-stage {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 4vw 40px;
+  }
+  .domain-card {
+    position: relative;
+    width: auto;
+    height: auto;
+    /* restore natural document flow */
+    transform: none;
+  }
+  /* Aspect-ratio drives height on mobile — no GSAP sizes */
+  .domain-card-inner {
+    position: relative;
+    height: 0;
+    padding-bottom: 140%; /* 5:7 ratio */
+  }
+  .domain-card-face {
+    padding: clamp(10px, 4%, 16px);
+  }
+  .dc-rank    { font-size: clamp(14px, 4vw, 20px); }
+  .dc-suit-sm { font-size: clamp(12px, 3.5vw, 16px); }
+  .dc-suit-lg { font-size: clamp(32px, 12vw, 52px); }
+  .dc-title   { font-size: clamp(10px, 2.8vw, 14px); }
+  .dc-back-title { font-size: clamp(9px, 2.5vw, 13px); }
+  .dc-back-desc  { font-size: clamp(9px, 2.2vw, 12px); }
+  .dc-tag        { font-size: clamp(7px, 1.8vw, 10px); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .domain-card-inner { transition: none; }
 }
@@ -1860,22 +2037,22 @@ body::before {
       <p>Each domain is more than a skillset — it’s a mindset. Build, break, design, and communicate — not in silos, but in sync.</p>
     </div>
 
-    <!-- Right-panel divider -->
-    <div class="domains-divider"></div>
+    <!-- Right-panel divider line (shown on desktop by JS) -->
+    <div class="domains-divider" id="domains-divider"></div>
 
-    <!-- Scroll hint (left) -->
+    <!-- Scroll hint (left edge, desktop only) -->
     <div class="domains-scroll-hint">
       <span>Scroll to Deal</span>
       <div class="hint-line"></div>
     </div>
 
-    <!-- Deck label (right) -->
+    <!-- Deck label (right edge, desktop only) -->
     <div class="domains-deck-label">
       <div class="hint-line"></div>
       <span>Deck</span>
     </div>
 
-    <!-- Stage: JS absolutely positions all 8 cards here -->
+    <!-- Stage: GSAP absolutely positions all 8 cards here -->
     <div class="domains-stage" id="domains-stage"></div>
 
   </div>
@@ -2208,52 +2385,53 @@ body::before {
 
   // ───── Domain Card Dealer (GSAP ScrollTrigger) ─────
   (function initDomains() {
-    const DOMAINS_DATA = [
-      { id:'app',        rank:'A',  suit:'♠', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
+    var DOMAINS_DATA = [
+      { id:'app',        rank:'A',  suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
         title:'App Development',         shortTitle:'App\nDevelopment',
         desc:'Engineering seamless mobile experiences across platforms with a focus on high-performance architecture and reactive UI patterns.',
         tags:['Flutter','React Native','SwiftUI','Kotlin'] },
-      { id:'web',        rank:'K',  suit:'♣', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
+      { id:'web',        rank:'K',  suit:'\u2663', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
         title:'Web Development',         shortTitle:'Web\nDevelopment',
         desc:'Building the foundational fabric of the modern web using robust full-stack frameworks and scalable architectures.',
         tags:['Next.js','GoLang','Node.js','PostgreSQL'] },
-      { id:'aiml',       rank:'Q',  suit:'♦', color:'#B44AF5', glow:'rgba(180,74,245,0.35)',
+      { id:'aiml',       rank:'Q',  suit:'\u2666', color:'#B44AF5', glow:'rgba(180,74,245,0.35)',
         title:'AI / Machine Learning',   shortTitle:'AI / Machine\nLearning',
         desc:'Developing intelligent systems through neural networks, predictive modeling, and cutting-edge research in artificial intelligence.',
         tags:['PyTorch','TensorFlow','Python','Pandas'] },
-      { id:'design',     rank:'J',  suit:'♥', color:'#F54A8A', glow:'rgba(245,74,138,0.35)',
+      { id:'design',     rank:'J',  suit:'\u2665', color:'#F54A8A', glow:'rgba(245,74,138,0.35)',
         title:'Design',                  shortTitle:'Design',
         desc:'The visual blueprint. Crafting user-first interfaces and motion graphics that marry modern aesthetics with functional purpose.',
         tags:['Figma','After Effects','Blender','UI/UX'] },
-      { id:'cybersec',   rank:'10', suit:'★', color:'#F5A44A', glow:'rgba(245,164,74,0.35)',
+      { id:'cybersec',   rank:'10', suit:'\u2605', color:'#F5A44A', glow:'rgba(245,164,74,0.35)',
         title:'Cybersecurity',           shortTitle:'Cyber\nSecurity',
         desc:'Securing the perimeter. Offensive and defensive security research, penetration testing, and vulnerability assessment.',
         tags:['Burp Suite','OWASP','CTF','Wireshark'] },
-      { id:'cp',         rank:'9',  suit:'♣', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
+      { id:'cp',         rank:'9',  suit:'\u2663', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
         title:'Competitive Programming', shortTitle:'Competitive\nProgramming',
         desc:'Sharpening algorithmic thinking through coding contests, data structures, optimization techniques, and problem-solving under pressure.',
         tags:['C++','Codeforces','LeetCode','DSA'] },
-      { id:'opensource', rank:'8',  suit:'♦', color:'#F5D44A', glow:'rgba(245,212,74,0.35)',
+      { id:'opensource', rank:'8',  suit:'\u2666', color:'#F5D44A', glow:'rgba(245,212,74,0.35)',
         title:'Open Source Development', shortTitle:'Open Source\nDevelopment',
         desc:'Building impactful software collaboratively through open-source contributions, version control workflows, and community-driven innovation.',
         tags:['Git','GitHub','Linux','GSSoC'] },
-      { id:'clouddevops',rank:'7',  suit:'♠', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
+      { id:'clouddevops',rank:'7',  suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
         title:'Cloud & DevOps',          shortTitle:'Cloud &\nDevOps',
         desc:'Automating deployment pipelines, managing cloud infrastructure, and ensuring scalable, reliable software delivery.',
         tags:['AWS','Docker','Kubernetes','CI/CD'] },
     ];
 
     function makeCard(d) {
-      const wrap = document.createElement('div');
+      var wrap  = document.createElement('div');
       wrap.className = 'domain-card';
       wrap.setAttribute('tabindex', '0');
       wrap.setAttribute('role', 'button');
-      wrap.setAttribute('aria-label', d.title + ' — hover or Enter to flip');
-      const inner = document.createElement('div');
+      wrap.setAttribute('aria-label', d.title + ' \u2014 hover or Enter to flip');
+
+      var inner = document.createElement('div');
       inner.className = 'domain-card-inner';
 
       // Front face
-      const front = document.createElement('div');
+      var front = document.createElement('div');
       front.className = 'domain-card-face domain-card-front';
       front.style.cssText = 'border:1.5px solid ' + d.color + '40;box-shadow:0 8px 28px #00000099;';
       front.innerHTML =
@@ -2263,7 +2441,7 @@ body::before {
         '</div>' +
         '<div class="dc-centre">' +
           '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
-          '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle.replace('\n','\n') + '</span>' +
+          '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle + '</span>' +
         '</div>' +
         '<div class="dc-corner dc-corner-br">' +
           '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
@@ -2271,10 +2449,10 @@ body::before {
         '</div>';
 
       // Back face
-      const back = document.createElement('div');
+      var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
       back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';';
-      const tagsHtml = d.tags.map(function(t) {
+      var tagsHtml = d.tags.map(function(t) {
         return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '12;color:' + d.color + '">' + t + '</span>';
       }).join('');
       back.innerHTML =
@@ -2287,131 +2465,243 @@ body::before {
       inner.appendChild(back);
       wrap.appendChild(inner);
 
-      // Flip on hover is handled by CSS :hover — no JS needed.
-      // Keyboard: Enter/Space toggles kb-flipped for accessibility.
       wrap.addEventListener('keydown', function(e) {
-        if (e.key==='Enter' || e.key===' ') { e.preventDefault(); wrap.classList.toggle('kb-flipped'); }
+        if (e.key==='Enter'||e.key===' ') { e.preventDefault(); wrap.classList.toggle('kb-flipped'); }
         if (e.key==='Escape') wrap.classList.remove('kb-flipped');
       });
       wrap.addEventListener('blur', function() { wrap.classList.remove('kb-flipped'); });
       return wrap;
     }
 
-    const stage   = document.getElementById('domains-stage');
-    const section = document.querySelector('.domains-section');
-    const header  = document.getElementById('domains-header');
+    var stage   = document.getElementById('domains-stage');
+    var section = document.querySelector('.domains-section');
+    var header  = document.getElementById('domains-header');
     if (!stage || !section || !header) return;
 
-    const cardEls = DOMAINS_DATA.map(function(d) {
-      const el = makeCard(d);
+    var cardEls = DOMAINS_DATA.map(function(d) {
+      var el = makeCard(d);
       stage.appendChild(el);
       return el;
     });
 
-    // Wait for GSAP + ScrollTrigger to be available
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.warn('GSAP not loaded — domains dealer skipped');
+      console.warn('GSAP not loaded');
       return;
     }
 
-    const isMobile = window.matchMedia('(max-width:768px)').matches;
-
-    // ── MOBILE: simple stagger ──────────────────────────────────────
-    if (isMobile) {
-      var vw = stage.clientWidth, pad = 14, cols = 2;
-      var cw = (vw - pad*(cols+1))/cols, ch = cw*(7/5);
-      cardEls.forEach(function(el, i) {
-        el.style.position = 'relative';
-        el.style.width    = cw + 'px';
-        el.style.height   = ch + 'px';
-        el.style.marginBottom = '14px';
-        gsap.set(el, { opacity:0, y:40 });
-      });
+    /* ── Mobile: CSS grid layout, simple stagger entrance ── */
+    if (window.matchMedia('(max-width:768px)').matches) {
+      gsap.set(header, { opacity: 0, y: 16 });
+      gsap.set(cardEls, { opacity: 0, y: 30 });
       ScrollTrigger.create({
-        trigger: section, start:'top 72%',
+        trigger: section, start: 'top 72%',
         onEnter: function() {
-          gsap.to(cardEls, { opacity:1, y:0, stagger:0.08, duration:0.6, ease:'power3.out' });
+          gsap.to(header, { opacity:1, y:0, duration:0.5, ease:'power2.out' });
+          gsap.to(cardEls, { opacity:1, y:0, stagger:0.07, duration:0.55, ease:'power3.out', delay:0.15 });
         }
       });
       return;
     }
 
-    // ── DESKTOP: full dealer animation ────────────────────────────
-    var VW = window.innerWidth, VH = window.innerHeight, N = cardEls.length;
-    var COLS = 4, ROWS = 2;
-    var RIGHT_PANEL_W = Math.max(VW*0.20, 180);
-    var LEFT_W        = VW - RIGHT_PANEL_W;
-    var HEADER_H      = Math.round(VH*0.22);
-    var GRID_PAD_L    = Math.round(VW*0.06);
-    var GRID_GAP      = 14;
-    var GRID_TOP      = HEADER_H + 10;
-    var GRID_AVAIL_H  = VH - 16 - GRID_TOP;
-    var GRID_AVAIL_W  = LEFT_W - GRID_PAD_L - 20;
-    var CH_h = (GRID_AVAIL_H - GRID_GAP*(ROWS-1)) / ROWS;
-    var CH_w = ((GRID_AVAIL_W - GRID_GAP*(COLS-1)) / COLS) * (7/5);
-    var CH   = Math.floor(Math.min(CH_h, CH_w));
-    var CW   = Math.floor(CH*(5/7));
+    /* ── Desktop: full card-dealer animation ── */
+    function buildDealer() {
+      var VW = window.innerWidth;
+      var VH = window.innerHeight;
+      var N  = cardEls.length; // 8
 
-    // Total grid width — used to centre across the full viewport
-    var TOTAL_GRID_W  = COLS*CW + (COLS-1)*GRID_GAP;
-    var GRID_OFFSET_X = Math.round((VW - TOTAL_GRID_W) / 2);   // centred
+      var COLS = 4, ROWS = 2;
 
-    var gridPos = cardEls.map(function(_, i) {
+      /* ── Measure the actual rendered header height ────────────
+         Using getBoundingClientRect() means we always know the
+         true bottom of the header text regardless of font size,
+         browser zoom, OS scaling, or line-wrapping.
+      ────────────────────────────────────────────────────────── */
+      var hdrRect      = header.getBoundingClientRect();
+      var HDR_BOTTOM   = hdrRect.bottom;
+      var PAD_BELOW    = Math.max(VH * 0.03, 16);  // gap between header and row 1
+
+      /* ── Grid area: full viewport width, centred ─────────────
+         No right panel. Grid spans the full VW with equal
+         horizontal padding on both sides.
+      ────────────────────────────────────────────────────────── */
+      var H_PAD  = Math.max(VW * 0.05, 32);  // equal padding left AND right
+      var GAP    = Math.max(VW * 0.013, 10); // inter-card gap
+
+      var G_TOP  = HDR_BOTTOM + PAD_BELOW;
+      var G_BOT  = VH - 20;
+      var G_H    = G_BOT - G_TOP;
+      var G_W    = VW - H_PAD * 2;           // full width minus equal margins
+
+      /* Bail-out for extreme zoom where header is very tall */
+      if (G_H < VH * 0.28) {
+        G_TOP = VH * 0.30;
+        G_H   = G_BOT - G_TOP;
+      }
+
+      /* ── Card sizing ──────────────────────────────────────────
+         Solve from both constraints and take the smaller result,
+         then enforce the overflow guard.
+      ────────────────────────────────────────────────────────── */
+      var CH_h   = (G_H - GAP * (ROWS - 1)) / ROWS;
+      var CW_max = (G_W - GAP * (COLS - 1)) / COLS;
+      var CH_w   = CW_max * (7 / 5);
+      var CH     = Math.floor(Math.min(CH_h, CH_w, VH * 0.40));
+      var CW     = Math.floor(CH * (5 / 7));
+
+      /* Hard cap: 4 cols must always fit in G_W */
+      var MAX_CW = Math.floor((G_W - GAP * (COLS - 1)) / COLS);
+      if (CW > MAX_CW) { CW = MAX_CW; CH = Math.floor(CW * (7 / 5)); }
+
+      /* ── True centre: equal space on all sides ───────────────*/
+      var GRID_TOTAL_W = COLS * CW + (COLS - 1) * GAP;
+      var GRID_TOTAL_H = ROWS * CH + (ROWS - 1) * GAP;
+      var GRID_START_X = Math.floor((VW - GRID_TOTAL_W) / 2);   // centred in full VW
+      var GRID_START_Y = G_TOP + Math.max(0, Math.floor((G_H - GRID_TOTAL_H) / 2));
+
+      var gridPos = cardEls.map(function(_, i) {
+        return {
+          x: GRID_START_X + (i % COLS) * (CW + GAP),
+          y: GRID_START_Y + Math.floor(i / COLS) * (CH + GAP),
+          w: CW,
+          h: CH
+        };
+      });
+
+      /* ── Deck: stacked off the right edge, slides in ─────────
+         Cards start piled just beyond the right edge of the
+         viewport so they visually "come from the right".
+      ────────────────────────────────────────────────────────── */
+      var DECK_W  = Math.min(CW * 0.88, 200);
+      var DECK_H  = DECK_W * (7 / 5);
+      /* Centre the deck horizontally in the right 15% of VW */
+      var DECK_CX = VW - DECK_W / 2 - Math.max(VW * 0.04, 20);
+      var DECK_CY = VH / 2;
+      var MID     = (N - 1) / 2;
+
+      var pilePos = cardEls.map(function(_, i) {
+        var d = i - MID;
+        return {
+          x:        DECK_CX - DECK_W / 2 + d * 2.5,
+          y:        DECK_CY  - DECK_H / 2 + d * 1.5,
+          w:        DECK_W,
+          h:        DECK_H,
+          rotation: d * 3.5,
+          scale:    1 - Math.abs(d) * 0.01,
+          zIndex:   N - i
+        };
+      });
+
+      /* ── Spotlight: upper-right, fully inside viewport ───────*/
+      var SPOT_W  = DECK_W * 1.12;
+      var SPOT_H  = SPOT_W * (7 / 5);
+      var SPOT_X  = VW - SPOT_W - Math.max(VW * 0.04, 20);
+      var SPOT_Y  = Math.max(VH * 0.08, 20);
+
+      /* Hide the divider line — no right panel anymore */
+      var divider = document.querySelector('.domains-divider');
+      if (divider) { divider.style.display = 'none'; }
+
       return {
-        x: GRID_OFFSET_X + (i%COLS)*(CW+GRID_GAP),
-        y: GRID_TOP   + Math.floor(i/COLS)*(CH+GRID_GAP),
-        w: CW, h: CH
+        pilePos: pilePos, gridPos: gridPos,
+        SPOT_X:  SPOT_X,  SPOT_Y:  SPOT_Y,
+        SPOT_W:  SPOT_W,  SPOT_H:  SPOT_H
       };
-    });
+    }
 
-    var PANEL_CX = LEFT_W + RIGHT_PANEL_W/2;
-    var DECK_W   = Math.min(CW*0.92, RIGHT_PANEL_W-20);
-    var DECK_H   = DECK_W*(7/5);
-    var MID      = (N-1)/2;
+    /* Build a fresh timeline from geo — shared by init and onRefresh */
+    function buildTimeline(geo) {
+      var tl = gsap.timeline({ paused: true });
+      tl.to(header, { opacity: 1, y: 0, duration: 0.06, ease: 'power2.out' }, 0);
 
-    var pilePos = cardEls.map(function(_, i) {
-      var d = i - MID;
-      return { x: PANEL_CX-DECK_W/2+d*2.5, y: VH/2-DECK_H/2+d*1.5,
-               w: DECK_W, h: DECK_H, rotation: d*3.5,
-               scale: 1-Math.abs(d)*0.01, zIndex: N-i };
-    });
+      var N = cardEls.length;
+      var W_START = 0.07, W_END = 0.96;
+      var PER = (W_END - W_START) / N;
 
-    var SPOT_W = DECK_W*1.1, SPOT_H = SPOT_W*(7/5);
-    var SPOT_X = PANEL_CX - SPOT_W/2, SPOT_Y = VH*0.12;
+      cardEls.forEach(function(el, i) {
+        var ws  = W_START + i * PER;
+        var wm1 = ws  + PER * 0.38;
+        var wm2 = wm1 + PER * 0.22;
+        var we  = ws  + PER;
+        var g   = geo.gridPos[i];
 
-    // Set initial states
-    gsap.set(header, { opacity:0, y:20 });
-    cardEls.forEach(function(el, i) {
-      var p = pilePos[i];
-      gsap.set(el, { x:p.x, y:p.y, width:p.w, height:p.h,
-        rotation:p.rotation, scale:p.scale, zIndex:p.zIndex,
-        opacity:1, transformOrigin:'center center' });
-    });
+        /* 1. Rise to spotlight */
+        tl.to(el, {
+          x: geo.SPOT_X, y: geo.SPOT_Y,
+          width: geo.SPOT_W, height: geo.SPOT_H,
+          rotation: 0, scale: 1, zIndex: 1000 + i, opacity: 1,
+          duration: wm1 - ws, ease: 'power2.out'
+        }, ws);
 
-    var tl = gsap.timeline({ paused:true });
-    tl.to(header, { opacity:1, y:0, duration:0.06, ease:'power2.out' }, 0);
+        /* 2. Float (subtle bob) */
+        tl.to(el, { y: geo.SPOT_Y - 8, duration: (wm2 - wm1) * 0.5, ease: 'sine.inOut' }, wm1);
+        tl.to(el, { y: geo.SPOT_Y,     duration: (wm2 - wm1) * 0.5, ease: 'sine.inOut' }, wm1 + (wm2 - wm1) * 0.5);
 
-    var W_START=0.07, W_END=0.96, PER=(W_END-W_START)/N;
-    cardEls.forEach(function(el, i) {
-      var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
-      var g=gridPos[i];
-      tl.to(el, { x:SPOT_X, y:SPOT_Y, width:SPOT_W, height:SPOT_H,
-        rotation:0, scale:1, zIndex:1000+i, opacity:1,
-        duration:wm1-ws, ease:'power2.out' }, ws);
-      tl.to(el, { y:SPOT_Y-7, duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1);
-      tl.to(el, { y:SPOT_Y,   duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1+(wm2-wm1)*0.5);
-      tl.to(el, { x:g.x, y:g.y, width:g.w, height:g.h,
-        rotation:0, scale:1, zIndex:i+1, opacity:1,
-        duration:we-wm2, ease:'power3.inOut' }, wm2);
-    });
+        /* 3. Fly to grid slot */
+        tl.to(el, {
+          x: g.x, y: g.y, width: g.w, height: g.h,
+          rotation: 0, scale: 1, zIndex: i + 1, opacity: 1,
+          duration: we - wm2, ease: 'power3.inOut'
+        }, wm2);
+      });
+
+      return tl;
+    }
+
+    /* Apply deck positions to all cards (called at init and on refresh) */
+    function setDeckState(geo) {
+      gsap.set(header, { opacity: 0, y: 20 });
+      cardEls.forEach(function(el, i) {
+        var p = geo.pilePos[i];
+        gsap.set(el, {
+          x: p.x, y: p.y,
+          width: p.w, height: p.h,
+          rotation: p.rotation,
+          scale: p.scale,
+          zIndex: p.zIndex,
+          opacity: 1,
+          transformOrigin: 'center center'
+        });
+      });
+    }
+
+    /* ── Initialise ── */
+    var geo = buildDealer();
+    setDeckState(geo);
+    var tl  = buildTimeline(geo);
 
     ScrollTrigger.create({
-      trigger: section, start:'top top',
-      end: '+=' + (VH*5),
-      pin:true, scrub:1.5, anticipatePin:1,
+      trigger:  section,
+      start:    'top top',
+      end:      function() { return '+=' + (window.innerHeight * 5); },
+      pin:      true,
+      scrub:    1.5,
+      anticipatePin: 1,
       animation: tl,
-      invalidateOnRefresh:true,
-      onRefresh: function() { tl.invalidate(); }
+      invalidateOnRefresh: true,
+      onRefresh: function() {
+        /* Called by GSAP on init AND on every resize/zoom.
+           Recompute geometry, reset card positions, rebuild keyframes. */
+        geo = buildDealer();
+        setDeckState(geo);
+        tl.clear();
+        /* Rebuild keyframes inline (same logic as buildTimeline) */
+        tl.to(header, { opacity: 1, y: 0, duration: 0.06, ease: 'power2.out' }, 0);
+        var N2 = cardEls.length;
+        var W_START = 0.07, W_END = 0.96, PER = (W_END - W_START) / N2;
+        cardEls.forEach(function(el, i) {
+          var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
+          var g=geo.gridPos[i];
+          tl.to(el, { x:geo.SPOT_X, y:geo.SPOT_Y, width:geo.SPOT_W, height:geo.SPOT_H,
+            rotation:0, scale:1, zIndex:1000+i, opacity:1,
+            duration:wm1-ws, ease:'power2.out' }, ws);
+          tl.to(el, { y:geo.SPOT_Y-8, duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1);
+          tl.to(el, { y:geo.SPOT_Y,   duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1+(wm2-wm1)*0.5);
+          tl.to(el, { x:g.x, y:g.y, width:g.w, height:g.h,
+            rotation:0, scale:1, zIndex:i+1, opacity:1,
+            duration:we-wm2, ease:'power3.inOut' }, wm2);
+        });
+        tl.invalidate();
+      }
     });
 
   })();
