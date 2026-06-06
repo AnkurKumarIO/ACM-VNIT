@@ -967,15 +967,12 @@ body::before {
   font-size: 0.78em;
 }
 
-<<<<<<< HEAD
-=======
 /* ── Back face elements ── */
 .domain-card-back::before {
   border-color: rgba(255,255,255,0.06) !important;
   border-width: 1.5px !important;
 }
 
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
 /* ── Image front face ── */
 .dc-img-front {
   position: absolute;
@@ -987,16 +984,9 @@ body::before {
   display: block;
 }
 
-<<<<<<< HEAD
-/* ── Domain name label BELOW the card (not overlaid) ── */
-.dc-name-label {
-  position: absolute;
-  /* sits right below the card bottom edge */
-=======
 /* ── Domain name label BELOW the card ── */
 .dc-name-label {
   position: absolute;
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
   top: 100%;
   left: -8px;
   right: -8px;
@@ -1004,10 +994,6 @@ body::before {
   text-align: center;
   pointer-events: none;
   z-index: 5;
-<<<<<<< HEAD
-  /* prevent clipping by parent */
-=======
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
   overflow: visible;
   opacity: 0;
   visibility: hidden;
@@ -1020,18 +1006,11 @@ body::before {
   letter-spacing: 0.06em;
   color: var(--cream);
   line-height: 1.2;
-<<<<<<< HEAD
-  /* scale with the card's font-size set by GSAP */
-=======
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
   font-size: 0.88em;
   white-space: nowrap;
   text-shadow: 0 1px 6px rgba(0,0,0,0.6);
 }
 
-<<<<<<< HEAD
-/* ── Back face elements (dark theme restored) ── */
-=======
 /* Mobile: name label visible below each card in the grid */
 @media (max-width: 768px) {
   .dc-name-label {
@@ -1042,7 +1021,6 @@ body::before {
     visibility: visible !important;
   }
 }
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
 .dc-back-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -3420,11 +3398,7 @@ body.intro-active { overflow: hidden; }
       front.className = 'domain-card-face domain-card-front';
 
       if (CARD_IMAGES[d.id]) {
-<<<<<<< HEAD
-        // Image-based front: full bleed photo card — NO name overlay
-=======
         // Image-based front: full bleed photo card
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
         front.style.cssText = 'box-shadow:0 8px 28px #00000099;padding:0;background:#000;';
         front.innerHTML = '<img class="dc-img-front" src="' + CARD_IMAGES[d.id] + '" alt="' + d.title + '" draggable="false">';
       } else {
@@ -3445,11 +3419,7 @@ body.intro-active { overflow: hidden; }
           '</div>';
       }
 
-<<<<<<< HEAD
-      // Back face — restored original dark theme
-=======
       // Back face — dark theme
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
       back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';background:linear-gradient(155deg,#1e1e1e 0%,#111 100%);';
@@ -3634,14 +3604,8 @@ body.intro-active { overflow: hidden; }
         var g   = geo.gridPos[i];
         var lbl = el.querySelector('.dc-name-label');
 
-<<<<<<< HEAD
-        if (lbl) {
-          tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
-        }
-=======
         /* Hide label at start */
         if (lbl) { tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws); }
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
 
         /* 1. Rise to spotlight */
         tl.to(el, {
@@ -3663,10 +3627,7 @@ body.intro-active { overflow: hidden; }
           duration: we - wm2, ease: 'power3.inOut'
         }, wm2);
 
-<<<<<<< HEAD
-=======
         /* 4. Fade in name label as card lands */
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
         if (lbl) {
           tl.set(lbl, { visibility: 'visible' }, wm2);
           tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
@@ -3728,15 +3689,8 @@ body.intro-active { overflow: hidden; }
         cardEls.forEach(function(el, i) {
           var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
           var g=geo.gridPos[i];
-<<<<<<< HEAD
-          var lbl = el.querySelector('.dc-name-label');
-          if (lbl) {
-            tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
-          }
-=======
           var lbl=el.querySelector('.dc-name-label');
           if (lbl) { tl.set(lbl, { opacity:0, visibility:'hidden' }, ws); }
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
           tl.to(el, { x:geo.SPOT_X, y:geo.SPOT_Y, width:geo.SPOT_W, height:geo.SPOT_H,
             rotation:0, scale:1, zIndex:1000+i, opacity:1,
             duration:wm1-ws, ease:'power2.out' }, ws);
@@ -3747,13 +3701,8 @@ body.intro-active { overflow: hidden; }
             fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
             duration:we-wm2, ease:'power3.inOut' }, wm2);
           if (lbl) {
-<<<<<<< HEAD
-            tl.set(lbl, { visibility: 'visible' }, wm2);
-            tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
-=======
             tl.set(lbl, { visibility:'visible' }, wm2);
             tl.to(lbl, { opacity:1, duration:we-wm2, ease:'power2.out' }, wm2);
->>>>>>> 617d2799b2e2a81b9c76f4992c019cec031b9f5b
           }
         });
         tl.invalidate();
