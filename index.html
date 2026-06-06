@@ -1173,237 +1173,405 @@ body::before {
   .domain-card-inner { height:0; padding-bottom:140%; }
 }
 /* ═══════════════════════════════════════════
-   EVENTS SECTION — CASSETTE CARDS
+   EVENTS SECTION — ACM ACTIVITIES
    ═══════════════════════════════════════════ */
 .events-section {
   padding: 120px 8vw;
   border-top: 1px solid var(--border-subtle);
 }
-.events-grid {
+
+/* Section divider row */
+.events-section-divider {
+  max-width: 1400px;
+  margin: 0 auto 64px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.events-section-divider h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  white-space: nowrap;
+}
+.events-section-divider h2 span { color: var(--gold); }
+.events-section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(201,168,76,0.12);
+}
+.events-section-divider-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.2);
+  white-space: nowrap;
+}
+
+/* Card grid */
+.events-grid-new {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
-  margin-top: 60px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
 }
-.event-featured {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-column: 1 / -1;
-  gap: 0;
-  background: linear-gradient(145deg, #071e38 0%, #010C18 100%);
-  border: 1.5px solid var(--border-gold);
-  border-radius: 20px;
-  overflow: hidden;
-  transition: border-color 0.4s, box-shadow 0.4s;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(201,168,76,0.08);
+
+/* Individual event card */
+.ev-card {
   position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(7, 30, 56, 0.6);
+  border: 1px solid rgba(201,168,76,0.12);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
-.event-featured::after {
+.ev-card::before {
   content: '';
   position: absolute;
-  inset: 8px;
-  border: 1px dashed rgba(216, 185, 126, 0.15);
-  border-radius: 12px;
-  pointer-events: none;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
 }
-.event-featured:hover {
-  border-color: var(--gold);
-  box-shadow: 0 20px 60px var(--gold-glow);
+.ev-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  box-shadow: 0 0 50px rgba(201,168,76,0.08), 0 24px 64px rgba(0,0,0,0.55);
+  transform: translateY(-6px);
 }
-.event-featured-visual {
+.ev-card:hover::before { opacity: 0.85; }
+
+/* Image zone */
+.ev-img-wrap {
   position: relative;
-  min-height: 360px;
-  background: linear-gradient(135deg, #041b37, #031224);
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background: #0a1828;
+  flex-shrink: 0;
+}
+.ev-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.ev-img-wrap img.ev-loaded { opacity: 1; }
+.ev-card:hover .ev-img-wrap img { transform: scale(1.04); }
+
+/* Zoom hint overlay */
+.ev-zoom-hint {
+  position: absolute;
+  inset: 0;
+  background: rgba(1,12,24,0);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border-subtle);
+  opacity: 0;
+  transition: all 0.35s;
+  cursor: zoom-in;
+  z-index: 4;
 }
-.event-featured-poker {
-  width: 220px;
-  height: 320px;
-  background: var(--cream);
-  border: 1.5px solid var(--navy);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 18px;
-  position: relative;
-  transform: rotate(-6deg);
-  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  color: var(--navy);
-}
-.event-featured-poker::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border: 1px solid var(--gold);
-  border-radius: 8px;
-  pointer-events: none;
-}
-.event-featured:hover .event-featured-poker {
-  transform: rotate(0deg) scale(1.06);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
-}
-.event-featured-content {
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  z-index: 3;
-}
-.event-featured-content .event-type {
+.ev-zoom-hint span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background: rgba(1,12,24,0.82);
+  border: 1px solid rgba(201,168,76,0.4);
   font-family: var(--font-mono);
   font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.ev-card:hover .ev-zoom-hint { opacity: 1; background: rgba(1,12,24,0.15); }
+
+/* Carousel controls */
+.ev-carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+}
+.ev-carousel-track img {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.ev-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(1,12,24,0.78);
+  border: 1px solid rgba(201,168,76,0.32);
+  color: var(--gold);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.3s, border-color 0.3s;
+  user-select: none;
+}
+.ev-carousel-btn:hover { background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.65); }
+.ev-carousel-prev { left: 12px; }
+.ev-carousel-next { right: 12px; }
+.ev-carousel-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+}
+.ev-carousel-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.3);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.ev-carousel-dot.active { background: var(--gold); transform: scale(1.35); }
+
+/* Image placeholder (before files placed) */
+.ev-img-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #0d1820, #091220);
+}
+.ev-img-placeholder-icon {
+  font-size: 36px;
+  color: rgba(201,168,76,0.2);
+}
+.ev-img-placeholder-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 12px;
+  color: rgba(201,168,76,0.3);
 }
-.event-featured-content h3 {
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 3vw, 36px);
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--cream);
-  margin-bottom: 16px;
-  line-height: 1.1;
-}
-.event-featured-content p {
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-}
-.event-meta {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.event-meta-tag {
-  padding: 8px 16px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+.ev-img-placeholder-hint {
   font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--cream);
-  opacity: 0.8;
-  background: rgba(108, 182, 227, 0.04);
-}
-.event-meta-tag.highlight {
-  border-color: rgba(216, 185, 126, 0.3);
-  background: rgba(216, 185, 126, 0.08);
-  color: var(--gold);
-  opacity: 1;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: rgba(245,240,232,0.15);
 }
 
-/* Regular event card */
-.event-card {
-  background: linear-gradient(145deg, #071e38 0%, #010C18 100%);
-  border: 1.5px solid var(--border-gold);
-  border-radius: 12px;
-  padding: 24px;
-  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(201,168,76,0.06);
+/* Card body */
+.ev-body {
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
 }
-/* Badge clip slot at the top center */
-.event-card::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 36px;
-  height: 6px;
-  background: rgba(216, 185, 126, 0.25);
-  border-radius: 3px;
-  border: 1px solid var(--border-gold);
-  z-index: 2;
+
+/* Badge */
+.ev-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  background: rgba(201,168,76,0.05);
+  width: fit-content;
 }
-.event-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--gold);
-  box-shadow: 0 16px 40px var(--gold-glow);
+.ev-badge::before { content: '◆'; font-size: 6px; opacity: 0.7; }
+
+/* Title */
+.ev-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  line-height: 1.2;
 }
-/* Subtle golden inner card border */
-.event-card::after {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border: 1px dashed rgba(216, 185, 126, 0.15);
-  border-radius: 8px;
-  pointer-events: none;
-  transition: border-color 0.4s;
+
+/* Description */
+.ev-desc {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.5);
+  flex: 1;
 }
-.event-card:hover::after {
-  border-color: rgba(216, 185, 126, 0.3);
+
+/* Gallery button */
+.ev-gallery-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: 1px solid rgba(201,168,76,0.35);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: transparent;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
-.event-card .event-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(108, 182, 227, 0.08);
-  border: 1px solid var(--border-subtle);
+.ev-gallery-btn:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: rgba(201,168,76,0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.15);
+}
+
+/* Lightbox */
+.ev-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(1,12,24,0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  margin: 12px auto 16px;
-  color: var(--accent);
-  position: relative;
-  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1);
 }
-.event-card h4 {
+.ev-lightbox.open { opacity: 1; pointer-events: auto; }
+.ev-lightbox-inner {
+  position: relative;
+  width: 90vw;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+.ev-lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.ev-lightbox-title {
   font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--cream);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  text-align: center;
-  position: relative;
-  z-index: 3;
-}
-.event-card p {
   font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-muted);
-  margin-bottom: 20px;
-  text-align: center;
-  position: relative;
-  z-index: 3;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
 }
-.event-card .event-date {
+.ev-lightbox-close {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.ev-lightbox-close:hover { background: rgba(201,168,76,0.2); }
+.ev-lightbox-img-wrap {
+  position: relative;
+  width: 100%;
+  max-height: 72vh;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(201,168,76,0.14);
+}
+.ev-lightbox-img-wrap img {
+  width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  display: block;
+  background: #071e38;
+}
+.ev-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(1,12,24,0.85);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 10;
+}
+.ev-lightbox-nav:hover { background: rgba(201,168,76,0.15); }
+.ev-lightbox-prev { left: 12px; }
+.ev-lightbox-next { right: 12px; }
+.ev-lightbox-footer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.ev-lightbox-dots { display: flex; gap: 8px; }
+.ev-lightbox-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.2);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.ev-lightbox-dot.active { background: var(--gold); transform: scale(1.3); }
+.ev-lightbox-counter {
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--gold);
-  font-weight: 600;
-  text-align: center;
-  position: relative;
-  z-index: 3;
-  background: rgba(216, 185, 126, 0.08);
-  padding: 4px 12px;
-  border-radius: 4px;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
+  letter-spacing: 0.15em;
+  color: rgba(245,240,232,0.35);
+  text-transform: uppercase;
 }
+/* Hide nav/dots/counter for single-image lightbox */
+.ev-lightbox.ev-single .ev-lightbox-nav,
+.ev-lightbox.ev-single .ev-lightbox-dots,
+.ev-lightbox.ev-single .ev-lightbox-counter { display: none; }
 
-@media (max-width: 768px) {
-  .events-grid { grid-template-columns: 1fr; }
-  .event-featured { grid-template-columns: 1fr; }
-  .event-featured-visual { min-height: 220px; }
-  .event-featured-content { padding: 28px; }
+@media (max-width: 900px) {
+  .events-grid-new { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .ev-img-wrap { height: 220px; }
 }
 
 /* Projects Section / GitHub-Inspired repository showcase */
@@ -2515,69 +2683,155 @@ body.intro-active { overflow: hidden; }
      ═══════════════════════════════════════════ -->
 <section class="events-section" id="events">
   <div style="max-width: 1400px; margin: 0 auto;">
-    <div class="section-label reveal">// Engineered for Excellence</div>
+    <div class="section-label reveal">// ACM Events &amp; Activities</div>
     <div class="section-title reveal reveal-delay-1">
-      Technical<br><span class="accent">Deployments</span>
+      Where Students<br><span class="accent">Learn &amp; Grow</span>
     </div>
+    <p class="reveal reveal-delay-2" style="font-size:clamp(13px,1.3vw,16px);line-height:1.75;color:rgba(245,240,232,0.52);max-width:680px;margin-top:20px;">
+      Explore the workshops, hackathons, mentorship sessions, and community initiatives organized by ACM VNIT that help students learn, collaborate, innovate, and grow as future technology leaders.
+    </p>
+  </div>
 
-    <div class="events-grid">
-      <!-- Featured Event: GREP -->
-      <div class="event-featured reveal">
-        <div class="event-featured-visual">
-          <div class="event-featured-poker">
-            <div class="pk-corner"><span class="pk-rank">G</span><span class="pk-suit-sm">♠</span></div>
-            <div class="pk-center" style="gap: 8px;">
-              <span class="pk-suit-lg" style="font-size: 48px; filter: drop-shadow(0 4px 10px rgba(8,42,87,0.15));">♠</span>
-              <span class="pk-domain-label" style="color: var(--navy); border-color: rgba(8,42,87,0.15); background: rgba(8,42,87,0.05); font-size: 9px;">GREP 2024</span>
-            </div>
-            <div class="pk-corner pk-corner-br"><span class="pk-rank">G</span><span class="pk-suit-sm">♠</span></div>
-          </div>
+  <div style="max-width:1400px;margin:52px auto 0;display:flex;align-items:center;gap:20px;" class="reveal reveal-delay-3">
+    <h2 style="font-family:var(--font-heading);font-size:clamp(1.2rem,2vw,1.7rem);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;color:var(--cream);white-space:nowrap;">
+      Event <span style="color:var(--gold)">Showcase</span>
+    </h2>
+    <div style="flex:1;height:1px;background:rgba(201,168,76,0.12);"></div>
+    <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,0.2);white-space:nowrap;">2024 — 2026</span>
+  </div>
+
+  <div class="events-grid-new" style="margin-top:32px;">
+
+    <!-- Card 1: ACM Meet 2026 -->
+    <article class="ev-card reveal reveal-delay-1"
+             data-ev-lightbox='[{"src":"events/img/acm-meet.jpg","alt":"ACM Meet 2026 — full chapter group photo"}]'
+             data-ev-title="ACM Meet 2026">
+      <div class="ev-img-wrap">
+        <img src="events/img/acm-meet.jpg"
+             alt="ACM Meet 2026 — students gathered outdoors for a group photo"
+             loading="lazy"
+             data-ev-key="acm-meet.jpg" />
+        <div class="ev-zoom-hint" tabindex="0" role="button" aria-label="View full photo">
+          <span>🔍 View Photo</span>
         </div>
-        <div class="event-featured-content">
-          <span class="event-type">// Flagship Hackathon</span>
-          <h3>GREP 2024</h3>
-          <p>The ultimate test of endurance and innovation. Build, break, and rebuild in our 36-hour technical sprint — where ideas meet implementation at velocity.</p>
-          <div class="event-meta">
-            <span class="event-meta-tag">36-Hour Sprint</span>
-            <span class="event-meta-tag highlight">Registration Open</span>
-          </div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-badge">Community Building</div>
+        <h3 class="ev-title">ACM Meet 2026</h3>
+        <p class="ev-desc">The ACM Meet brought together students from all four academic years, creating opportunities for networking, collaboration, mentorship, and community engagement. Members interacted with seniors, discussed ACM initiatives, and strengthened the technical culture of the chapter.</p>
+        <button class="ev-gallery-btn">📷 View Gallery</button>
+      </div>
+    </article>
+
+    <!-- Card 2: Insomnia Hackathon -->
+    <article class="ev-card reveal reveal-delay-2"
+             data-ev-lightbox='[{"src":"events/img/insomnia.jpg","alt":"Insomnia 24-Hour Hackathon — students coding in lecture hall"}]'
+             data-ev-title="Insomnia 24-Hour Hackathon">
+      <div class="ev-img-wrap">
+        <img src="events/img/insomnia.jpg"
+             alt="Insomnia hackathon — students with laptops in packed lecture hall"
+             loading="lazy"
+             data-ev-key="insomnia.jpg" />
+        <div class="ev-zoom-hint" tabindex="0" role="button" aria-label="View full photo">
+          <span>🔍 View Photo</span>
         </div>
       </div>
-
-      <!-- Event: DevOps Deep-Dive -->
-      <div class="event-card reveal" data-event="devops">
-        <div class="event-icon">⚡</div>
-        <h4>DevOps Deep-Dive</h4>
-        <p>Intensive workshop on CI/CD pipelines, Kubernetes orchestration, and cloud-native deployment strategies.</p>
-        <div class="event-date">UPCOMING → FEB 22</div>
+      <div class="ev-body">
+        <div class="ev-badge">Flagship Hackathon</div>
+        <h3 class="ev-title">Insomnia 24-Hour Hackathon</h3>
+        <p class="ev-desc">Insomnia is VNIT's flagship 24-hour hackathon where students work continuously to build innovative solutions under intense time constraints. The event encourages creativity, teamwork, problem-solving, and hands-on technical learning.</p>
+        <button class="ev-gallery-btn">📷 View Gallery</button>
       </div>
+    </article>
 
-      <!-- Event: CTF Qualifiers -->
-      <div class="event-card reveal reveal-delay-1" data-event="ctf">
-        <div class="event-icon">🛡️</div>
-        <h4>CTF Qualifiers</h4>
-        <p>Global cybersecurity challenge for aspiring penetration testers. Reentrancy attacks, flash loans, and smart contract audits.</p>
-        <div class="event-date">UPCOMING → FEB 28</div>
+    <!-- Card 3: Hackathon Guidance -->
+    <article class="ev-card reveal reveal-delay-3"
+             data-ev-lightbox='[{"src":"events/img/hackathon-guidance.jpg","alt":"Hackathon Guidance — senior ACM members presenting in computer lab"}]'
+             data-ev-title="Hackathon Guidance & Orientation">
+      <div class="ev-img-wrap">
+        <img src="events/img/hackathon-guidance.jpg"
+             alt="Senior ACM members conducting hackathon guidance session"
+             loading="lazy"
+             data-ev-key="hackathon-guidance.jpg" />
+        <div class="ev-zoom-hint" tabindex="0" role="button" aria-label="View full photo">
+          <span>🔍 View Photo</span>
+        </div>
       </div>
+      <div class="ev-body">
+        <div class="ev-badge">Mentorship Session</div>
+        <h3 class="ev-title">Hackathon Guidance &amp; Orientation</h3>
+        <p class="ev-desc">Senior ACM members conducted an interactive session focused on hackathon preparation, project ideation, team formation, technology selection, and strategies for excelling in competitive innovation events.</p>
+        <button class="ev-gallery-btn">📷 View Gallery</button>
+      </div>
+    </article>
 
-      <!-- Event: Web3 Security -->
-      <div class="event-card reveal reveal-delay-2" data-event="web3">
-        <div class="event-icon">🔮</div>
-        <h4>Web3 Security Audit</h4>
-        <p>Exploration of reentrancy attacks, flash loans, and smart contract vulnerability mitigation in decentralized systems.</p>
-        <div class="event-date">ARCHIVED → JAN 20</div>
+    <!-- Card 4: Web Dev Workshop (dual-image carousel) -->
+    <article class="ev-card reveal reveal-delay-4"
+             data-ev-lightbox='[
+               {"src":"events/img/webdev-1.jpg","alt":"Web Development Workshop — JWT session"},
+               {"src":"events/img/webdev-2.jpg","alt":"Web Development Workshop — Welcome presentation"}
+             ]'
+             data-ev-title="Web Development Workshop">
+      <div class="ev-img-wrap" id="ev-carousel-webdev">
+        <div class="ev-carousel-track" id="ev-track-webdev">
+          <img src="events/img/webdev-1.jpg"
+               alt="Web Development Workshop — JWT lecture hall"
+               loading="lazy"
+               data-ev-key="webdev-1.jpg" />
+          <img src="events/img/webdev-2.jpg"
+               alt="Web Development Workshop — Welcome to Web Development"
+               loading="lazy"
+               data-ev-key="webdev-2.jpg" />
+        </div>
+        <button class="ev-carousel-btn ev-carousel-prev" data-cid="webdev" aria-label="Previous">&#8249;</button>
+        <button class="ev-carousel-btn ev-carousel-next" data-cid="webdev" aria-label="Next">&#8250;</button>
+        <div class="ev-carousel-dots" id="ev-dots-webdev">
+          <div class="ev-carousel-dot active" data-cid="webdev" data-idx="0"></div>
+          <div class="ev-carousel-dot"        data-cid="webdev" data-idx="1"></div>
+        </div>
+        <div class="ev-zoom-hint" tabindex="0" role="button" aria-label="View gallery">
+          <span>🖼 View Gallery</span>
+        </div>
       </div>
+      <div class="ev-body">
+        <div class="ev-badge">Technical Workshop</div>
+        <h3 class="ev-title">Web Development Workshop</h3>
+        <p class="ev-desc">ACM seniors introduced students to modern web development concepts, frontend technologies, development tools, and industry-standard workflows. Participants gained practical exposure through hands-on demonstrations, interactive discussions, and real-world development insights.</p>
+        <button class="ev-gallery-btn">📷 View Gallery</button>
+      </div>
+    </article>
 
-      <!-- Event: Next.js Architecture -->
-      <div class="event-card reveal reveal-delay-3" data-event="nextjs">
-        <div class="event-icon">🧩</div>
-        <h4>Next.js 14 Internals</h4>
-        <p>Understanding Server Components, Hydration, and the App Router pattern — deep-diving into the architecture of modern React.</p>
-        <div class="event-date">ARCHIVED → FEB 08</div>
-      </div>
-    </div>
+  </div><!-- /.events-grid-new -->
+
+  <!-- View All Events link -->
+  <div style="max-width:1400px;margin:48px auto 0;display:flex;justify-content:center;" class="reveal">
+    <a href="events/code.html"
+       style="display:inline-flex;align-items:center;gap:10px;padding:13px 32px;border-radius:50px;border:1px solid rgba(201,168,76,0.35);font-family:var(--font-heading);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);background:transparent;text-decoration:none;transition:background .3s,box-shadow .3s,transform .3s;"
+       onmouseover="this.style.background='rgba(201,168,76,0.08)';this.style.boxShadow='0 6px 24px rgba(201,168,76,0.15)';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.background='transparent';this.style.boxShadow='none';this.style.transform='translateY(0)'">
+      View All Events &rarr;
+    </a>
   </div>
 </section>
+
+<!-- ── Lightbox (Events) ── -->
+<div class="ev-lightbox" id="ev-lightbox" role="dialog" aria-modal="true">
+  <div class="ev-lightbox-inner">
+    <div class="ev-lightbox-header">
+      <span class="ev-lightbox-title" id="ev-lb-title"></span>
+      <button class="ev-lightbox-close" id="ev-lb-close" aria-label="Close">✕</button>
+    </div>
+    <div class="ev-lightbox-img-wrap">
+      <img id="ev-lb-img" src="" alt=""/>
+      <button class="ev-lightbox-nav ev-lightbox-prev" id="ev-lb-prev">&#8249;</button>
+      <button class="ev-lightbox-nav ev-lightbox-next" id="ev-lb-next">&#8250;</button>
+    </div>
+    <div class="ev-lightbox-footer">
+      <div class="ev-lightbox-dots" id="ev-lb-dots"></div>
+      <span class="ev-lightbox-counter" id="ev-lb-counter"></span>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════
      PROJECTS SECTION
@@ -3595,6 +3849,134 @@ body.intro-active { overflow: hidden; }
     video.addEventListener('ended', function() { fluidActive = false; });
     loop();
   })();
+</script>
+
+<!-- ═══════════════════════════════════════════
+     EVENTS — Carousel + Lightbox
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  /* ── Lazy image load + placeholder ── */
+  const EV_LABELS = {
+    'acm-meet.jpg':           'ACM Meet 2026',
+    'insomnia.jpg':           'Insomnia Hackathon',
+    'hackathon-guidance.jpg': 'Hackathon Guidance',
+    'webdev-1.jpg':           'Web Dev Workshop',
+    'webdev-2.jpg':           'Web Dev Workshop',
+  };
+  function makePlaceholder(img) {
+    var wrap = img.closest('.ev-img-wrap'); if (!wrap) return;
+    if (wrap.querySelector('.ev-img-placeholder')) return;
+    var key = (img.dataset.evKey || '');
+    var label = EV_LABELS[key] || 'ACM VNIT Event';
+    var ph = document.createElement('div');
+    ph.className = 'ev-img-placeholder';
+    ph.innerHTML =
+      '<span class="ev-img-placeholder-icon">🖼</span>' +
+      '<span class="ev-img-placeholder-label">' + label + '</span>' +
+      '<span class="ev-img-placeholder-hint">Place image in events/img/</span>';
+    img.style.opacity = '0';
+    wrap.appendChild(ph);
+  }
+  document.querySelectorAll('.ev-img-wrap img, .ev-carousel-track img').forEach(function(img) {
+    function onLoad() { img.classList.add('ev-loaded'); var ph = img.closest('.ev-img-wrap') && img.closest('.ev-img-wrap').querySelector('.ev-img-placeholder'); if (ph) ph.remove(); }
+    function onError() { makePlaceholder(img); }
+    if (img.complete && img.naturalWidth > 0) { img.classList.add('ev-loaded'); return; }
+    if (img.complete && img.naturalWidth === 0) { onError(); return; }
+    img.addEventListener('load', onLoad);
+    img.addEventListener('error', onError);
+  });
+
+  /* ── Carousel ── */
+  var carousels = {};
+  function initCarousel(id) {
+    var track = document.getElementById('ev-track-' + id);
+    if (!track) return;
+    carousels[id] = { idx: 0, total: track.querySelectorAll('img').length };
+  }
+  function goSlide(id, n) {
+    var s = carousels[id]; if (!s) return;
+    s.idx = ((n % s.total) + s.total) % s.total;
+    var track = document.getElementById('ev-track-' + id);
+    if (track) track.style.transform = 'translateX(-' + s.idx * 100 + '%)';
+    document.querySelectorAll('[data-cid="' + id + '"][data-idx]').forEach(function(d) {
+      d.classList.toggle('active', parseInt(d.dataset.idx) === s.idx);
+    });
+  }
+  initCarousel('webdev');
+  document.querySelectorAll('.ev-carousel-prev').forEach(function(btn) {
+    btn.addEventListener('click', function(e) { e.stopPropagation(); goSlide(btn.dataset.cid, carousels[btn.dataset.cid].idx - 1); });
+  });
+  document.querySelectorAll('.ev-carousel-next').forEach(function(btn) {
+    btn.addEventListener('click', function(e) { e.stopPropagation(); goSlide(btn.dataset.cid, carousels[btn.dataset.cid].idx + 1); });
+  });
+  document.querySelectorAll('.ev-carousel-dot[data-idx]').forEach(function(d) {
+    d.addEventListener('click', function(e) { e.stopPropagation(); goSlide(d.dataset.cid, parseInt(d.dataset.idx)); });
+  });
+  setInterval(function() {
+    Object.keys(carousels).forEach(function(id) { if (carousels[id].total > 1) goSlide(id, carousels[id].idx + 1); });
+  }, 4000);
+
+  /* ── Lightbox ── */
+  var lb       = document.getElementById('ev-lightbox');
+  var lbImg    = document.getElementById('ev-lb-img');
+  var lbTitle  = document.getElementById('ev-lb-title');
+  var lbDots   = document.getElementById('ev-lb-dots');
+  var lbCount  = document.getElementById('ev-lb-counter');
+  var lbClose  = document.getElementById('ev-lb-close');
+  var lbPrev   = document.getElementById('ev-lb-prev');
+  var lbNext   = document.getElementById('ev-lb-next');
+  var lbImages = [], lbIdx = 0;
+
+  function openLb(images, title, startIdx) {
+    lbImages = images; lbIdx = startIdx || 0;
+    lbTitle.textContent = title;
+    lb.classList.toggle('ev-single', images.length === 1);
+    renderLb();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function renderLb() {
+    var im = lbImages[lbIdx];
+    lbImg.src = im.src; lbImg.alt = im.alt;
+    lbCount.textContent = lbImages.length > 1 ? (lbIdx + 1) + ' / ' + lbImages.length : '';
+    lbDots.innerHTML = lbImages.map(function(_, i) {
+      return '<div class="ev-lightbox-dot' + (i === lbIdx ? ' active' : '') + '" data-lbi="' + i + '"></div>';
+    }).join('');
+    lbDots.querySelectorAll('.ev-lightbox-dot').forEach(function(d) {
+      d.addEventListener('click', function() { lbIdx = parseInt(d.dataset.lbi); renderLb(); });
+    });
+  }
+  function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; setTimeout(function() { lbImg.src = ''; }, 350); }
+
+  if (lbClose) lbClose.addEventListener('click', closeLb);
+  if (lb) lb.addEventListener('click', function(e) { if (e.target === lb) closeLb(); });
+  if (lbPrev) lbPrev.addEventListener('click', function() { lbIdx = ((lbIdx - 1) + lbImages.length) % lbImages.length; renderLb(); });
+  if (lbNext) lbNext.addEventListener('click', function() { lbIdx = (lbIdx + 1) % lbImages.length; renderLb(); });
+  document.addEventListener('keydown', function(e) {
+    if (!lb || !lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowLeft')  { lbIdx = ((lbIdx - 1) + lbImages.length) % lbImages.length; renderLb(); }
+    if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbImages.length; renderLb(); }
+  });
+
+  /* Wire cards to lightbox */
+  document.querySelectorAll('.ev-card[data-ev-lightbox]').forEach(function(card) {
+    var images = JSON.parse(card.dataset.evLightbox);
+    var title  = card.dataset.evTitle || '';
+    card.querySelectorAll('.ev-zoom-hint').forEach(function(hint) {
+      hint.addEventListener('click', function() { openLb(images, title, 0); });
+      hint.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') openLb(images, title, 0); });
+    });
+    card.querySelectorAll('.ev-gallery-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var cid = card.querySelector('.ev-carousel-track') ? 'webdev' : null;
+        var start = cid ? (carousels[cid] ? carousels[cid].idx : 0) : 0;
+        openLb(images, title, start);
+      });
+    });
+  });
+})();
 </script>
 </body>
 </html>
