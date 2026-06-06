@@ -1973,6 +1973,160 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════
+   COMPREHENSIVE MOBILE FIXES (≤ 768px)
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Nav brand: hide on mobile (hamburger handles nav) ── */
+  .nav-brand-fixed { display: none; }
+
+  /* ── Hero CTA: move below fold so it doesn't clash with hamburger ── */
+  .hero-cta {
+    position: relative;
+    top: auto; right: auto;
+    display: inline-flex;
+    margin-top: 32px;
+    padding: 10px 22px;
+    font-size: 12px;
+    z-index: 10;
+  }
+
+  /* ── Hero layout ── */
+  .hero {
+    padding: 100px 6vw 0;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-text-wrap { max-width: 100%; }
+
+  /* ── Legend: stack vertically instead of side-by-side ── */
+  .legend-container {
+    position: relative;
+    bottom: auto;
+    left: auto; right: auto;
+    padding: 28px 6vw 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .legend-text { font-size: 13px; opacity: 0.85; }
+  .legend-text[style*="text-align: right"] { text-align: left !important; }
+
+  /* ── Section padding — breathable but not wasteful ── */
+  .about-section,
+  .community-section,
+  .events-section,
+  .projects-section {
+    padding: 60px 6vw;
+  }
+
+  /* ── About: single column, no vertical divider ── */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px 0;
+  }
+  .about-v-divider { display: none; }
+  .about-card-wrap { justify-self: center !important; padding: 0 !important; }
+  .about-text { text-align: left !important; direction: ltr !important; }
+
+  /* ── Projects: single column, kill span-2 ── */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .projects-grid [style*="grid-column"],
+  .project-card[style*="grid-column"] {
+    grid-column: span 1 !important;
+  }
+  .projects-section { padding: 60px 6vw; }
+
+  /* ── Events: tighten up ── */
+  .events-grid { grid-template-columns: 1fr; gap: 20px; }
+  .event-featured { grid-template-columns: 1fr; }
+  .event-featured-visual { min-height: 180px; }
+
+  /* ── Contact: disable scroll-driven animation, show form directly ── */
+  .contact-section { overflow: hidden; }
+  .contact-scroll-driver {
+    height: auto;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 6vw 60px;
+  }
+  .contact-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    justify-content: flex-start;
+    gap: 32px;
+    overflow: visible;
+  }
+  .contact-header {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    white-space: normal;
+    text-align: center;
+    padding-bottom: 8px;
+    pointer-events: auto;
+  }
+  .contact-title { font-size: clamp(2.4rem, 11vw, 3.5rem); }
+  .laptop-wrap {
+    position: relative;
+    width: 100%;
+    transform: none !important;
+  }
+  .laptop-screen {
+    opacity: 1 !important;
+  }
+  .laptop-screen.screen-on,
+  .laptop-screen:not(.screen-on) { opacity: 1 !important; }
+  .laptop-glow { display: none; }
+  /* Show form flat — skip the 3D lid on mobile */
+  .laptop-hinge { perspective: none; }
+  .laptop-lid {
+    transform: rotateX(-8deg) !important;
+    border-radius: 14px;
+  }
+
+  /* ── Footer: single column ── */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  .footer-bottom > div {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── Cassette cards: 1 col ── */
+  .cassette-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Small phones (≤ 480px) ── */
+@media (max-width: 480px) {
+  .hero-line-1, .hero-line-2 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+  .contact-scroll-driver { padding: 70px 5vw 50px; }
+  .projects-grid { gap: 16px; }
+  .laptop-wrap { width: 100%; }
+  .screen-inner { padding: 14px 16px 12px; }
+  .screen-title { font-size: 1rem; }
+  .sf input, .sf textarea { font-size: 13px; padding: 8px 10px; }
+}
+
+/* ═══════════════════════════════════════════
    INTRO VIDEO LOADING SCREEN
    ═══════════════════════════════════════════ */
 #intro-overlay {
@@ -3258,6 +3412,12 @@ body.intro-active { overflow: hidden; }
     var glow    = document.getElementById('laptopGlow');
     var wrap    = document.getElementById('laptopWrap');
     if (!driver || !lid) return;
+
+    // On mobile skip the animation — show form fully open
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      screen.classList.add('screen-on');
+      return;
+    }
 
     var CLOSED_DEG  = -100;
     var OPEN_DEG    =   -8;
