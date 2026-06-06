@@ -179,6 +179,16 @@ body::before {
   color: var(--navy);
 }
 
+/* Hide on scroll down behavior */
+.navbar {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+.navbar.nav-hidden {
+  transform: translateX(-50%) translateY(-100px) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
 /* Mobile hamburger */
 .mobile-menu-btn {
   display: none;
@@ -744,7 +754,7 @@ body::before {
   border-right: 2px dashed var(--border-dashed);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .community-right {
   padding: 48px 0 48px 48px;
@@ -753,7 +763,7 @@ body::before {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
-  margin-top: 48px;
+  margin-top: 40px;
 }
 .stat-item .stat-number {
   font-size: clamp(36px, 5vw, 56px);
@@ -2466,7 +2476,7 @@ body.intro-active { overflow: hidden; }
       </div>
       <div class="about-v-divider reveal"></div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
-        <div class="about-section-headline">ACM</div>
+        <div class="about-section-headline">ACM-VNIT</div>
         <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
         <p>We don't just write code — we ask questions, build with purpose, and learn together. With a culture built on trust and innovation, we're here to build tools, solve problems, and grow as a community — because technology, at its best, brings people together.</p>
       </div>
@@ -2628,12 +2638,14 @@ body.intro-active { overflow: hidden; }
         </div>
       </div>
       <div class="community-right">
-        <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;" class="reveal">
-          SDG — Quality <span style="color: var(--accent);">Education</span>
-        </h3>
-        <p class="community-desc reveal reveal-delay-1">
-          Aligned with UN Sustainable Development Goal 4: Quality Education. Our workshops focus on reducing the digital learning gap in rural communities around Nagpur. Participants explore modern web technologies and learn how simple digital tools can strengthen classrooms with limited resources.
-        </p>
+        <div>
+          <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;" class="reveal">
+            SDG — Quality <span style="color: var(--accent);">Education</span>
+          </h3>
+          <p class="community-desc reveal reveal-delay-1">
+            Aligned with UN Sustainable Development Goal 4: Quality Education. Our workshops focus on reducing the digital learning gap in rural communities around Nagpur. Participants explore modern web technologies and learn how simple digital tools can strengthen classrooms with limited resources.
+          </p>
+        </div>
         <div style="margin-top: 40px;" class="reveal reveal-delay-2">
           <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;">
             Code of <span style="color: var(--accent);">Conduct</span>
@@ -3066,6 +3078,34 @@ body.intro-active { overflow: hidden; }
   function closeMobileMenu() {
     mobileOverlay.classList.remove('open');
   }
+
+  // ───── Hide Navbar on Scroll Down, Show on Scroll Up ─────
+  (function() {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    const threshold = 80;
+    const navbarEl = document.getElementById('navbar');
+
+    if (!navbarEl) return;
+
+    function updateNavbar() {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > threshold) {
+        navbarEl.classList.add('nav-hidden');
+      } else if (currentScrollY < lastScrollY) {
+        navbarEl.classList.remove('nav-hidden');
+      }
+      lastScrollY = Math.max(0, currentScrollY);
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
 
   // ── Contact nav: scroll to where the form is already fully open ──
   // Animation: progress = scrolled / (driverH - viewH)
