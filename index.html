@@ -904,11 +904,18 @@ body::before {
 }
 .dc-corner-br { align-self: flex-end; transform: rotate(180deg); }
 
-/* Font sizes relative to card width via clamp:
-   small card (spotlight ~120px wide) → 13px
-   large card (grid slot ~220px wide) → 20px             */
-.dc-rank    { font-weight: 900; line-height: 1; font-size: clamp(13px, 1.5vw, 20px); }
-.dc-suit-sm { line-height: 1;                  font-size: clamp(11px, 1.2vw, 16px); }
+/* ── Font scaling strategy ────────────────────────────────────
+   GSAP sets an inline font-size on .domain-card proportional
+   to the card's pixel width (CW * 0.065 ≈ 6.5% of card width).
+   All child text uses em fractions of that base, so every
+   element scales perfectly with the card at every resolution.
+   The clamp() fallback kicks in if JS hasn't run yet.
+────────────────────────────────────────────────────────────── */
+.domain-card { font-size: clamp(10px, 1.2vw, 16px); } /* JS overrides this */
+
+/* Front face */
+.dc-rank    { font-weight: 900; line-height: 1; font-size: 1.15em; }
+.dc-suit-sm { line-height: 1;                  font-size: 0.95em; }
 
 .dc-centre {
   flex: 1;
@@ -916,10 +923,10 @@ body::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5em;
   z-index: 2;
 }
-.dc-suit-lg  { line-height: 1; font-size: clamp(36px, 5vw, 68px); pointer-events: none; }
+.dc-suit-lg  { line-height: 1; font-size: 3.8em; pointer-events: none; }
 .dc-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -928,39 +935,47 @@ body::before {
   letter-spacing: 0.04em;
   white-space: pre-line;
   color: var(--cream);
-  font-size: clamp(9px, 1.1vw, 15px);
+  font-size: 0.78em;
 }
 
 /* ── Back face elements ── */
 .dc-back-title {
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.10em;
   text-align: center;
-  padding-bottom: 6px;
+  padding-bottom: 0.4em;
   flex-shrink: 0;
   z-index: 2;
-  font-size: clamp(8px, 1vw, 13px);
+  font-size: 0.72em;
 }
 .dc-back-desc {
-  line-height: 1.6;
+  line-height: 1.55;
   color: #9999aa;
   z-index: 2;
-  font-size: clamp(9px, 0.85vw, 12px);
+  font-size: 0.85em;
+  flex-shrink: 1;   /* allow shrinking — never overflow the card */
+  overflow: hidden;
+}
+.dc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  z-index: 2;
+  margin-top: auto;
   flex-shrink: 0;
 }
-.dc-tags { display: flex; flex-wrap: wrap; gap: 4px; z-index: 2; margin-top: auto; flex-shrink: 0; }
 .dc-tag {
   font-family: var(--font-mono);
-  font-size: clamp(7px, 0.65vw, 10px);
+  font-size: 0.55em;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 2px 6px;
+  padding: 0.2em 0.5em;
   border-radius: 4px;
 }
 .dc-suit-watermark {
   text-align: center;
-  font-size: clamp(12px, 1.3vw, 16px);
+  font-size: 0.9em;
   opacity: 0.22;
   flex-shrink: 0;
   z-index: 2;
@@ -1053,13 +1068,9 @@ body::before {
   .domain-card-face {
     padding: clamp(10px, 4%, 16px);
   }
-  .dc-rank    { font-size: clamp(14px, 4vw, 20px); }
-  .dc-suit-sm { font-size: clamp(12px, 3.5vw, 16px); }
-  .dc-suit-lg { font-size: clamp(32px, 12vw, 52px); }
-  .dc-title   { font-size: clamp(10px, 2.8vw, 14px); }
-  .dc-back-title { font-size: clamp(9px, 2.5vw, 13px); }
-  .dc-back-desc  { font-size: clamp(9px, 2.2vw, 12px); }
-  .dc-tag        { font-size: clamp(7px, 1.8vw, 10px); }
+  /* On mobile cards are sized by aspect-ratio, so set a
+     sensible base font-size and let em values do the rest */
+  .domain-card { font-size: clamp(11px, 3.5vw, 16px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2636,10 +2647,11 @@ body::before {
         tl.to(el, { y: geo.SPOT_Y - 8, duration: (wm2 - wm1) * 0.5, ease: 'sine.inOut' }, wm1);
         tl.to(el, { y: geo.SPOT_Y,     duration: (wm2 - wm1) * 0.5, ease: 'sine.inOut' }, wm1 + (wm2 - wm1) * 0.5);
 
-        /* 3. Fly to grid slot */
+        /* 3. Fly to grid slot — also update font-size to match final card width */
         tl.to(el, {
           x: g.x, y: g.y, width: g.w, height: g.h,
           rotation: 0, scale: 1, zIndex: i + 1, opacity: 1,
+          fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
           duration: we - wm2, ease: 'power3.inOut'
         }, wm2);
       });
@@ -2652,6 +2664,8 @@ body::before {
       gsap.set(header, { opacity: 0, y: 20 });
       cardEls.forEach(function(el, i) {
         var p = geo.pilePos[i];
+        /* font-size = 6.5% of card width — all em-based child text scales with this */
+        el.style.fontSize = Math.max(Math.round(p.w * 0.065), 9) + 'px';
         gsap.set(el, {
           x: p.x, y: p.y,
           width: p.w, height: p.h,
@@ -2698,6 +2712,7 @@ body::before {
           tl.to(el, { y:geo.SPOT_Y,   duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1+(wm2-wm1)*0.5);
           tl.to(el, { x:g.x, y:g.y, width:g.w, height:g.h,
             rotation:0, scale:1, zIndex:i+1, opacity:1,
+            fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
             duration:we-wm2, ease:'power3.inOut' }, wm2);
         });
         tl.invalidate();
