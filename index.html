@@ -103,10 +103,52 @@ body::before {
   z-index: 1000;
   pointer-events: none;
 }
+
+/* Brand logo+text pinned to the left edge of the viewport */
+.nav-brand-fixed {
+  position: absolute;
+  top: 20px;
+  left: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  pointer-events: auto;
+  z-index: 1001;
+  text-decoration: none;
+}
+.nav-logo {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.nav-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-brand-main {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.nav-brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
 .nav-pill {
   display: flex;
   align-items: center;
-  padding: 6px 16px;
+  padding: 5px 14px;
   background: rgba(1, 12, 24, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -114,39 +156,15 @@ body::before {
   border-radius: 50px;
   pointer-events: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201,168,76,0.08) inset;
-}
-.nav-brand-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-right: 12px;
-}
-.nav-logo {
-  height: 20px;
-  width: 20px;
-  object-fit: contain;
-}
-.nav-title {
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--accent);
-}
-.nav-brand-divider {
-  width: 1px;
-  height: 18px;
-  background: var(--gold);
-  opacity: 0.4;
-  margin-right: 12px;
+  gap: 2px;
 }
 .nav-pill a {
   display: inline-block;
-  padding: 8px 14px;
+  padding: 7px 10px;
   font-family: var(--font-heading);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--cream);
   opacity: 0.7;
@@ -1735,6 +1753,224 @@ body::before {
     transform: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════
+   CONTACT SECTION — LAPTOP SCROLL ANIMATION
+   ═══════════════════════════════════════════ */
+.contact-section {
+  position: relative;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg);
+}
+.contact-scroll-driver {
+  position: relative;
+  height: 350vh;
+}
+.contact-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+.contact-header {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 20;
+  white-space: nowrap;
+  will-change: transform;
+  pointer-events: none;
+}
+.contact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.35);
+  color: #f87171;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 999px;
+  margin-bottom: 22px;
+}
+.contact-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #f87171;
+  flex-shrink: 0;
+  animation: cpulse 1.8s ease-in-out infinite;
+}
+@keyframes cpulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.65); }
+}
+.contact-title {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 7.5vw, 6rem);
+  font-weight: 800;
+  color: var(--cream);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.laptop-wrap {
+  position: relative;
+  width: min(700px, 90vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(44%);
+  will-change: transform;
+  z-index: 10;
+}
+.laptop-base {
+  width: 100%;
+  height: clamp(16px, 2.4vw, 26px);
+  background: linear-gradient(180deg, #323232 0%, #1e1e1e 100%);
+  border-radius: 0 0 16px 16px;
+  border: 1.5px solid #444;
+  border-top: 2px solid #555;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.95), 0 4px 12px rgba(0,0,0,0.7);
+}
+.laptop-base::after {
+  content: '';
+  position: absolute;
+  bottom: 5px; left: 50%;
+  transform: translateX(-50%);
+  width: 16%; height: 5px;
+  background: #161616;
+  border-radius: 3px;
+  border: 1px solid #3a3a3a;
+}
+.laptop-hinge {
+  width: 97%;
+  perspective: 2200px;
+  perspective-origin: 50% 100%;
+  position: relative;
+  z-index: 3;
+  transform-style: preserve-3d;
+}
+.laptop-lid {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(145deg, #303030 0%, #1e1e1e 60%, #141414 100%);
+  border: 1.5px solid #444;
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  transform-origin: 50% 100%;
+  transform: rotateX(0deg);
+  will-change: transform;
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 0 0 1.5px #333;
+}
+.laptop-lid::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(255,255,255,0.055);
+  border-radius: 9px;
+  pointer-events: none;
+  z-index: 1;
+}
+.laptop-camera {
+  position: absolute;
+  top: 7px; left: 50%;
+  transform: translateX(-50%);
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #0d0d0d;
+  border: 1px solid rgba(255,255,255,0.12);
+  z-index: 5;
+}
+.laptop-screen {
+  position: absolute;
+  inset: 8px;
+  border-radius: 7px;
+  background: linear-gradient(155deg, #ececec 0%, #f5f0ed 45%, #fad4c8 100%);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+}
+.laptop-screen.screen-on { opacity: 1; }
+.screen-inner {
+  width: 100%; height: 100%;
+  padding: 18px 22px 14px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.12) transparent;
+  display: flex;
+  flex-direction: column;
+}
+.screen-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-weight: 800;
+  color: #161616;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+}
+.sf-full { grid-column: 1 / -1; }
+.sf { display: flex; flex-direction: column; gap: 3px; }
+.sf label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #666; }
+.sf input, .sf textarea {
+  background: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(0,0,0,0.14);
+  border-radius: 8px;
+  padding: 7px 11px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #1a1a1a;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.sf textarea { resize: none; height: 58px; }
+.sf input:focus, .sf textarea:focus { border-color: rgba(0,0,0,0.4); box-shadow: 0 0 0 3px rgba(0,0,0,0.07); background: #fff; }
+.screen-submit {
+  margin-top: 10px; width: 100%; padding: 10px 0;
+  background: #111; color: #fff; border: none; border-radius: 999px;
+  font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.screen-submit:hover { background: #000; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.laptop-glow {
+  position: absolute;
+  bottom: -10px; left: 50%;
+  transform: translateX(-50%);
+  width: 65%; height: 50px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.3) 0%, transparent 70%);
+  filter: blur(14px);
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+@media (max-width: 600px) {
+  .contact-title { white-space: normal; text-align: center; }
+  .screen-grid { grid-template-columns: 1fr; }
+  .sf textarea { height: 48px; }
+}
 </style>
 </head>
 <body>
@@ -1742,19 +1978,24 @@ body::before {
 <!-- ═══════════════════════════════════════════
      FLOATING PILL NAVBAR
      ═══════════════════════════════════════════ -->
+<!-- Brand: independently fixed to left edge -->
+<div class="nav-brand-fixed">
+  <img src="acm-logo.png" alt="ACM Logo" class="nav-logo">
+  <div class="nav-brand-text">
+    <span class="nav-brand-main">Association for Computing Machinery</span>
+    <span class="nav-brand-sub">VNIT Student Chapter</span>
+  </div>
+</div>
+
 <nav class="navbar" id="navbar">
   <div class="nav-pill">
-    <div class="nav-brand-container">
-      <img src="acm-logo.png" alt="ACM Logo" class="nav-logo">
-      <span class="nav-title">ACM VNIT</span>
-    </div>
-    <span class="nav-brand-divider"></span>
     <a href="#hero" class="active">Home</a>
     <a href="#about">About</a>
     <a href="#community">Impact</a>
     <a href="#domains">Domains</a>
     <a href="#events">Events</a>
     <a href="#projects">Projects</a>
+    <a href="#contact-us">Contact</a>
   </div>
   <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
 </nav>
@@ -1768,6 +2009,7 @@ body::before {
   <a href="#domains" onclick="closeMobileMenu()">Domains</a>
   <a href="#events" onclick="closeMobileMenu()">Events</a>
   <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+  <a href="#contact-us" onclick="closeMobileMenu()">Contact</a>
 </div>
 
 <!-- Hero CTA -->
@@ -1781,17 +2023,17 @@ body::before {
      ═══════════════════════════════════════════ -->
 <section class="hero" id="hero">
   <div class="hero-text-wrap">
-    <div class="hero-badge reveal">// ESTABLISHED 2009 — VNIT NAGPUR</div>
-    <div class="hero-line-1 reveal reveal-delay-1">we are the</div>
-    <div class="hero-line-2 reveal reveal-delay-2">association for<br>computing machinery</div>
+    <div class="hero-badge">// ESTABLISHED 2009 — VNIT NAGPUR</div>
+    <div class="hero-line-1">we are the</div>
+    <div class="hero-line-2">association for<br>computing machinery</div>
   </div>
 
   <div class="legend-container">
-    <div class="legend-text reveal reveal-delay-3">
+    <div class="legend-text">
       Established in <span class="accent">2009</span>.<br>
       Evolving ever since.
     </div>
-    <div class="legend-text reveal reveal-delay-4" style="text-align: right;">
+    <div class="legend-text" style="text-align: right;">
       We're not just another <span class="accent">tech chapter</span>.<br>
       We're the <span class="accent">blueprint</span> that actually ships.
     </div>
@@ -2282,6 +2524,47 @@ body::before {
 </section>
 
 <!-- ═══════════════════════════════════════════
+     CONTACT SECTION — LAPTOP SCROLL ANIMATION
+     ═══════════════════════════════════════════ -->
+<section class="contact-section" id="contact-us">
+  <div class="contact-scroll-driver" id="contactDriver">
+    <div class="contact-sticky" id="contactSticky">
+
+      <!-- Title stays fixed at top — never fades, only shifts upward slightly -->
+      <div class="contact-header" id="contactHeader">
+        <div class="contact-badge">Contact</div>
+        <div class="contact-title">CONTACT US!</div>
+      </div>
+
+      <!-- Laptop rises from below -->
+      <div class="laptop-wrap" id="laptopWrap">
+        <div class="laptop-hinge">
+          <div class="laptop-lid" id="laptopLid">
+            <div class="laptop-camera"></div>
+            <div class="laptop-screen" id="laptopScreen">
+              <div class="screen-inner">
+                <div class="screen-title">Say Hello!</div>
+                <div class="screen-grid">
+                  <div class="sf"><label for="cf-first">First Name</label><input type="text" id="cf-first" placeholder="Ankur" autocomplete="given-name"></div>
+                  <div class="sf"><label for="cf-last">Last Name</label><input type="text" id="cf-last" placeholder="Kumar" autocomplete="family-name"></div>
+                  <div class="sf"><label for="cf-email">Email</label><input type="email" id="cf-email" placeholder="you@example.com" autocomplete="email"></div>
+                  <div class="sf"><label for="cf-phone">Phone</label><input type="tel" id="cf-phone" placeholder="+91 00000 00000" autocomplete="tel"></div>
+                  <div class="sf sf-full"><label for="cf-msg">Message</label><textarea id="cf-msg" placeholder="What's on your mind?"></textarea></div>
+                  <div class="sf-full"><button type="button" class="screen-submit" onclick="handleContactSubmit()">Submit</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+        <div class="laptop-glow" id="laptopGlow"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
      FOOTER
      ═══════════════════════════════════════════ -->
 <footer class="site-footer" id="contact">
@@ -2381,7 +2664,7 @@ body::before {
     });
   }, { threshold: 0.3 });
 
-  document.querySelectorAll('#hero, #about, #community, #domains, #events, #projects').forEach(s => navObserver.observe(s));
+  document.querySelectorAll('#hero, #about, #community, #domains, #events, #projects, #contact-us').forEach(s => navObserver.observe(s));
 
   // ───── Mobile Menu ─────
   const mobileBtn = document.getElementById('mobileMenuBtn');
@@ -2758,20 +3041,7 @@ body::before {
     }
   });
 
-  // ───── Nav Pill Hide on Scroll Down, Show on Scroll Up ─────
-  let lastScroll = 0;
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-    if (currentScroll > lastScroll && currentScroll > 100) {
-      navbar.style.transform = 'translateX(-50%) translateY(-100px)';
-      navbar.style.transition = 'transform 0.4s ease';
-    } else {
-      navbar.style.transform = 'translateX(-50%) translateY(0)';
-      navbar.style.transition = 'transform 0.4s ease';
-    }
-    lastScroll = currentScroll;
-  });
+  // ───── Nav Pill always visible ─────
 
   // ───── About Cards 3D Tilt & Branches Animation ─────
   (function initAboutCardsInteraction() {
@@ -2840,6 +3110,101 @@ body::before {
       });
     });
   })();
+
+  // ══════════════════════════════════════════════
+  //  CONTACT — Scroll-bound laptop animation
+  // ══════════════════════════════════════════════
+  (function initContactLaptop() {
+    var driver  = document.getElementById('contactDriver');
+    var lid     = document.getElementById('laptopLid');
+    var header  = document.getElementById('contactHeader');
+    var screen  = document.getElementById('laptopScreen');
+    var glow    = document.getElementById('laptopGlow');
+    var wrap    = document.getElementById('laptopWrap');
+    if (!driver || !lid) return;
+
+    var CLOSED_DEG  = -100;
+    var OPEN_DEG    =   -8;
+    var currentDeg  = CLOSED_DEG;
+    var targetDeg   = CLOSED_DEG;
+    var rafId       = null;
+    var screenShown = false;
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function applyLid(deg) {
+      lid.style.transform = 'rotateX(' + deg + 'deg)';
+      var progress = (deg - CLOSED_DEG) / (OPEN_DEG - CLOSED_DEG);
+
+      // Title: stays fully visible, only nudges upward
+      header.style.opacity   = '1';
+      header.style.transform = 'translateX(-50%) translateY(' + (-progress * 40) + 'px)';
+
+      // Laptop rises from bottom
+      wrap.style.transform = 'translateY(' + ((1 - progress) * 44) + 'vh)';
+
+      // Glow brightens
+      glow.style.opacity = 0.3 + progress * 0.7;
+
+      // Screen fades in once lid is ~75% open
+      if (progress > 0.75 && !screenShown) {
+        screen.classList.add('screen-on');
+        screenShown = true;
+      } else if (progress <= 0.75 && screenShown) {
+        screen.classList.remove('screen-on');
+        screenShown = false;
+      }
+    }
+
+    function tick() {
+      currentDeg = lerp(currentDeg, targetDeg, 0.10);
+      if (Math.abs(currentDeg - targetDeg) > 0.05) {
+        applyLid(currentDeg);
+        rafId = requestAnimationFrame(tick);
+      } else {
+        applyLid(targetDeg);
+        rafId = null;
+      }
+    }
+
+    function onScroll() {
+      var rect       = driver.getBoundingClientRect();
+      var driverH    = driver.offsetHeight;
+      var viewH      = window.innerHeight;
+      var scrolled   = -rect.top;
+      var scrollable = driverH - viewH;
+      var progress   = Math.max(0, Math.min(1, scrolled / scrollable));
+      targetDeg = CLOSED_DEG + (OPEN_DEG - CLOSED_DEG) * progress;
+      if (rafId === null) rafId = requestAnimationFrame(tick);
+    }
+
+    applyLid(CLOSED_DEG);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // ── Contact form submit handler ──
+  function handleContactSubmit() {
+    var first = document.getElementById('cf-first').value.trim();
+    var email = document.getElementById('cf-email').value.trim();
+    var msg   = document.getElementById('cf-msg').value.trim();
+    if (!first || !email || !msg) {
+      alert('Please fill in your name, email, and message.');
+      return;
+    }
+    var btn = document.querySelector('.screen-submit');
+    btn.textContent = '✓ Sent!';
+    btn.style.background = '#1a6b3a';
+    setTimeout(function() {
+      btn.textContent = 'Submit';
+      btn.style.background = '';
+      document.getElementById('cf-first').value = '';
+      document.getElementById('cf-last').value  = '';
+      document.getElementById('cf-email').value = '';
+      document.getElementById('cf-phone').value = '';
+      document.getElementById('cf-msg').value   = '';
+    }, 2500);
+  }
 </script>
 </body>
 </html>
