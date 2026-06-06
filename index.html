@@ -895,8 +895,9 @@ body::before {
   position: absolute;
   inset: 8px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.18);
   pointer-events: none;
+  z-index: 3;
 }
 
 .domain-card-front { justify-content: space-between; }
@@ -957,6 +958,59 @@ body::before {
 }
 
 /* ── Back face elements ── */
+.domain-card-back::before {
+  border-color: rgba(255,255,255,0.06) !important;
+  border-width: 1.5px !important;
+}
+
+/* ── Image front face ── */
+.dc-img-front {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+/* ── Domain name label BELOW the card ── */
+.dc-name-label {
+  position: absolute;
+  top: 100%;
+  left: -8px;
+  right: -8px;
+  margin-top: 8px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  overflow: visible;
+  opacity: 0;
+  visibility: hidden;
+}
+.dc-name-label-text {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  line-height: 1.2;
+  font-size: 0.88em;
+  white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+
+/* Mobile: name label visible below each card in the grid */
+@media (max-width: 768px) {
+  .dc-name-label {
+    position: static;
+    margin-top: 6px;
+    display: block;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
 .dc-back-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -2386,7 +2440,7 @@ body.intro-active { overflow: hidden; }
       </div>
       <div class="about-v-divider reveal"></div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
-        <div class="about-section-headline">ACM-VNIT</div>
+        <div class="about-section-headline">ACM</div>
         <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
         <p>We don't just write code — we ask questions, build with purpose, and learn together. With a culture built on trust and innovation, we're here to build tools, solve problems, and grow as a community — because technology, at its best, brings people together.</p>
       </div>
@@ -3004,6 +3058,18 @@ body.intro-active { overflow: hidden; }
         tags:['AWS','Docker','Kubernetes','CI/CD'] },
     ];
 
+    // Cards that use a custom image for the front face
+    var CARD_IMAGES = {
+      'app':        'card-app-dev.jpg',
+      'aiml':       'card-aiml.jpg',
+      'cybersec':   'card-cybersec.jpg',
+      'clouddevops':'card-cloud-devops.jpg',
+      'web':        'card-web-dev.jpg',
+      'cp':         'card-cp.jpg',
+      'opensource': 'card-opensource.jpg',
+      'design':     'card-design.jpg'
+    };
+
     function makeCard(d) {
       var wrap  = document.createElement('div');
       wrap.className = 'domain-card';
@@ -3017,25 +3083,33 @@ body.intro-active { overflow: hidden; }
       // Front face
       var front = document.createElement('div');
       front.className = 'domain-card-face domain-card-front';
-      front.style.cssText = 'border:1.5px solid ' + d.color + '40;box-shadow:0 8px 28px #00000099;';
-      front.innerHTML =
-        '<div class="dc-corner">' +
-          '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
-          '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
-        '</div>' +
-        '<div class="dc-centre">' +
-          '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
-          '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle + '</span>' +
-        '</div>' +
-        '<div class="dc-corner dc-corner-br">' +
-          '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
-          '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
-        '</div>';
 
-      // Back face
+      if (CARD_IMAGES[d.id]) {
+        // Image-based front: full bleed photo card
+        front.style.cssText = 'box-shadow:0 8px 28px #00000099;padding:0;background:#000;';
+        front.innerHTML = '<img class="dc-img-front" src="' + CARD_IMAGES[d.id] + '" alt="' + d.title + '" draggable="false">';
+      } else {
+        // Default icon front
+        front.style.cssText = 'box-shadow:0 8px 28px #00000099;';
+        front.innerHTML =
+          '<div class="dc-corner">' +
+            '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
+            '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
+          '</div>' +
+          '<div class="dc-centre">' +
+            '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
+            '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle + '</span>' +
+          '</div>' +
+          '<div class="dc-corner dc-corner-br">' +
+            '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
+            '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
+          '</div>';
+      }
+
+      // Back face — dark theme
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
-      back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';';
+      back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';background:linear-gradient(155deg,#1e1e1e 0%,#111 100%);';
       var tagsHtml = d.tags.map(function(t) {
         return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '12;color:' + d.color + '">' + t + '</span>';
       }).join('');
@@ -3047,7 +3121,13 @@ body.intro-active { overflow: hidden; }
 
       inner.appendChild(front);
       inner.appendChild(back);
+
+      // Name label sits BELOW the card (outside domain-card-inner, inside domain-card)
+      var nameLabel = document.createElement('div');
+      nameLabel.className = 'dc-name-label';
+      nameLabel.innerHTML = '<span class="dc-name-label-text" style="color:' + d.color + '">' + d.title + '</span>';
       wrap.appendChild(inner);
+      wrap.appendChild(nameLabel);
 
       wrap.addEventListener('keydown', function(e) {
         if (e.key==='Enter'||e.key===' ') { e.preventDefault(); wrap.classList.toggle('kb-flipped'); }
@@ -3112,7 +3192,7 @@ body.intro-active { overflow: hidden; }
       var GAP    = Math.max(VW * 0.013, 10); // inter-card gap
 
       var G_TOP  = HDR_BOTTOM + PAD_BELOW;
-      var G_BOT  = VH - 20;
+      var G_BOT  = VH - 48; /* extra 28px so name labels below row-2 cards stay visible */
       var G_H    = G_BOT - G_TOP;
       var G_W    = VW - H_PAD * 2;           // full width minus equal margins
 
@@ -3143,9 +3223,11 @@ body.intro-active { overflow: hidden; }
       var GRID_START_Y = G_TOP + Math.max(0, Math.floor((G_H - GRID_TOTAL_H) / 2));
 
       var gridPos = cardEls.map(function(_, i) {
+        var row = Math.floor(i / COLS);
+        var yOffset = (row === 0) ? -24 : 0;
         return {
           x: GRID_START_X + (i % COLS) * (CW + GAP),
-          y: GRID_START_Y + Math.floor(i / COLS) * (CH + GAP),
+          y: GRID_START_Y + row * (CH + GAP) + yOffset,
           w: CW,
           h: CH
         };
@@ -3207,6 +3289,10 @@ body.intro-active { overflow: hidden; }
         var wm2 = wm1 + PER * 0.22;
         var we  = ws  + PER;
         var g   = geo.gridPos[i];
+        var lbl = el.querySelector('.dc-name-label');
+
+        /* Hide label at start */
+        if (lbl) { tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws); }
 
         /* 1. Rise to spotlight */
         tl.to(el, {
@@ -3227,6 +3313,12 @@ body.intro-active { overflow: hidden; }
           fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
           duration: we - wm2, ease: 'power3.inOut'
         }, wm2);
+
+        /* 4. Fade in name label as card lands */
+        if (lbl) {
+          tl.set(lbl, { visibility: 'visible' }, wm2);
+          tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
+        }
       });
 
       return tl;
@@ -3237,6 +3329,8 @@ body.intro-active { overflow: hidden; }
       gsap.set(header, { opacity: 0, y: 20 });
       cardEls.forEach(function(el, i) {
         var p = geo.pilePos[i];
+        var lbl = el.querySelector('.dc-name-label');
+        if (lbl) { gsap.set(lbl, { opacity: 0, visibility: 'hidden' }); }
         /* font-size = 6.5% of card width — all em-based child text scales with this */
         el.style.fontSize = Math.max(Math.round(p.w * 0.065), 9) + 'px';
         gsap.set(el, {
@@ -3278,6 +3372,8 @@ body.intro-active { overflow: hidden; }
         cardEls.forEach(function(el, i) {
           var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
           var g=geo.gridPos[i];
+          var lbl=el.querySelector('.dc-name-label');
+          if (lbl) { tl.set(lbl, { opacity:0, visibility:'hidden' }, ws); }
           tl.to(el, { x:geo.SPOT_X, y:geo.SPOT_Y, width:geo.SPOT_W, height:geo.SPOT_H,
             rotation:0, scale:1, zIndex:1000+i, opacity:1,
             duration:wm1-ws, ease:'power2.out' }, ws);
@@ -3287,6 +3383,10 @@ body.intro-active { overflow: hidden; }
             rotation:0, scale:1, zIndex:i+1, opacity:1,
             fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
             duration:we-wm2, ease:'power3.inOut' }, wm2);
+          if (lbl) {
+            tl.set(lbl, { visibility:'visible' }, wm2);
+            tl.to(lbl, { opacity:1, duration:we-wm2, ease:'power2.out' }, wm2);
+          }
         });
         tl.invalidate();
       }
