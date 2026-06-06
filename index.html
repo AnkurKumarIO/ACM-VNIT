@@ -179,6 +179,16 @@ body::before {
   color: var(--navy);
 }
 
+/* Hide on scroll down behavior */
+.navbar {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+.navbar.nav-hidden {
+  transform: translateX(-50%) translateY(-100px) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
 /* Mobile hamburger */
 .mobile-menu-btn {
   display: none;
@@ -744,7 +754,7 @@ body::before {
   border-right: 2px dashed var(--border-dashed);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .community-right {
   padding: 48px 0 48px 48px;
@@ -753,7 +763,7 @@ body::before {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
-  margin-top: 48px;
+  margin-top: 40px;
 }
 .stat-item .stat-number {
   font-size: clamp(36px, 5vw, 56px);
@@ -984,9 +994,10 @@ body::before {
   display: block;
 }
 
-/* ── Domain name label BELOW the card ── */
+/* ── Domain name label BELOW the card (not overlaid) ── */
 .dc-name-label {
   position: absolute;
+  /* sits right below the card bottom edge */
   top: 100%;
   left: -8px;
   right: -8px;
@@ -994,6 +1005,7 @@ body::before {
   text-align: center;
   pointer-events: none;
   z-index: 5;
+  /* prevent clipping by parent */
   overflow: visible;
   opacity: 0;
   visibility: hidden;
@@ -1006,6 +1018,7 @@ body::before {
   letter-spacing: 0.06em;
   color: var(--cream);
   line-height: 1.2;
+  /* scale with the card's font-size set by GSAP */
   font-size: 0.88em;
   white-space: nowrap;
   text-shadow: 0 1px 6px rgba(0,0,0,0.6);
@@ -1021,6 +1034,8 @@ body::before {
     visibility: visible !important;
   }
 }
+
+/* ── Back face elements (dark theme restored) ── */
 .dc-back-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -2629,7 +2644,7 @@ body.intro-active { overflow: hidden; }
       </div>
       <div class="about-v-divider reveal"></div>
       <div class="about-text reveal reveal-delay-2" style="text-align: right;">
-        <div class="about-section-headline">ACM</div>
+        <div class="about-section-headline">ACM-VNIT</div>
         <p>As the official student chapter of the Association for Computing Machinery at VNIT Nagpur, we've been pushing boundaries and challenging conventions since 2009. From research and development to open-source contributions and technical events, we turn ideas into real-world impact.</p>
         <p>We don't just write code — we ask questions, build with purpose, and learn together. With a culture built on trust and innovation, we're here to build tools, solve problems, and grow as a community — because technology, at its best, brings people together.</p>
       </div>
@@ -2791,12 +2806,14 @@ body.intro-active { overflow: hidden; }
         </div>
       </div>
       <div class="community-right">
-        <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;" class="reveal">
-          SDG — Quality <span style="color: var(--accent);">Education</span>
-        </h3>
-        <p class="community-desc reveal reveal-delay-1">
-          Aligned with UN Sustainable Development Goal 4: Quality Education. Our workshops focus on reducing the digital learning gap in rural communities around Nagpur. Participants explore modern web technologies and learn how simple digital tools can strengthen classrooms with limited resources.
-        </p>
+        <div>
+          <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;" class="reveal">
+            SDG — Quality <span style="color: var(--accent);">Education</span>
+          </h3>
+          <p class="community-desc reveal reveal-delay-1">
+            Aligned with UN Sustainable Development Goal 4: Quality Education. Our workshops focus on reducing the digital learning gap in rural communities around Nagpur. Participants explore modern web technologies and learn how simple digital tools can strengthen classrooms with limited resources.
+          </p>
+        </div>
         <div style="margin-top: 40px;" class="reveal reveal-delay-2">
           <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--cream); margin-bottom: 16px; text-transform: uppercase;">
             Code of <span style="color: var(--accent);">Conduct</span>
@@ -3316,6 +3333,34 @@ body.intro-active { overflow: hidden; }
     mobileOverlay.classList.remove('open');
   }
 
+  // ───── Hide Navbar on Scroll Down, Show on Scroll Up ─────
+  (function() {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    const threshold = 80;
+    const navbarEl = document.getElementById('navbar');
+
+    if (!navbarEl) return;
+
+    function updateNavbar() {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > threshold) {
+        navbarEl.classList.add('nav-hidden');
+      } else if (currentScrollY < lastScrollY) {
+        navbarEl.classList.remove('nav-hidden');
+      }
+      lastScrollY = Math.max(0, currentScrollY);
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+
   // ── Contact nav: scroll to where the form is already fully open ──
   // Animation: progress = scrolled / (driverH - viewH)
   // Screen appears at progress > 0.75, so we jump to progress = 0.82
@@ -3398,7 +3443,7 @@ body.intro-active { overflow: hidden; }
       front.className = 'domain-card-face domain-card-front';
 
       if (CARD_IMAGES[d.id]) {
-        // Image-based front: full bleed photo card
+        // Image-based front: full bleed photo card — NO name overlay
         front.style.cssText = 'box-shadow:0 8px 28px #00000099;padding:0;background:#000;';
         front.innerHTML = '<img class="dc-img-front" src="' + CARD_IMAGES[d.id] + '" alt="' + d.title + '" draggable="false">';
       } else {
@@ -3419,7 +3464,7 @@ body.intro-active { overflow: hidden; }
           '</div>';
       }
 
-      // Back face — dark theme
+      // Back face — restored original dark theme
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
       back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';background:linear-gradient(155deg,#1e1e1e 0%,#111 100%);';
@@ -3689,8 +3734,10 @@ body.intro-active { overflow: hidden; }
         cardEls.forEach(function(el, i) {
           var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
           var g=geo.gridPos[i];
-          var lbl=el.querySelector('.dc-name-label');
-          if (lbl) { tl.set(lbl, { opacity:0, visibility:'hidden' }, ws); }
+          var lbl = el.querySelector('.dc-name-label');
+          if (lbl) {
+            tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
+          }
           tl.to(el, { x:geo.SPOT_X, y:geo.SPOT_Y, width:geo.SPOT_W, height:geo.SPOT_H,
             rotation:0, scale:1, zIndex:1000+i, opacity:1,
             duration:wm1-ws, ease:'power2.out' }, ws);
@@ -3701,8 +3748,8 @@ body.intro-active { overflow: hidden; }
             fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
             duration:we-wm2, ease:'power3.inOut' }, wm2);
           if (lbl) {
-            tl.set(lbl, { visibility:'visible' }, wm2);
-            tl.to(lbl, { opacity:1, duration:we-wm2, ease:'power2.out' }, wm2);
+            tl.set(lbl, { visibility: 'visible' }, wm2);
+            tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
           }
         });
         tl.invalidate();

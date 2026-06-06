@@ -102,6 +102,7 @@ tailwind.config = {
   /* ── Material icons ── */
   .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24}
 
+<<<<<<< HEAD
   /* ── Navbar ── */
   .site-nav{
     position:sticky;top:0;z-index:100;
@@ -536,6 +537,19 @@ tailwind.config = {
   .card-img-wrap img[data-placeholder]{
     opacity:.35;filter:grayscale(1)
   }
+=======
+    html { scroll-behavior: smooth; }
+
+    /* Hide on scroll down behavior */
+    header {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    }
+    header.nav-hidden {
+        transform: translateY(-100%) !important;
+        opacity: 0 !important;
+        pointer-events: none;
+    }
+>>>>>>> f521fdb27dd9b761e6d05b3cd70b530e4d3bb24d
 </style>
 </head>
 <body>
@@ -1019,6 +1033,7 @@ document.querySelectorAll('.event-card[data-lightbox]').forEach(card => {
       const startIndex = carouselId ? (carousels[carouselId]?.currentIndex || 0) : 0;
       openLightbox(images, title, startIndex);
     });
+<<<<<<< HEAD
   });
 });
 
@@ -1035,6 +1050,36 @@ window.addEventListener('scroll', () => {
   });
   ticking = true;
 });
+=======
+
+    // Hide Navbar on Scroll Down, Show on Scroll Up
+    (function() {
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        const threshold = 80;
+        const headerEl = document.querySelector('header');
+
+        if (!headerEl) return;
+
+        function updateNavbar() {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > threshold) {
+                headerEl.classList.add('nav-hidden');
+            } else if (currentScrollY < lastScrollY) {
+                headerEl.classList.remove('nav-hidden');
+            }
+            lastScrollY = Math.max(0, currentScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        }, { passive: true });
+    })();
+>>>>>>> f521fdb27dd9b761e6d05b3cd70b530e4d3bb24d
 </script>
 </body>
 </html>

@@ -193,6 +193,16 @@
     /* Smooth scroll */
     html { scroll-behavior: smooth; }
 
+    /* Hide on scroll down behavior */
+    header {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    }
+    header.nav-hidden {
+        transform: translateY(-100%) !important;
+        opacity: 0 !important;
+        pointer-events: none;
+    }
+
     /* Pulse ring for global card */
     @keyframes pulse-ring {
         0% { transform: scale(0.9); opacity: 0.5; }
@@ -609,6 +619,34 @@
             navbar.classList.add('bg-background/70');
         }
     });
+
+    // Hide Navbar on Scroll Down, Show on Scroll Up
+    (function() {
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        const threshold = 80;
+        const headerEl = document.getElementById('navbar');
+
+        if (!headerEl) return;
+
+        function updateNavbar() {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > threshold) {
+                headerEl.classList.add('nav-hidden');
+            } else if (currentScrollY < lastScrollY) {
+                headerEl.classList.remove('nav-hidden');
+            }
+            lastScrollY = Math.max(0, currentScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        }, { passive: true });
+    })();
 </script>
 </body>
 </html>
