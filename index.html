@@ -796,8 +796,7 @@ body::before {
   position: absolute;
   top: 4vh;
   left: 6vw;
-  /* stop just before the right deck panel */
-  right: calc(22vw + 20px);
+  right: 6vw;   /* symmetric — no right panel */
   z-index: 20;
   pointer-events: none;
 }
@@ -1012,10 +1011,9 @@ body::before {
   z-index: 15;
 }
 
-@media (min-width: 769px) {
-  .domains-scroll-hint,
-  .domains-deck-label { display: flex; }
-}
+/* scroll hint and deck label removed — no right panel */
+.domains-scroll-hint,
+.domains-deck-label { display: none !important; }
 
 /* ── Mobile: flat scrollable grid ───────────────
    On small screens the pinned GSAP dealer is
@@ -2511,53 +2509,53 @@ body::before {
       var VH = window.innerHeight;
       var N  = cardEls.length; // 8
 
-      /* ── Layout constants ─────────────────────────────────────
-         All values are derived from VW/VH so every resolution
-         gets a geometrically correct layout.
-
-         Right panel  = 20% of VW, min 160px (holds deck + spot)
-         Left area    = VW - panel (holds header + grid)
-         Grid: 4 cols, 2 rows
-         Header zone  = 22% VH, capped at 200px
-      ────────────────────────────────────────────────────────── */
-      var PANEL_W = Math.max(VW * 0.20, 160);
-      var LEFT_W  = VW - PANEL_W;
       var COLS = 4, ROWS = 2;
 
-      var HDR_H  = Math.min(VH * 0.22, 200);
-      var PAD_L  = Math.max(VW * 0.05, 32);   // left padding inside grid area
-      var PAD_R  = 16;                          // gap before right panel
-      var GAP    = Math.max(VW * 0.011, 8);    // inter-card gap
+      /* ── Measure the actual rendered header height ────────────
+         Using getBoundingClientRect() means we always know the
+         true bottom of the header text regardless of font size,
+         browser zoom, OS scaling, or line-wrapping.
+      ────────────────────────────────────────────────────────── */
+      var hdrRect      = header.getBoundingClientRect();
+      var HDR_BOTTOM   = hdrRect.bottom;
+      var PAD_BELOW    = Math.max(VH * 0.03, 16);  // gap between header and row 1
 
-      /* Available space for the grid */
-      var G_TOP  = HDR_H + 10;
-      var G_BOT  = VH - 16;
+      /* ── Grid area: full viewport width, centred ─────────────
+         No right panel. Grid spans the full VW with equal
+         horizontal padding on both sides.
+      ────────────────────────────────────────────────────────── */
+      var H_PAD  = Math.max(VW * 0.05, 32);  // equal padding left AND right
+      var GAP    = Math.max(VW * 0.013, 10); // inter-card gap
+
+      var G_TOP  = HDR_BOTTOM + PAD_BELOW;
+      var G_BOT  = VH - 20;
       var G_H    = G_BOT - G_TOP;
-      var G_W    = LEFT_W - PAD_L - PAD_R;
+      var G_W    = VW - H_PAD * 2;           // full width minus equal margins
 
-      /* Card height: fit 2 rows in G_H */
+      /* Bail-out for extreme zoom where header is very tall */
+      if (G_H < VH * 0.28) {
+        G_TOP = VH * 0.30;
+        G_H   = G_BOT - G_TOP;
+      }
+
+      /* ── Card sizing ──────────────────────────────────────────
+         Solve from both constraints and take the smaller result,
+         then enforce the overflow guard.
+      ────────────────────────────────────────────────────────── */
       var CH_h   = (G_H - GAP * (ROWS - 1)) / ROWS;
-      /* Card height from width constraint: fit 4 cols in G_W at 5:7 ratio */
       var CW_max = (G_W - GAP * (COLS - 1)) / COLS;
       var CH_w   = CW_max * (7 / 5);
-      /* Use the smaller of the two, also cap at 40% VH so cards
-         never tower over the viewport on short displays (1024x768, 1366x768) */
       var CH     = Math.floor(Math.min(CH_h, CH_w, VH * 0.40));
       var CW     = Math.floor(CH * (5 / 7));
 
-      /* Re-check: make sure 4 cards + gaps actually fit in G_W.
-         If CW came from CH_h path it might be wider than G_W allows. */
+      /* Hard cap: 4 cols must always fit in G_W */
       var MAX_CW = Math.floor((G_W - GAP * (COLS - 1)) / COLS);
-      if (CW > MAX_CW) {
-        CW = MAX_CW;
-        CH = Math.floor(CW * (7 / 5));
-      }
+      if (CW > MAX_CW) { CW = MAX_CW; CH = Math.floor(CW * (7 / 5)); }
 
-      /* Centre the 4-col block horizontally in the left area */
+      /* ── True centre: equal space on all sides ───────────────*/
       var GRID_TOTAL_W = COLS * CW + (COLS - 1) * GAP;
       var GRID_TOTAL_H = ROWS * CH + (ROWS - 1) * GAP;
-      /* Also vertically centre between header bottom and viewport bottom */
-      var GRID_START_X = PAD_L + Math.max(0, Math.floor((G_W - GRID_TOTAL_W) / 2));
+      var GRID_START_X = Math.floor((VW - GRID_TOTAL_W) / 2);   // centred in full VW
       var GRID_START_Y = G_TOP + Math.max(0, Math.floor((G_H - GRID_TOTAL_H) / 2));
 
       var gridPos = cardEls.map(function(_, i) {
@@ -2569,20 +2567,22 @@ body::before {
         };
       });
 
-      /* ── Right panel geometry ── */
-      var PANEL_CX = LEFT_W + PANEL_W / 2;
-      var PANEL_CY = VH / 2;
-
-      /* Deck card size: slightly smaller than grid card */
-      var DECK_W = Math.min(CW * 0.90, PANEL_W - 20);
-      var DECK_H = DECK_W * (7 / 5);
-      var MID    = (N - 1) / 2;
+      /* ── Deck: stacked off the right edge, slides in ─────────
+         Cards start piled just beyond the right edge of the
+         viewport so they visually "come from the right".
+      ────────────────────────────────────────────────────────── */
+      var DECK_W  = Math.min(CW * 0.88, 200);
+      var DECK_H  = DECK_W * (7 / 5);
+      /* Centre the deck horizontally in the right 15% of VW */
+      var DECK_CX = VW - DECK_W / 2 - Math.max(VW * 0.04, 20);
+      var DECK_CY = VH / 2;
+      var MID     = (N - 1) / 2;
 
       var pilePos = cardEls.map(function(_, i) {
         var d = i - MID;
         return {
-          x:        PANEL_CX - DECK_W / 2 + d * 2.5,
-          y:        PANEL_CY - DECK_H / 2 + d * 1.5,
+          x:        DECK_CX - DECK_W / 2 + d * 2.5,
+          y:        DECK_CY  - DECK_H / 2 + d * 1.5,
           w:        DECK_W,
           h:        DECK_H,
           rotation: d * 3.5,
@@ -2591,19 +2591,15 @@ body::before {
         };
       });
 
-      /* ── Spotlight: upper third of right panel ── */
-      var SPOT_W = DECK_W * 1.10;
-      var SPOT_H = SPOT_W * (7 / 5);
-      var SPOT_X = PANEL_CX - SPOT_W / 2;
-      /* Keep spotlight fully inside the viewport vertically */
-      var SPOT_Y = Math.max(VH * 0.06, 10);
+      /* ── Spotlight: upper-right, fully inside viewport ───────*/
+      var SPOT_W  = DECK_W * 1.12;
+      var SPOT_H  = SPOT_W * (7 / 5);
+      var SPOT_X  = VW - SPOT_W - Math.max(VW * 0.04, 20);
+      var SPOT_Y  = Math.max(VH * 0.08, 20);
 
-      /* Position the visual divider line */
+      /* Hide the divider line — no right panel anymore */
       var divider = document.querySelector('.domains-divider');
-      if (divider) {
-        divider.style.left    = LEFT_W + 'px';
-        divider.style.display = 'block';
-      }
+      if (divider) { divider.style.display = 'none'; }
 
       return {
         pilePos: pilePos, gridPos: gridPos,
