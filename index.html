@@ -1440,10 +1440,15 @@ body::before {
   font-family: var(--font-heading);
   font-size: clamp(1.05rem, 1.7vw, 1.3rem);
   font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--cream);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   line-height: 1.2;
 }
+/* Per-card accent colors matching domain cards palette */
+.ev-card:nth-child(1) .ev-title { color: #6CB6E3; text-shadow: 0 0 24px rgba(108,182,227,.45); }
+.ev-card:nth-child(2) .ev-title { color: #4ade80; text-shadow: 0 0 24px rgba(74,222,128,.4); }
+.ev-card:nth-child(3) .ev-title { color: #f472b6; text-shadow: 0 0 24px rgba(244,114,182,.4); }
+.ev-card:nth-child(4) .ev-title { color: #C9A84C; text-shadow: 0 0 24px rgba(201,168,76,.5); }
 
 /* Description */
 .ev-desc {
