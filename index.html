@@ -2489,6 +2489,136 @@ body.intro-active { overflow: hidden; }
 #intro-burst-circle.expand {
   transform: translate(-50%, -50%) scale(1);
 }
+
+/* ═══════════════════════════════════════════
+   HORIZONTAL MARQUEE SECTION
+   ═══════════════════════════════════════════ */
+.marquee-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+/* Subtle top and bottom glow matching the site's style */
+.marquee-section::before,
+.marquee-section::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.3), transparent);
+  pointer-events: none;
+}
+.marquee-section::before { top: 0; }
+.marquee-section::after { bottom: 0; }
+
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Side gradient masks for smooth fade edges */
+.marquee-container::before,
+.marquee-container::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 10vw;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-elevated), transparent);
+}
+.marquee-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-elevated), transparent);
+}
+
+.marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.marquee-section:hover .marquee-track,
+.marquee-container:hover .marquee-track,
+.marquee-track:hover {
+  animation-play-state: paused !important;
+}
+.marquee-group {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding-right: clamp(1.5rem, 3vw, 3rem); /* seamless spacing */
+  flex-shrink: 0;
+  backface-visibility: hidden;
+}
+
+.marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-heading);
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 500;
+  color: var(--cream);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease, transform 0.3s ease;
+  cursor: default;
+  user-select: none;
+}
+
+/* Hover effect on marquee text */
+.marquee-item:hover {
+  color: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+/* Stylized separator */
+.marquee-separator {
+  color: var(--gold);
+  font-size: clamp(14px, 1.6vw, 18px);
+  opacity: 0.65;
+  user-select: none;
+  font-weight: 700;
+  margin: 0 clamp(0.5rem, 1vw, 1rem);
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Responsive speed adjustment for mobile screens */
+@media (max-width: 768px) {
+  .marquee-section {
+    padding: 16px 0;
+  }
+  .marquee-track {
+    animation-duration: 25s; /* slightly faster flow on smaller screens to feel active */
+  }
+}
 </style>
 </head>
 <body>
@@ -2584,6 +2714,54 @@ body.intro-active { overflow: hidden; }
     <div class="legend-text" style="text-align: right;">
       We're not just another <span class="accent">tech chapter</span>.<br>
       We're the <span class="accent">blueprint</span> that actually ships.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MARQUEE HIGHLIGHTS SECTION
+     ═══════════════════════════════════════════ -->
+<section class="marquee-section" aria-label="Key Highlights">
+  <div class="marquee-container">
+    <div class="marquee-track">
+      <!-- Group 1 -->
+      <div class="marquee-group">
+        <span class="marquee-item">🚀 Empowering Coders, Innovators &amp; Problem Solvers</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">💻 Competitive Programming • Hackathons • Open Source</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🏆 Learn • Build • Compete • Grow</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🔥 Workshops, Tech Talks &amp; Industry Insights</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🎯 Sharpen Your DSA Skills, Ace Coding Interviews</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🤝 Connecting Students Through Technology &amp; Innovation</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">⚡ Building the Next Generation of Developers</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🌍 Code • Collaborate • Create • Conquer</span>
+        <span class="marquee-separator">•</span>
+      </div>
+      <!-- Group 2 (Duplicate for seamless loop) -->
+      <div class="marquee-group" aria-hidden="true">
+        <span class="marquee-item">🚀 Empowering Coders, Innovators &amp; Problem Solvers</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">💻 Competitive Programming • Hackathons • Open Source</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🏆 Learn • Build • Compete • Grow</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🔥 Workshops, Tech Talks &amp; Industry Insights</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🎯 Sharpen Your DSA Skills, Ace Coding Interviews</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🤝 Connecting Students Through Technology &amp; Innovation</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">⚡ Building the Next Generation of Developers</span>
+        <span class="marquee-separator">•</span>
+        <span class="marquee-item">🌍 Code • Collaborate • Create • Conquer</span>
+        <span class="marquee-separator">•</span>
+      </div>
     </div>
   </div>
 </section>
