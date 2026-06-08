@@ -1628,15 +1628,31 @@ body::before {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 }
+@media (max-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .project-card {
   --proj-color: var(--gold);
   background: linear-gradient(160deg, #071e38 0%, #010C18 100%);
   border: 1px solid var(--border-gold);
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
@@ -1659,10 +1675,30 @@ body::before {
   border-color: var(--gold);
   box-shadow: 0 15px 40px var(--gold-glow);
 }
+
+/* Horizontal slide reveal for project cards specifically */
+.project-card.reveal {
+  opacity: 0;
+  transform: translateX(80px);
+  transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.project-card.reveal.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Rhythmic stagger delays for projects row */
+.projects-grid > .project-card:nth-child(1) { transition-delay: 0.05s !important; }
+.projects-grid > .project-card:nth-child(2) { transition-delay: 0.2s !important; }
+.projects-grid > .project-card:nth-child(3) { transition-delay: 0.35s !important; }
+.projects-grid > .project-card:nth-child(4) { transition-delay: 0.5s !important; }
+.projects-grid > .project-card:nth-child(5) { transition-delay: 0.65s !important; }
+
 .project-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 20px;
 }
 .project-card-id {
@@ -1673,26 +1709,33 @@ body::before {
   color: var(--text-dim);
 }
 .project-card-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--accent);
   background: rgba(108, 182, 227, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.project-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .project-card h3 {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--cream);
   margin-bottom: 10px;
 }
 .project-card > p {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-muted);
   flex-grow: 1;
@@ -1704,11 +1747,11 @@ body::before {
   margin-top: 20px;
 }
 .project-tech-tag {
-  padding: 4px 10px;
+  padding: 4px 8px;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-dim);
@@ -1724,53 +1767,210 @@ body::before {
 }
 .project-link {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-weight: 600;
   transition: gap 0.3s;
 }
-.project-link:hover { gap: 14px; color: var(--gold); }
+.project-link:hover { gap: 10px; color: var(--gold); }
 
-/* CTA project card */
-.project-cta-card {
-  background: linear-gradient(145deg, rgba(108, 182, 227, 0.05), #031224);
-  border: 1px dashed var(--border-gold);
-  border-radius: 8px;
-  padding: 40px 24px;
+/* Project Deck Card — matches plain card styling */
+.project-deck-card {
+  cursor: pointer;
+}
+
+/* Projects Modal Overlay */
+.projects-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(1, 12, 24, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1000;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  transition: all 0.4s;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.project-cta-card:hover {
-  border-color: var(--accent);
-  background: linear-gradient(145deg, rgba(108, 182, 227, 0.08), #031224);
+.projects-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
 }
-.project-cta-card .cta-icon {
-  font-size: 40px;
-  margin-bottom: 16px;
+.projects-modal-container {
+  width: 90%;
+  max-width: 1200px;
+  height: 80vh;
+  background: linear-gradient(160deg, #041628 0%, #010C18 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(201, 168, 76, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow: hidden;
+  transform: scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.project-cta-card h3 {
+.projects-modal-overlay.open .projects-modal-container {
+  transform: scale(1);
+}
+.projects-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.projects-modal-title-wrap h2 {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.projects-modal-title-wrap p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.projects-modal-close {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.projects-modal-close:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: rotate(90deg);
+  background: rgba(201, 168, 76, 0.05);
+}
+.projects-modal-search-wrap {
+  position: relative;
+  margin-bottom: 30px;
+}
+.projects-modal-search-wrap input {
+  width: 100%;
+  background: rgba(4, 22, 40, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 14px 20px 14px 48px;
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+.projects-modal-search-wrap input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.15);
+  background: rgba(4, 22, 40, 0.8);
+}
+.projects-modal-search-wrap .search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.6;
+}
+.projects-modal-grid {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding-right: 8px;
+  padding-bottom: 10px;
+}
+.projects-modal-grid::-webkit-scrollbar {
+  width: 6px;
+}
+.projects-modal-grid::-webkit-scrollbar-track {
+  background: rgba(201, 168, 76, 0.02);
+  border-radius: 3px;
+}
+.projects-modal-grid::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.15);
+  border-radius: 3px;
+}
+.projects-modal-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.3);
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.projects-modal-grid .project-card {
+  animation: fadeInCard 0.4s ease forwards;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  min-height: unset;
+  overflow: visible;
+}
+.projects-modal-grid .project-card:hover {
+  transform: translateY(-2px);
+}
+.projects-modal-grid .project-card-header {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+.projects-modal-grid .project-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+.projects-modal-grid .project-card-text h3 {
+  font-family: var(--font-heading);
+  font-size: 14px;
   font-weight: 700;
   color: var(--cream);
-  margin-bottom: 10px;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.project-cta-card p {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-  max-width: 240px;
+.projects-modal-grid .project-card-text .project-card-id {
+  font-size: 9px;
 }
+
+@media (max-width: 768px) {
+  .projects-modal-container {
+    padding: 24px;
+    width: 95%;
+    height: 85vh;
+  }
+  .projects-modal-title-wrap h2 {
+    font-size: 20px;
+  }
+  .projects-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .btn-accent {
   display: inline-flex;
   align-items: center;
@@ -3764,129 +3964,124 @@ body.intro-active { overflow: hidden; }
   </div>
 
   <div class="projects-grid">
-    <!-- Lumina OS -->
-    <div class="project-card reveal" data-proj="lumina" style="grid-column: span 2;">
+    <!-- 180DC VNIT -->
+    <div class="project-card reveal" data-proj="180dc">
       <div class="project-card-header">
-        <span class="project-card-id">// Edge Research</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo1.jpg" alt="180DC Logo">
         </div>
+        <span class="project-card-id">// Social Consulting</span>
       </div>
-      <h3>Lumina OS</h3>
-      <p>A microkernel-based operating system built from scratch in Rust, focusing on memory safety and real-time process scheduling for edge computing nodes.</p>
+      <h3>180DC VNIT</h3>
+      <p>Official website for 180 Degrees Consulting VNIT, showcasing our student-led consultancy services, social impact projects, and club portfolio.</p>
       <div class="project-tech-tags">
-        <span class="project-tech-tag">Rust</span>
-        <span class="project-tech-tag">x86_64</span>
-        <span class="project-tech-tag">QEMU</span>
+        <span class="project-tech-tag">HTML</span>
+        <span class="project-tech-tag">CSS</span>
+        <span class="project-tech-tag">JS</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
-            Rust
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 142</span>
-            <span>⑂ 28</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/180DC" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- NeuralLink v2 -->
-    <div class="project-card reveal reveal-delay-1" data-proj="neural">
+    <!-- Spic Macay -->
+    <div class="project-card reveal" data-proj="spicmacay">
       <div class="project-card-header">
-        <span class="project-card-id">// Machine Intelligence</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo2.jpg" alt="Spic Macay Logo">
         </div>
+        <span class="project-card-id">// Cultural Heritage</span>
       </div>
-      <h3>NeuralLink v2</h3>
-      <p>Edge AI processing framework optimized for low-power ARM architectures, reducing inference latency by 40%.</p>
+      <h3>Spic Macay</h3>
+      <p>Dedicated to promoting Indian classical music and heritage at VNIT Nagpur, curating immersive performances, traditional workshops, and artist galleries.</p>
       <div class="project-tech-tags">
-        <span class="project-tech-tag">C++</span>
-        <span class="project-tech-tag">TensorFlow</span>
+        <span class="project-tech-tag">HTML</span>
+        <span class="project-tech-tag">CSS</span>
+        <span class="project-tech-tag">JS</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--gold);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--gold);"></span>
-            C++
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 96</span>
-            <span>⑂ 12</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/Spic-Macay-Website" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- CLI Toolbox -->
-    <div class="project-card reveal reveal-delay-2" data-proj="cli">
+    <!-- Tesla Club VNIT -->
+    <div class="project-card reveal" data-proj="tesla">
       <div class="project-card-header">
-        <span class="project-card-id">// Developer Tooling</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo3.jpg" alt="Tesla Club VNIT Logo">
         </div>
+        <span class="project-card-id">// Electronics Club</span>
       </div>
-      <h3>CLI Toolbox</h3>
-      <p>Developer productivity tools for automation, Git workflow management, and rapid boilerplate generation.</p>
+      <h3>Tesla Club VNIT</h3>
+      <p>Official web platform for the Tesla Club of VNIT, the premier electronics and electrical engineering club, showcasing projects, events, and team achievements.</p>
       <div class="project-tech-tags">
-        <span class="project-tech-tag">Go</span>
-        <span class="project-tech-tag">Cobra</span>
+        <span class="project-tech-tag">React</span>
+        <span class="project-tech-tag">Node.js</span>
+        <span class="project-tech-tag">Tailwind</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--accent);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
-            Go
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 68</span>
-            <span>⑂ 18</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/Tantrafiesta" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- ACM Portal -->
-    <div class="project-card reveal reveal-delay-3" data-proj="portal">
+    <!-- IG'26 App -->
+    <div class="project-card reveal" data-proj="ig26">
       <div class="project-card-header">
-        <span class="project-card-id">// Chapter Infrastructure</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo4.jpg" alt="IG'26 App Logo">
         </div>
+        <span class="project-card-id">// Institute App</span>
       </div>
-      <h3>ACM Portal</h3>
-      <p>Internal chapter management system handling event registrations, member grading, and resource allocation for 500+ students.</p>
+      <h3>IG'26 App</h3>
+      <p>Official ACM VNIT app for Shashwatam '26 — VNIT's premier 10-day annual institute gathering themed "The Eternal Spirit," hosting 80+ inter-departmental competitions across cultural, technical, sports, and creative disciplines.</p>
       <div class="project-tech-tags">
         <span class="project-tech-tag">Next.js</span>
-        <span class="project-tech-tag">Postgres</span>
+        <span class="project-tech-tag">Firebase</span>
+        <span class="project-tech-tag">CSS</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--accent);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
-            TypeScript
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 45</span>
-            <span>⑂ 7</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/Shashwatam" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- CTA Card -->
-    <div class="project-cta-card reveal reveal-delay-4">
-      <div class="cta-icon">🚀</div>
-      <h3>Your Project Here?</h3>
-      <p>Contribute to our technical ecosystem and architect the future of tech.</p>
-      <button class="btn-accent">Start Building +</button>
+    <!-- Other Projects Deck Card -->
+    <div class="project-deck-card project-card reveal" id="openProjectsModalBtn" style="cursor: pointer;">
+      <div class="project-card-header">
+        <div class="project-card-icon" title="Deck Logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="14" height="14" rx="2" />
+            <rect x="7" y="7" width="14" height="14" rx="2" opacity="0.6" />
+          </svg>
+        </div>
+        <span class="project-card-id">// View All</span>
+      </div>
+      <h3>Other Projects</h3>
+      <p>Browse our complete registry of active engineering systems and open-source contributions.</p>
+      <div class="project-card-footer">
+        <span class="project-link">Explore Other Projects <span style="font-size: 12px;">→</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects Overlay Modal -->
+  <div class="projects-modal-overlay" id="projectsModal">
+    <div class="projects-modal-container">
+      <div class="projects-modal-header">
+        <div class="projects-modal-title-wrap">
+          <h2>All Chapter Projects</h2>
+          <p>A complete catalog of student-led projects, dev utilities, and research systems.</p>
+        </div>
+        <button class="projects-modal-close" id="closeProjectsModalBtn" aria-label="Close modal">✕</button>
+      </div>
+      
+      <div class="projects-modal-search-wrap">
+        <input type="text" id="projectsSearchInput" placeholder="Search by name, technology, or category..." autocomplete="off" />
+        <span class="search-icon">🔍</span>
+      </div>
+      
+      <div class="projects-modal-grid" id="modalProjectsGrid">
+        <!-- Dynamically generated via JS -->
+      </div>
     </div>
   </div>
 </section>
@@ -5009,6 +5204,124 @@ body.intro-active { overflow: hidden; }
         openLb(images, title, start);
       });
     });
+  });
+
+  /* ── Projects Deck & Search Modal ── */
+  const projectsData = [
+    {
+      name: "180DC VNIT",
+      category: "Social Consulting",
+      logo: `<img src="projects/img/logo1.jpg" alt="180DC Logo">`,
+      desc: "Official website for 180 Degrees Consulting VNIT, showcasing our student-led consultancy services, social impact projects, and club portfolio.",
+      tags: ["HTML", "CSS", "JS"],
+      lang: "HTML",
+      langColor: "#6CB6E3",
+      stars: 12,
+      forks: 2,
+      url: "https://github.com/AnkurKumarIO/180DC"
+    },
+    {
+      name: "Spic Macay",
+      category: "Cultural Heritage",
+      logo: `<img src="projects/img/logo2.jpg" alt="Spic Macay Logo">`,
+      desc: "Dedicated to promoting Indian classical music and heritage at VNIT Nagpur, curating immersive performances, traditional workshops, and artist galleries.",
+      tags: ["HTML", "CSS", "JS"],
+      lang: "HTML",
+      langColor: "#6CB6E3",
+      stars: 15,
+      forks: 3,
+      url: "https://github.com/AnkurKumarIO/Spic-Macay-Website"
+    },
+    {
+      name: "Tesla Club VNIT",
+      category: "Electronics Club",
+      logo: `<img src="projects/img/logo3.jpg" alt="Tesla Club VNIT Logo">`,
+      desc: "Official web platform for the Tesla Club of VNIT, the premier electronics and electrical engineering club, showcasing projects, events, and team achievements.",
+      tags: ["React", "Node.js", "Tailwind"],
+      lang: "JavaScript",
+      langColor: "#E8C87A",
+      stars: 28,
+      forks: 7,
+      url: "https://github.com/AnkurKumarIO/Tantrafiesta"
+    },
+    {
+      name: "IG'26 App",
+      category: "Institute App",
+      logo: `<img src="projects/img/logo4.jpg" alt="IG'26 App Logo">`,
+      desc: "Official ACM VNIT app for Shashwatam '26 — VNIT's premier 10-day annual institute gathering themed \"The Eternal Spirit,\" hosting 80+ inter-departmental competitions across cultural, technical, sports, and creative disciplines.",
+      tags: ["Next.js", "Firebase", "CSS"],
+      lang: "JavaScript",
+      langColor: "#E8C87A",
+      stars: 32,
+      forks: 5,
+      url: "https://github.com/AnkurKumarIO/Shashwatam"
+    },
+  ];
+
+  const modal = document.getElementById('projectsModal');
+  const openBtn = document.getElementById('openProjectsModalBtn');
+  const closeBtn = document.getElementById('closeProjectsModalBtn');
+  const searchInput = document.getElementById('projectsSearchInput');
+
+  function renderProjects(filterText = "") {
+    const grid = document.getElementById('modalProjectsGrid');
+    if (!grid) return;
+
+    const query = filterText.toLowerCase().trim();
+    const filtered = projectsData.filter(p => {
+      return p.name.toLowerCase().includes(query) || 
+             p.desc.toLowerCase().includes(query) ||
+             p.category.toLowerCase().includes(query) ||
+             p.tags.some(tag => tag.toLowerCase().includes(query)) ||
+             p.lang.toLowerCase().includes(query);
+    });
+
+    grid.innerHTML = filtered.map((p, idx) => `
+      <div class="project-card" style="opacity:0; animation: fadeInCard 0.4s ease forwards; animation-delay: ${idx * 0.04}s; cursor: pointer;" onclick="window.open('${p.url}', '_blank')">
+        <div class="project-card-header">
+          <div class="project-card-icon">
+            ${p.logo}
+          </div>
+        </div>
+        <div class="project-card-text">
+          <h3>${p.name}</h3>
+          <span class="project-card-id">${p.category}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openProjectsModal() {
+    if (!modal) return;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (searchInput) searchInput.value = '';
+    renderProjects();
+    setTimeout(() => searchInput && searchInput.focus(), 150);
+  }
+
+  function closeProjectsModal() {
+    if (!modal) return;
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (openBtn) openBtn.addEventListener('click', openProjectsModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeProjectsModal);
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeProjectsModal();
+    });
+  }
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      renderProjects(e.target.value);
+    });
+  }
+  document.addEventListener('keydown', function(e) {
+    if (modal && modal.classList.contains('open') && e.key === 'Escape') {
+      closeProjectsModal();
+    }
   });
 })();
 </script>
