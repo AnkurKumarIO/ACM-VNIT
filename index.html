@@ -1628,15 +1628,31 @@ body::before {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 }
+@media (max-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .project-card {
   --proj-color: var(--gold);
   background: linear-gradient(160deg, #071e38 0%, #010C18 100%);
   border: 1px solid var(--border-gold);
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
@@ -1659,10 +1675,30 @@ body::before {
   border-color: var(--gold);
   box-shadow: 0 15px 40px var(--gold-glow);
 }
+
+/* Horizontal slide reveal for project cards specifically */
+.project-card.reveal {
+  opacity: 0;
+  transform: translateX(80px);
+  transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.project-card.reveal.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Rhythmic stagger delays for projects row */
+.projects-grid > .project-card:nth-child(1) { transition-delay: 0.05s !important; }
+.projects-grid > .project-card:nth-child(2) { transition-delay: 0.2s !important; }
+.projects-grid > .project-card:nth-child(3) { transition-delay: 0.35s !important; }
+.projects-grid > .project-card:nth-child(4) { transition-delay: 0.5s !important; }
+.projects-grid > .project-card:nth-child(5) { transition-delay: 0.65s !important; }
+
 .project-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 20px;
 }
 .project-card-id {
@@ -1673,26 +1709,33 @@ body::before {
   color: var(--text-dim);
 }
 .project-card-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--accent);
   background: rgba(108, 182, 227, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.project-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .project-card h3 {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--cream);
   margin-bottom: 10px;
 }
 .project-card > p {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-muted);
   flex-grow: 1;
@@ -1704,11 +1747,11 @@ body::before {
   margin-top: 20px;
 }
 .project-tech-tag {
-  padding: 4px 10px;
+  padding: 4px 8px;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-dim);
@@ -1724,53 +1767,210 @@ body::before {
 }
 .project-link {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-weight: 600;
   transition: gap 0.3s;
 }
-.project-link:hover { gap: 14px; color: var(--gold); }
+.project-link:hover { gap: 10px; color: var(--gold); }
 
-/* CTA project card */
-.project-cta-card {
-  background: linear-gradient(145deg, rgba(108, 182, 227, 0.05), #031224);
-  border: 1px dashed var(--border-gold);
-  border-radius: 8px;
-  padding: 40px 24px;
+/* Project Deck Card — matches plain card styling */
+.project-deck-card {
+  cursor: pointer;
+}
+
+/* Projects Modal Overlay */
+.projects-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(1, 12, 24, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1000;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  transition: all 0.4s;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.project-cta-card:hover {
-  border-color: var(--accent);
-  background: linear-gradient(145deg, rgba(108, 182, 227, 0.08), #031224);
+.projects-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
 }
-.project-cta-card .cta-icon {
-  font-size: 40px;
-  margin-bottom: 16px;
+.projects-modal-container {
+  width: 90%;
+  max-width: 1200px;
+  height: 80vh;
+  background: linear-gradient(160deg, #041628 0%, #010C18 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(201, 168, 76, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow: hidden;
+  transform: scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.project-cta-card h3 {
+.projects-modal-overlay.open .projects-modal-container {
+  transform: scale(1);
+}
+.projects-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.projects-modal-title-wrap h2 {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.projects-modal-title-wrap p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.projects-modal-close {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.projects-modal-close:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: rotate(90deg);
+  background: rgba(201, 168, 76, 0.05);
+}
+.projects-modal-search-wrap {
+  position: relative;
+  margin-bottom: 30px;
+}
+.projects-modal-search-wrap input {
+  width: 100%;
+  background: rgba(4, 22, 40, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 14px 20px 14px 48px;
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+.projects-modal-search-wrap input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.15);
+  background: rgba(4, 22, 40, 0.8);
+}
+.projects-modal-search-wrap .search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.6;
+}
+.projects-modal-grid {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding-right: 8px;
+  padding-bottom: 10px;
+}
+.projects-modal-grid::-webkit-scrollbar {
+  width: 6px;
+}
+.projects-modal-grid::-webkit-scrollbar-track {
+  background: rgba(201, 168, 76, 0.02);
+  border-radius: 3px;
+}
+.projects-modal-grid::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.15);
+  border-radius: 3px;
+}
+.projects-modal-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.3);
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.projects-modal-grid .project-card {
+  animation: fadeInCard 0.4s ease forwards;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  min-height: unset;
+  overflow: visible;
+}
+.projects-modal-grid .project-card:hover {
+  transform: translateY(-2px);
+}
+.projects-modal-grid .project-card-header {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+.projects-modal-grid .project-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+.projects-modal-grid .project-card-text h3 {
+  font-family: var(--font-heading);
+  font-size: 14px;
   font-weight: 700;
   color: var(--cream);
-  margin-bottom: 10px;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.project-cta-card p {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-  max-width: 240px;
+.projects-modal-grid .project-card-text .project-card-id {
+  font-size: 9px;
 }
+
+@media (max-width: 768px) {
+  .projects-modal-container {
+    padding: 24px;
+    width: 95%;
+    height: 85vh;
+  }
+  .projects-modal-title-wrap h2 {
+    font-size: 20px;
+  }
+  .projects-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .btn-accent {
   display: inline-flex;
   align-items: center;
@@ -2403,19 +2603,98 @@ body::before {
   transition: opacity 0.9s ease, visibility 0.9s ease;
   cursor: default;
 }
+/* ── Sound choice gate ────────────────────────────────────────
+   Shown before video starts. Fades out once user makes a choice.
+────────────────────────────────────────────────────────────── */
+#intro-sound-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(1, 12, 24, 0.92);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s ease;
+}
+#intro-sound-gate.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#intro-sound-gate-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+}
+#intro-sound-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 1.2vw, 14px);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin: 0;
+}
+#intro-sound-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#intro-btn-sound,
+#intro-btn-mute {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+  border: 1.5px solid;
+}
+#intro-btn-sound {
+  background: rgba(76, 184, 245, 0.12);
+  border-color: rgba(76, 184, 245, 0.5);
+  color: #4ab8f5;
+}
+#intro-btn-sound:hover {
+  background: rgba(76, 184, 245, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(76, 184, 245, 0.25);
+}
+#intro-btn-mute {
+  background: rgba(255,255,255, 0.05);
+  border-color: rgba(255,255,255, 0.2);
+  color: rgba(255,255,255, 0.6);
+}
+#intro-btn-mute:hover {
+  background: rgba(255,255,255, 0.1);
+  transform: translateY(-2px);
+  color: rgba(255,255,255, 0.9);
+}
+#intro-btn-sound span,
+#intro-btn-mute span { font-size: 18px; }
+
 #intro-overlay.fade-out {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-#intro-video {
+#intro-video,
+#team-intro-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-#intro-fluid-canvas {
+#intro-fluid-canvas,
+#team-intro-fluid-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -2423,6 +2702,54 @@ body::before {
   pointer-events: none;
   z-index: 3;
   mix-blend-mode: screen;
+}
+#team-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #010C18;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+  cursor: default;
+  pointer-events: none;
+}
+#team-intro-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+#team-intro-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Skip button — same style as main intro */
+#team-intro-skip {
+  position: absolute;
+  bottom: clamp(20px, 4vh, 40px);
+  right: clamp(20px, 4vw, 48px);
+  z-index: 10;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50px;
+  color: #F5F0E8;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+#team-intro-skip:hover {
+  background: rgba(201,168,76,0.18);
+  border-color: rgba(201,168,76,0.5);
+  color: #C9A84C;
 }
 #intro-unmute {
   position: absolute;
@@ -2624,6 +2951,406 @@ body.intro-active { overflow: hidden; }
     animation-duration: 25s; /* slightly faster flow on smaller screens to feel active */
   }
 }
+
+/* ═══════════════════════════════════════════
+   TEAMS SECTION
+   ═══════════════════════════════════════════ */
+.teams-section {
+  padding: 100px 8vw;
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+}
+.teams-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 52px;
+}
+.teams-title-area .section-label { margin-bottom: 16px; }
+.btn-view-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 50px;
+  color: var(--gold);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-view-team:hover {
+  background: var(--gold);
+  color: var(--navy);
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+.teams-preview-grid,
+.team-grid-featured,
+.team-grid-members {
+  display: grid;
+  gap: 26px;
+  justify-content: center;
+  align-items: start;
+}
+.teams-preview-grid {
+  grid-template-columns: repeat(2, minmax(0, 320px));
+}
+.team-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.team-card-links {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  z-index: 2;
+}
+.team-card-link {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: transparent;
+  text-decoration: none;
+  margin-left: -1px;
+}
+.team-card-link:first-child {
+  margin-left: 0;
+}
+.team-card-link:hover {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.team-card-role {
+  color: var(--gold);
+  font-family: var(--font-heading);
+  font-size: clamp(16px, 1.6vw, 22px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 0 16px rgba(251, 191, 36, 0.3);
+  line-height: 1.05;
+}
+.team-grid-featured,
+.team-grid-members {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+}
+/* ── Team Card — image only, identical everywhere ────────────────────────
+   The card image asset already contains name, role and design.
+   No additional content is rendered outside the image.
+────────────────────────────────────────────────────────────────────────── */
+.team-card {
+  --team-card-glow: #60A5FA;
+  --team-card-glow-rgb: 96, 165, 250;
+  background: transparent;
+  border: 1px solid rgba(var(--team-card-glow-rgb), 0.2);
+  border-radius: 16px;
+  overflow: visible;
+  position: relative;
+  isolation: isolate;
+  transform: none;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.team-card:hover {
+  transform: none;
+  scale: 1;
+  border-color: rgba(var(--team-card-glow-rgb), 0.68);
+  box-shadow:
+    0 0 10px rgba(var(--team-card-glow-rgb), .3),
+    0 0 20px rgba(var(--team-card-glow-rgb), .2),
+    0 0 30px rgba(var(--team-card-glow-rgb), .1);
+  z-index: 2;
+}
+.team-card::before,
+.team-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.team-card::before {
+  inset: -2px;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, transparent, rgba(var(--team-card-glow-rgb), 0.95), transparent) 0 0 / 220% 1px no-repeat,
+    linear-gradient(180deg, transparent, rgba(var(--team-card-glow-rgb), 0.95), transparent) 100% 0 / 1px 220% no-repeat,
+    linear-gradient(270deg, transparent, rgba(var(--team-card-glow-rgb), 0.95), transparent) 100% 100% / 220% 1px no-repeat,
+    linear-gradient(0deg, transparent, rgba(var(--team-card-glow-rgb), 0.95), transparent) 0 100% / 1px 220% no-repeat;
+  box-shadow: 0 0 10px rgba(var(--team-card-glow-rgb), 0.32);
+  z-index: 2;
+}
+.team-card::after {
+  inset: -6px;
+  border-radius: 22px;
+  background:
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 0 0 / 22px 1px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 0 0 / 1px 22px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 100% 0 / 22px 1px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 100% 0 / 1px 22px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 0 100% / 22px 1px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 0 100% / 1px 22px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 100% 100% / 22px 1px no-repeat,
+    linear-gradient(var(--team-card-glow), var(--team-card-glow)) 100% 100% / 1px 22px no-repeat;
+  box-shadow:
+    0 0 18px rgba(var(--team-card-glow-rgb), 0.24),
+    inset 0 0 18px rgba(var(--team-card-glow-rgb), 0.08);
+  z-index: -1;
+}
+.team-card:hover::before {
+  opacity: 1;
+  animation: team-border-trace 2.6s linear infinite;
+}
+.team-card:hover::after {
+  opacity: 1;
+  animation: team-corner-pulse 2.4s ease-in-out infinite;
+}
+.team-card--blue:hover::before { animation-duration: 2.3s; }
+.team-card--purple:hover::before { animation-name: team-border-orbit; animation-duration: 3.4s; }
+.team-card--emerald:hover::after { animation-name: team-breathing-glow; animation-duration: 3.2s; }
+.team-card--gold:hover::before { animation-duration: 1.9s; }
+.team-card--cyan:hover::before { animation-duration: 2.8s; }
+.team-card--pink:hover::after { animation-name: team-corner-spark; animation-duration: 2.6s; }
+/* Image fills the card — natural portrait aspect ratio from the asset */
+.team-card-image-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;   /* portrait card shape — adjust if assets differ */
+  overflow: hidden;
+  display: block;
+  line-height: 0;
+}
+.team-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transform: none;
+  transition: none;
+}
+.team-card:hover .team-card-image-wrap img {
+  transform: none;
+  scale: 1;
+}
+
+@keyframes team-border-trace {
+  0% {
+    background-position: -220% 0, 100% -220%, 220% 100%, 0 220%;
+  }
+  100% {
+    background-position: 220% 0, 100% 220%, -220% 100%, 0 -220%;
+  }
+}
+
+@keyframes team-corner-pulse {
+  0%, 100% {
+    opacity: 0.65;
+    box-shadow:
+      0 0 12px rgba(var(--team-card-glow-rgb), 0.2),
+      inset 0 0 14px rgba(var(--team-card-glow-rgb), 0.06);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      0 0 22px rgba(var(--team-card-glow-rgb), 0.35),
+      inset 0 0 20px rgba(var(--team-card-glow-rgb), 0.12);
+  }
+}
+
+@keyframes team-border-orbit {
+  0% {
+    background-position: -180% 0, 100% -180%, 180% 100%, 0 180%;
+  }
+  50% {
+    background-position: 180% 0, 100% 180%, -180% 100%, 0 -180%;
+  }
+  100% {
+    background-position: -180% 0, 100% -180%, 180% 100%, 0 180%;
+  }
+}
+
+@keyframes team-breathing-glow {
+  0%, 100% {
+    opacity: 0.55;
+    box-shadow:
+      0 0 10px rgba(var(--team-card-glow-rgb), 0.18),
+      inset 0 0 12px rgba(var(--team-card-glow-rgb), 0.05);
+  }
+  50% {
+    opacity: 0.95;
+    box-shadow:
+      0 0 26px rgba(var(--team-card-glow-rgb), 0.32),
+      inset 0 0 22px rgba(var(--team-card-glow-rgb), 0.1);
+  }
+}
+
+@keyframes team-corner-spark {
+  0%, 100% {
+    opacity: 0.45;
+    background-size:
+      18px 1px, 1px 18px,
+      22px 1px, 1px 22px,
+      18px 1px, 1px 18px,
+      22px 1px, 1px 22px;
+  }
+  50% {
+    opacity: 1;
+    background-size:
+      30px 1px, 1px 30px,
+      24px 1px, 1px 24px,
+      30px 1px, 1px 30px,
+      24px 1px, 1px 24px;
+  }
+}
+
+/* Homepage preview: 2 cards centred, max width so they don't stretch */
+.teams-preview-grid {
+  max-width: 692px;
+  margin: 0 auto;
+}
+.teams-cta-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 42px;
+}
+
+/* ═══════════════════════════════════════════
+   TEAM DIRECTORY OVERLAY
+   ═══════════════════════════════════════════ */
+.team-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 12, 24, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 2000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, visibility 0.6s;
+}
+.team-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.team-overlay-header {
+  padding: 40px 8vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: rgba(1, 12, 24, 0.9);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.team-overlay-title {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: var(--cream);
+  text-transform: uppercase;
+}
+.team-overlay-controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.year-selector {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+.year-selector option {
+  background: var(--bg);
+  color: var(--cream);
+}
+.btn-close-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--cream);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-close-overlay:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.team-directory-content {
+  padding: 60px 2vw;
+  max-width: 2040px;
+  margin: 0 auto;
+}
+.team-directory-section-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-top: 32px;
+  margin-bottom: 32px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px dashed var(--border-dashed);
+  padding-bottom: 16px;
+}
+@media (max-width: 599px) {
+  .teams-header { flex-direction: column; gap: 24px; }
+  .teams-preview-grid {
+    max-width: 320px;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .team-grid-featured,
+  .team-grid-members { grid-template-columns: minmax(0, 320px); }
+  .team-directory-content { padding: 42px 6vw; }
+  .team-overlay-header { padding: 24px 6vw; }
+}
+@media (max-width: 1199px) and (min-width: 600px) {
+  .team-grid-featured,
+  .team-grid-members { grid-template-columns: repeat(2, minmax(0, 320px)); }
+}
+@media (max-width: 1599px) and (min-width: 1200px) {
+  .team-grid-featured,
+  .team-grid-members { grid-template-columns: repeat(4, minmax(0, 320px)); }
+}
 </style>
 </head>
 <body>
@@ -2635,22 +3362,42 @@ body.intro-active { overflow: hidden; }
   <video
     id="intro-video"
     src="introvid.mp4"
-    autoplay
     playsinline
     preload="auto"
     aria-hidden="true"
   ></video>
 
-  <!-- Fluid ripple canvas — drawn over video, mix-blend-mode:screen -->
+  <!-- Fluid ripple canvas -->
   <canvas id="intro-fluid-canvas" aria-hidden="true"></canvas>
 
-  <!-- Unmute nudge -->
-  <div id="intro-unmute" class="hidden">
-    <span>🔊</span>
-    Click anywhere to unmute
+  <!-- Sound choice gate — shown before video starts -->
+  <div id="intro-sound-gate">
+    <div id="intro-sound-gate-inner">
+      <p id="intro-sound-label">// ACM VNIT</p>
+      <div id="intro-sound-buttons">
+        <button id="intro-btn-sound" aria-label="Play with sound">
+          <span>🔊</span> With Sound
+        </button>
+        <button id="intro-btn-mute" aria-label="Play muted">
+          <span>🔇</span> Muted
+        </button>
+      </div>
+    </div>
   </div>
 
-  <button id="intro-skip" aria-label="Skip intro">Skip ↓</button>
+  <button id="intro-skip" aria-label="Skip intro" style="display:none">Skip ↓</button>
+</div>
+
+<div id="team-intro-overlay" role="dialog" aria-label="Team intro">
+  <video
+    id="team-intro-video"
+    src="team-cards/team-intro.mp4"
+    playsinline
+    preload="auto"
+    aria-hidden="true"
+  ></video>
+  <canvas id="team-intro-fluid-canvas" aria-hidden="true"></canvas>
+  <button id="team-intro-skip" aria-label="Skip intro">Skip ↓</button>
 </div>
 
 <!-- Burst circle that expands on click -->
@@ -2678,6 +3425,7 @@ body.intro-active { overflow: hidden; }
     <a href="#domains">Domains</a>
     <a href="#events">Events</a>
     <a href="#projects">Projects</a>
+    <a href="#teams">Teams</a>
     <a href="#contact-us">Contact</a>
   </div>
   <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
@@ -2692,6 +3440,7 @@ body.intro-active { overflow: hidden; }
   <a href="#domains" onclick="closeMobileMenu()">Domains</a>
   <a href="#events" onclick="closeMobileMenu()">Events</a>
   <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+  <a href="#teams" onclick="closeMobileMenu()">Teams</a>
   <a href="#contact-us" onclick="closeMobileMenu()">Contact</a>
 </div>
 
@@ -3215,130 +3964,147 @@ body.intro-active { overflow: hidden; }
   </div>
 
   <div class="projects-grid">
-    <!-- Lumina OS -->
-    <div class="project-card reveal" data-proj="lumina" style="grid-column: span 2;">
+    <!-- 180DC VNIT -->
+    <div class="project-card reveal" data-proj="180dc">
       <div class="project-card-header">
-        <span class="project-card-id">// Edge Research</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo1.jpg" alt="180DC Logo">
         </div>
+        <span class="project-card-id">// Social Consulting</span>
       </div>
-      <h3>Lumina OS</h3>
-      <p>A microkernel-based operating system built from scratch in Rust, focusing on memory safety and real-time process scheduling for edge computing nodes.</p>
+      <h3>180DC VNIT</h3>
+      <p>Official website for 180 Degrees Consulting VNIT, showcasing our student-led consultancy services, social impact projects, and club portfolio.</p>
       <div class="project-tech-tags">
-        <span class="project-tech-tag">Rust</span>
-        <span class="project-tech-tag">x86_64</span>
-        <span class="project-tech-tag">QEMU</span>
+        <span class="project-tech-tag">HTML</span>
+        <span class="project-tech-tag">CSS</span>
+        <span class="project-tech-tag">JS</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
-            Rust
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 142</span>
-            <span>⑂ 28</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/180DC" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- NeuralLink v2 -->
-    <div class="project-card reveal reveal-delay-1" data-proj="neural">
+    <!-- Spic Macay -->
+    <div class="project-card reveal" data-proj="spicmacay">
       <div class="project-card-header">
-        <span class="project-card-id">// Machine Intelligence</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo2.jpg" alt="Spic Macay Logo">
         </div>
+        <span class="project-card-id">// Cultural Heritage</span>
       </div>
-      <h3>NeuralLink v2</h3>
-      <p>Edge AI processing framework optimized for low-power ARM architectures, reducing inference latency by 40%.</p>
+      <h3>Spic Macay</h3>
+      <p>Dedicated to promoting Indian classical music and heritage at VNIT Nagpur, curating immersive performances, traditional workshops, and artist galleries.</p>
       <div class="project-tech-tags">
-        <span class="project-tech-tag">C++</span>
-        <span class="project-tech-tag">TensorFlow</span>
+        <span class="project-tech-tag">HTML</span>
+        <span class="project-tech-tag">CSS</span>
+        <span class="project-tech-tag">JS</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--gold);"></span>
-            C++
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 96</span>
-            <span>⑂ 12</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/Spic-Macay-Website" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- CLI Toolbox -->
-    <div class="project-card reveal reveal-delay-2" data-proj="cli">
+    <!-- Tesla Club VNIT -->
+    <div class="project-card reveal" data-proj="tesla">
       <div class="project-card-header">
-        <span class="project-card-id">// Developer Tooling</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo3.jpg" alt="Tesla Club VNIT Logo">
         </div>
+        <span class="project-card-id">// Electronics Club</span>
       </div>
-      <h3>CLI Toolbox</h3>
-      <p>Developer productivity tools for automation, Git workflow management, and rapid boilerplate generation.</p>
+      <h3>Tesla Club VNIT</h3>
+      <p>Official web platform for the Tesla Club of VNIT, the premier electronics and electrical engineering club, showcasing projects, events, and team achievements.</p>
       <div class="project-tech-tags">
-        <span class="project-tech-tag">Go</span>
-        <span class="project-tech-tag">Cobra</span>
+        <span class="project-tech-tag">React</span>
+        <span class="project-tech-tag">Node.js</span>
+        <span class="project-tech-tag">Tailwind</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
-            Go
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 68</span>
-            <span>⑂ 18</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/Tantrafiesta" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- ACM Portal -->
-    <div class="project-card reveal reveal-delay-3" data-proj="portal">
+    <!-- IG'26 App -->
+    <div class="project-card reveal" data-proj="ig26">
       <div class="project-card-header">
-        <span class="project-card-id">// Chapter Infrastructure</span>
-        <div class="project-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <div class="project-card-icon" title="Project Logo">
+          <img src="projects/img/logo4.jpg" alt="IG'26 App Logo">
         </div>
+        <span class="project-card-id">// Institute App</span>
       </div>
-      <h3>ACM Portal</h3>
-      <p>Internal chapter management system handling event registrations, member grading, and resource allocation for 500+ students.</p>
+      <h3>IG'26 App</h3>
+      <p>Official ACM VNIT app for Shashwatam '26 — VNIT's premier 10-day annual institute gathering themed "The Eternal Spirit," hosting 80+ inter-departmental competitions across cultural, technical, sports, and creative disciplines.</p>
       <div class="project-tech-tags">
         <span class="project-tech-tag">Next.js</span>
-        <span class="project-tech-tag">Postgres</span>
+        <span class="project-tech-tag">Firebase</span>
+        <span class="project-tech-tag">CSS</span>
       </div>
       <div class="project-card-footer">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim);">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent);"></span>
-            TypeScript
-          </span>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: inline-flex; gap: 12px;">
-            <span>★ 45</span>
-            <span>⑂ 7</span>
-          </span>
-        </div>
-        <a class="project-link" href="#">view_repository →</a>
+        <a class="project-link" href="https://github.com/AnkurKumarIO/Shashwatam" target="_blank" rel="noopener noreferrer">view_repository →</a>
       </div>
     </div>
 
-    <!-- CTA Card -->
-    <div class="project-cta-card reveal reveal-delay-4">
-      <div class="cta-icon">🚀</div>
-      <h3>Your Project Here?</h3>
-      <p>Contribute to our technical ecosystem and architect the future of tech.</p>
-      <button class="btn-accent">Start Building +</button>
+    <!-- Other Projects Deck Card -->
+    <div class="project-deck-card project-card reveal" id="openProjectsModalBtn" style="cursor: pointer;">
+      <div class="project-card-header">
+        <div class="project-card-icon" title="Deck Logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="14" height="14" rx="2" />
+            <rect x="7" y="7" width="14" height="14" rx="2" opacity="0.6" />
+          </svg>
+        </div>
+        <span class="project-card-id">// View All</span>
+      </div>
+      <h3>Other Projects</h3>
+      <p>Browse our complete registry of active engineering systems and open-source contributions.</p>
+      <div class="project-card-footer">
+        <span class="project-link">Explore Other Projects <span style="font-size: 12px;">→</span></span>
+      </div>
     </div>
+  </div>
+
+  <!-- Projects Overlay Modal -->
+  <div class="projects-modal-overlay" id="projectsModal">
+    <div class="projects-modal-container">
+      <div class="projects-modal-header">
+        <div class="projects-modal-title-wrap">
+          <h2>All Chapter Projects</h2>
+          <p>A complete catalog of student-led projects, dev utilities, and research systems.</p>
+        </div>
+        <button class="projects-modal-close" id="closeProjectsModalBtn" aria-label="Close modal">✕</button>
+      </div>
+      
+      <div class="projects-modal-search-wrap">
+        <input type="text" id="projectsSearchInput" placeholder="Search by name, technology, or category..." autocomplete="off" />
+        <span class="search-icon">🔍</span>
+      </div>
+      
+      <div class="projects-modal-grid" id="modalProjectsGrid">
+        <!-- Dynamically generated via JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TEAMS SECTION
+     ═══════════════════════════════════════════ -->
+<section class="teams-section" id="teams">
+  <div class="teams-header">
+    <div class="teams-title-area">
+      <div class="section-label reveal">// The People Behind</div>
+      <div class="section-title reveal reveal-delay-1" style="font-size: clamp(2.5rem, 6vw, 5rem);">
+        Our <span class="accent">Teams</span>
+      </div>
+    </div>
+  </div>
+  <div class="teams-preview-grid" id="teams-preview-grid">
+    <!-- Populated by JS -->
+  </div>
+  <div class="teams-cta-row">
+    <button class="btn-view-team reveal reveal-delay-2" onclick="openTeamOverlay()">
+      View Full Team →
+    </button>
   </div>
 </section>
 
@@ -3493,7 +4259,7 @@ body.intro-active { overflow: hidden; }
 
   // ───── Active Nav Link on Scroll ─────
   const navLinks = document.querySelectorAll('.nav-pill a');
-  const sectionIds = ['#hero', '#about', '#community', '#domains', '#events', '#projects', '#contact-us', '#contact'];
+  const sectionIds = ['#hero', '#about', '#community', '#domains', '#events', '#projects', '#teams', '#contact-us', '#contact'];
 
   // Use rootMargin so active state fires as soon as the section's top
   // crosses the upper portion of the viewport — works correctly even for
@@ -4162,7 +4928,6 @@ body.intro-active { overflow: hidden; }
     var video     = document.getElementById('intro-video');
     var skip      = document.getElementById('intro-skip');
     var canvas    = document.getElementById('intro-fluid-canvas');
-    var unmutBtn  = document.getElementById('intro-unmute');
     var burst     = document.getElementById('intro-burst');
     var burstCirc = document.getElementById('intro-burst-circle');
 
@@ -4200,14 +4965,16 @@ body.intro-active { overflow: hidden; }
         if (burst) {
           burst.style.transition = 'opacity 0.4s ease';
           burst.style.opacity    = '0';
-          setTimeout(function() { burst.remove(); }, 420);
+          if (burstCirc) burstCirc.classList.remove('expand');
+          setTimeout(function() { burst.style.opacity = ''; }, 420);
         }
       }, 680);
     }
 
     overlay.addEventListener('click', function(e) {
-      if (e.target === unmutBtn || (unmutBtn && unmutBtn.contains(e.target))) return;
-      if (video.muted) { video.muted = false; if (unmutBtn) unmutBtn.classList.add('hidden'); return; }
+      /* Don't burst if the sound gate is still visible */
+      var gate = document.getElementById('intro-sound-gate');
+      if (gate && !gate.classList.contains('hidden')) return;
       triggerBurst(e);
     });
 
@@ -4221,22 +4988,35 @@ body.intro-active { overflow: hidden; }
 
     setTimeout(function() { triggerBurst(null); }, 60000);
 
-    video.muted = false;
-    var pp = video.play();
-    if (pp !== undefined) {
-      pp.catch(function() {
-        video.muted = true;
-        video.play().catch(function() { triggerBurst(null); });
-        if (unmutBtn) {
-          unmutBtn.classList.remove('hidden');
-          unmutBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            video.muted = false;
-            unmutBtn.classList.add('hidden');
-          }, { once: true });
-        }
-      });
+    /* ── Sound choice gate ─────────────────────────────────────
+       Video doesn't start until user clicks With Sound or Muted.
+       This click IS the user gesture — so video.play() with audio
+       is guaranteed to work on every browser including Vercel/HTTPS.
+    ────────────────────────────────────────────────────────────── */
+    var gate      = document.getElementById('intro-sound-gate');
+    var btnSound  = document.getElementById('intro-btn-sound');
+    var btnMute   = document.getElementById('intro-btn-mute');
+    var skipEl    = document.getElementById('intro-skip');
+
+    function startVideo(muted) {
+      /* Hide gate */
+      if (gate) gate.classList.add('hidden');
+      /* Show skip button now that video is playing */
+      if (skipEl) skipEl.style.display = '';
+
+      video.muted = muted;
+      video.play().catch(function() { triggerBurst(null); });
     }
+
+    if (btnSound) btnSound.addEventListener('click', function(e) {
+      e.stopPropagation();
+      startVideo(false);
+    }, { once: true });
+
+    if (btnMute) btnMute.addEventListener('click', function(e) {
+      e.stopPropagation();
+      startVideo(true);
+    }, { once: true });
 
     /* ── Fluid paint trail ── */
     var ctx = canvas.getContext('2d');
@@ -4423,7 +5203,422 @@ body.intro-active { overflow: hidden; }
       });
     });
   });
+
+  /* ── Projects Deck & Search Modal ── */
+  const projectsData = [
+    {
+      name: "180DC VNIT",
+      category: "Social Consulting",
+      logo: `<img src="projects/img/logo1.jpg" alt="180DC Logo">`,
+      desc: "Official website for 180 Degrees Consulting VNIT, showcasing our student-led consultancy services, social impact projects, and club portfolio.",
+      tags: ["HTML", "CSS", "JS"],
+      lang: "HTML",
+      langColor: "#6CB6E3",
+      stars: 12,
+      forks: 2,
+      url: "https://github.com/AnkurKumarIO/180DC"
+    },
+    {
+      name: "Spic Macay",
+      category: "Cultural Heritage",
+      logo: `<img src="projects/img/logo2.jpg" alt="Spic Macay Logo">`,
+      desc: "Dedicated to promoting Indian classical music and heritage at VNIT Nagpur, curating immersive performances, traditional workshops, and artist galleries.",
+      tags: ["HTML", "CSS", "JS"],
+      lang: "HTML",
+      langColor: "#6CB6E3",
+      stars: 15,
+      forks: 3,
+      url: "https://github.com/AnkurKumarIO/Spic-Macay-Website"
+    },
+    {
+      name: "Tesla Club VNIT",
+      category: "Electronics Club",
+      logo: `<img src="projects/img/logo3.jpg" alt="Tesla Club VNIT Logo">`,
+      desc: "Official web platform for the Tesla Club of VNIT, the premier electronics and electrical engineering club, showcasing projects, events, and team achievements.",
+      tags: ["React", "Node.js", "Tailwind"],
+      lang: "JavaScript",
+      langColor: "#E8C87A",
+      stars: 28,
+      forks: 7,
+      url: "https://github.com/AnkurKumarIO/Tantrafiesta"
+    },
+    {
+      name: "IG'26 App",
+      category: "Institute App",
+      logo: `<img src="projects/img/logo4.jpg" alt="IG'26 App Logo">`,
+      desc: "Official ACM VNIT app for Shashwatam '26 — VNIT's premier 10-day annual institute gathering themed \"The Eternal Spirit,\" hosting 80+ inter-departmental competitions across cultural, technical, sports, and creative disciplines.",
+      tags: ["Next.js", "Firebase", "CSS"],
+      lang: "JavaScript",
+      langColor: "#E8C87A",
+      stars: 32,
+      forks: 5,
+      url: "https://github.com/AnkurKumarIO/Shashwatam"
+    },
+  ];
+
+  const modal = document.getElementById('projectsModal');
+  const openBtn = document.getElementById('openProjectsModalBtn');
+  const closeBtn = document.getElementById('closeProjectsModalBtn');
+  const searchInput = document.getElementById('projectsSearchInput');
+
+  function renderProjects(filterText = "") {
+    const grid = document.getElementById('modalProjectsGrid');
+    if (!grid) return;
+
+    const query = filterText.toLowerCase().trim();
+    const filtered = projectsData.filter(p => {
+      return p.name.toLowerCase().includes(query) || 
+             p.desc.toLowerCase().includes(query) ||
+             p.category.toLowerCase().includes(query) ||
+             p.tags.some(tag => tag.toLowerCase().includes(query)) ||
+             p.lang.toLowerCase().includes(query);
+    });
+
+    grid.innerHTML = filtered.map((p, idx) => `
+      <div class="project-card" style="opacity:0; animation: fadeInCard 0.4s ease forwards; animation-delay: ${idx * 0.04}s; cursor: pointer;" onclick="window.open('${p.url}', '_blank')">
+        <div class="project-card-header">
+          <div class="project-card-icon">
+            ${p.logo}
+          </div>
+        </div>
+        <div class="project-card-text">
+          <h3>${p.name}</h3>
+          <span class="project-card-id">${p.category}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openProjectsModal() {
+    if (!modal) return;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (searchInput) searchInput.value = '';
+    renderProjects();
+    setTimeout(() => searchInput && searchInput.focus(), 150);
+  }
+
+  function closeProjectsModal() {
+    if (!modal) return;
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (openBtn) openBtn.addEventListener('click', openProjectsModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeProjectsModal);
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeProjectsModal();
+    });
+  }
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      renderProjects(e.target.value);
+    });
+  }
+  document.addEventListener('keydown', function(e) {
+    if (modal && modal.classList.contains('open') && e.key === 'Escape') {
+      closeProjectsModal();
+    }
+  });
 })();
+</script>
+
+<!-- ═══════════════════════════════════════════
+     TEAM DIRECTORY OVERLAY
+     ═══════════════════════════════════════════ -->
+<div class="team-overlay" id="team-directory-overlay">
+  <div class="team-overlay-header">
+    <div class="team-overlay-title">ACM VNIT <span class="accent">Team</span></div>
+    <div class="team-overlay-controls">
+      <select class="year-selector" id="team-year-selector" onchange="renderTeamDirectory()">
+        <option value="2026">2026</option>
+      </select>
+      <button class="btn-close-overlay" onclick="closeTeamOverlay()">← Back</button>
+    </div>
+  </div>
+  <div class="team-directory-content">
+    <div class="team-directory-section-title">Leadership</div>
+    <div class="team-grid-featured" id="team-grid-leadership"></div>
+    <div class="team-directory-section-title">Team Members</div>
+    <div class="team-grid-members" id="team-grid-members"></div>
+  </div>
+</div>
+
+<script>
+// ── Team Data ──────────────────────────────────────────────────────────────
+const teamData = {
+  "2026": {
+    year: "2026",
+    president:     { name: "Ankur Kumar", role: "President",      image: "team-cards/Ankur Kumar.png" },
+    vicePresident: { name: "Ankur Kumar", role: "Vice President", image: "team-cards/Ankur Kumar.png" },
+    members: Array.from({ length: 18 }, (_, i) => ({
+      name:  "Ankur Kumar",
+      role:  `Team Member ${i + 1}`,
+      image: "team-cards/Ankur Kumar.png",
+    }))
+  }
+};
+
+const borderThemes = [
+  { name: "blue", hex: "#60A5FA", rgb: "96, 165, 250" },
+  { name: "purple", hex: "#A78BFA", rgb: "167, 139, 250" },
+  { name: "emerald", hex: "#34D399", rgb: "52, 211, 153" },
+  { name: "gold", hex: "#FBBF24", rgb: "251, 191, 36" },
+  { name: "cyan", hex: "#22D3EE", rgb: "34, 211, 238" },
+  { name: "pink", hex: "#F472B6", rgb: "244, 114, 182" },
+];
+
+// ── Card HTML generator ────────────────────────────────────────────────────
+function generateTeamCardHTML(member, index = 0) {
+  if (!member) return '';
+  const img = member.image || member.photo || '';
+  const theme = borderThemes[index % borderThemes.length];
+  const roleHtml = index < 2 && member.role ? `<div class="team-card-role">${member.role}</div>` : '';
+  return `
+    <div class="team-card-wrapper">
+      <div class="team-card team-card--${theme.name}" style="--team-card-glow: ${theme.hex}; --team-card-glow-rgb: ${theme.rgb};">
+        <div class="team-card-image-wrap">
+          <img src="${img}" alt="${member.name}" loading="lazy">
+        </div>
+        <div class="team-card-links">
+          <a class="team-card-link" href="#" aria-label="LinkedIn placeholder"></a>
+          <a class="team-card-link" href="#" aria-label="GitHub placeholder"></a>
+          <a class="team-card-link" href="#" aria-label="LeetCode placeholder"></a>
+        </div>
+      </div>
+      ${roleHtml}
+    </div>`;
+}
+
+// ── Main page: President + VP cards (always visible, no reveal gating) ─────
+function initTeamsPreview() {
+  const grid = document.getElementById('teams-preview-grid');
+  if (!grid || grid.children.length > 0) return; // guard double-run
+
+  const data          = teamData["2026"];
+  const president     = data?.president     ?? { name:"Ankur Kumar", role:"President",      image:"team-cards/Ankur Kumar.png" };
+  const vicePresident = data?.vicePresident ?? { name:"Ankur Kumar", role:"Vice President", image:"team-cards/Ankur Kumar.png" };
+
+  grid.innerHTML =
+    generateTeamCardHTML(president, 0) +
+    generateTeamCardHTML(vicePresident, 1);
+}
+
+// ── Full team overlay ──────────────────────────────────────────────────────
+function renderTeamDirectory() {
+  const yearEl     = document.getElementById('team-year-selector');
+  const year       = yearEl ? yearEl.value : "2026";
+  const data       = teamData[year] || teamData["2026"];
+  const leadGrid   = document.getElementById('team-grid-leadership');
+  const memberGrid = document.getElementById('team-grid-members');
+  if (!leadGrid || !memberGrid) return;
+
+  const president     = data?.president     ?? { name:"Ankur Kumar", role:"President",      image:"team-cards/Ankur Kumar.png" };
+  const vicePresident = data?.vicePresident ?? { name:"Ankur Kumar", role:"Vice President", image:"team-cards/Ankur Kumar.png" };
+  const membersList   = data?.members       ?? Array.from({length:18},(_,i)=>({
+    name:"Ankur Kumar", role:`Team Member ${i+1}`, image:"team-cards/Ankur Kumar.png"
+  }));
+
+  leadGrid.innerHTML =
+    generateTeamCardHTML(president, 0) +
+    generateTeamCardHTML(vicePresident, 1);
+
+  memberGrid.innerHTML = membersList.map((m, i) => generateTeamCardHTML(m, i + 2)).join('');
+}
+
+var teamIntroActive = false;
+
+function playTeamIntro(onComplete) {
+  var overlay   = document.getElementById('team-intro-overlay');
+  var video     = document.getElementById('team-intro-video');
+  var skipBtn   = document.getElementById('team-intro-skip');
+  var canvas    = document.getElementById('team-intro-fluid-canvas');
+  var burst     = document.getElementById('intro-burst');
+  var burstCirc = document.getElementById('intro-burst-circle');
+
+  if (!overlay || !video) { if (onComplete) onComplete(); return; }
+  if (teamIntroActive) return;
+  teamIntroActive = true;
+
+  if (burst) burst.style.opacity = '';
+  overlay.classList.add('active');
+  overlay.classList.remove('fade-out');
+  document.body.classList.add('intro-active');
+
+  /* ── Burst + reveal team overlay ── */
+  function finish(e) {
+    if (!teamIntroActive) return;
+    teamIntroActive = false;
+    fluidActive = false;
+
+    var cx = (e && e.clientX) ? e.clientX : window.innerWidth  / 2;
+    var cy = (e && e.clientY) ? e.clientY : window.innerHeight / 2;
+
+    if (burstCirc) {
+      var diag = Math.sqrt(
+        window.innerWidth  * window.innerWidth +
+        window.innerHeight * window.innerHeight
+      ) * 2.2;
+      burstCirc.style.width  = diag + 'px';
+      burstCirc.style.height = diag + 'px';
+      burstCirc.style.left   = cx + 'px';
+      burstCirc.style.top    = cy + 'px';
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          burstCirc.classList.add('expand');
+        });
+      });
+    }
+
+    overlay.classList.remove('active');
+    overlay.classList.add('fade-out');
+    video.pause();
+    video.currentTime = 0;
+
+    setTimeout(function() {
+      overlay.classList.remove('fade-out');
+      document.body.classList.remove('intro-active');
+      if (burst) {
+        burst.style.transition = 'opacity 0.4s ease';
+        burst.style.opacity    = '0';
+        setTimeout(function() {
+          burst.style.opacity = '';
+          if (burstCirc) burstCirc.classList.remove('expand');
+        }, 420);
+      }
+      if (onComplete) onComplete();
+    }, 680);
+  }
+
+  /* Click anywhere → finish */
+  overlay.addEventListener('click', function(e) {
+    e.stopPropagation();
+    finish(e);
+  }, { once: true });
+
+  /* Skip button */
+  if (skipBtn) {
+    skipBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      finish(e);
+    }, { once: true });
+  }
+
+  video.addEventListener('ended', function() { finish(null); }, { once: true });
+  video.addEventListener('error', function() { finish(null); }, { once: true });
+  setTimeout(function() { finish(null); }, 60000);
+
+  /* ── Audio: always unmuted, no prompt ── */
+  video.muted = false;
+  video.currentTime = 0;
+  var pp = video.play();
+  if (pp !== undefined) {
+    pp.catch(function() {
+      /* Autoplay blocked — still play muted so video works, audio will
+         need user gesture. Most browsers allow this after first interaction
+         (the user just clicked "View Full Team") so this rarely fires. */
+      video.muted = true;
+      video.play().catch(function() { finish(null); });
+    });
+  }
+
+  /* ── Fluid paint trail ── */
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var fluidActive = true;
+
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  var fMouseX = window.innerWidth / 2, fMouseY = window.innerHeight / 2, fMoved = false;
+  function onFMove(e) { fMouseX = e.clientX; fMouseY = e.clientY; fMoved = true; }
+  document.addEventListener('mousemove', onFMove);
+
+  var FN = 6, fPoints = [];
+  for (var i = 0; i < FN; i++) {
+    var lag = 0.04 + i * 0.045;
+    fPoints.push({ x: fMouseX, y: fMouseY, vx: 0, vy: 0, lag: lag,
+      damp: 0.72 - i * 0.04, hue: [270,22,190,290,30,200][i],
+      size: 38 - i * 3.5, alpha: 0.18 - i * 0.015 });
+  }
+
+  function fPaint(p, px, py) {
+    var dx = p.x - px, dy = p.y - py, dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 0.5) return;
+    var spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy), inten = Math.min(spd/8,1);
+    var bs = p.size * (0.6 + inten*0.8), hue = p.hue, alpha = p.alpha*(0.4+inten*0.6);
+    var steps = Math.max(1, Math.floor(dist/(bs*0.4)));
+    for (var s = 0; s <= steps; s++) {
+      var t=s/steps, bx=px+dx*t, by=py+dy*t;
+      var g = ctx.createRadialGradient(bx,by,0,bx,by,bs);
+      g.addColorStop(0,   'hsla('+hue+',100%,65%,'+alpha.toFixed(3)+')');
+      g.addColorStop(0.4, 'hsla('+hue+',90%,45%,'+(alpha*0.5).toFixed(3)+')');
+      g.addColorStop(1,   'hsla('+hue+',80%,20%,0)');
+      ctx.beginPath(); ctx.arc(bx,by,bs,0,Math.PI*2);
+      ctx.fillStyle = g; ctx.fill();
+    }
+  }
+
+  var fPrev = fPoints.map(function(p){ return {x:p.x, y:p.y}; });
+  function fLoop() {
+    if (!fluidActive) {
+      document.removeEventListener('mousemove', onFMove);
+      return;
+    }
+    requestAnimationFrame(fLoop);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    if (!fMoved) return;
+    ctx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < FN; i++) {
+      var p=fPoints[i], prev=fPrev[i];
+      p.vx += (fMouseX-p.x)*p.lag; p.vy += (fMouseY-p.y)*p.lag;
+      p.vx *= p.damp; p.vy *= p.damp;
+      var nx=p.x+p.vx, ny=p.y+p.vy;
+      fPaint(p,prev.x,prev.y);
+      prev.x=p.x; prev.y=p.y; p.x=nx; p.y=ny;
+    }
+  }
+  fLoop();
+}
+
+
+function openTeamOverlay() {
+  var overlay = document.getElementById('team-directory-overlay');
+  if (!overlay) return;
+  playTeamIntro(function() {
+    renderTeamDirectory();
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  });
+}
+
+function closeTeamOverlay() {
+  const overlay = document.getElementById('team-directory-overlay');
+  if (!overlay) return;
+  overlay.classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+
+window.renderTeamDirectory = renderTeamDirectory;
+window.openTeamOverlay = openTeamOverlay;
+window.closeTeamOverlay = closeTeamOverlay;
+
+document.addEventListener('click', function(event) {
+  const openButton = event.target.closest('.teams-cta-row .btn-view-team');
+  const closeButton = event.target.closest('.btn-close-overlay');
+  if (openButton) openTeamOverlay();
+  if (closeButton) closeTeamOverlay();
+});
+
+// ── Init: runs after DOM is parsed (script is at end of body) ─────────────
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTeamsPreview);
+} else {
+  initTeamsPreview();
+}
 </script>
 </body>
 </html>
