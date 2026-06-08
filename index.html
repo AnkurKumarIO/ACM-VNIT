@@ -2603,6 +2603,83 @@ body::before {
   transition: opacity 0.9s ease, visibility 0.9s ease;
   cursor: default;
 }
+/* ── Sound choice gate ────────────────────────────────────────
+   Shown before video starts. Fades out once user makes a choice.
+────────────────────────────────────────────────────────────── */
+#intro-sound-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(1, 12, 24, 0.92);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s ease;
+}
+#intro-sound-gate.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#intro-sound-gate-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+}
+#intro-sound-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 1.2vw, 14px);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin: 0;
+}
+#intro-sound-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#intro-btn-sound,
+#intro-btn-mute {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+  border: 1.5px solid;
+}
+#intro-btn-sound {
+  background: rgba(76, 184, 245, 0.12);
+  border-color: rgba(76, 184, 245, 0.5);
+  color: #4ab8f5;
+}
+#intro-btn-sound:hover {
+  background: rgba(76, 184, 245, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(76, 184, 245, 0.25);
+}
+#intro-btn-mute {
+  background: rgba(255,255,255, 0.05);
+  border-color: rgba(255,255,255, 0.2);
+  color: rgba(255,255,255, 0.6);
+}
+#intro-btn-mute:hover {
+  background: rgba(255,255,255, 0.1);
+  transform: translateY(-2px);
+  color: rgba(255,255,255, 0.9);
+}
+#intro-btn-sound span,
+#intro-btn-mute span { font-size: 18px; }
+
 #intro-overlay.fade-out {
   opacity: 0;
   visibility: hidden;
@@ -3285,16 +3362,30 @@ body.intro-active { overflow: hidden; }
   <video
     id="intro-video"
     src="introvid.mp4"
-    autoplay
     playsinline
     preload="auto"
     aria-hidden="true"
   ></video>
 
-  <!-- Fluid ripple canvas — drawn over video, mix-blend-mode:screen -->
+  <!-- Fluid ripple canvas -->
   <canvas id="intro-fluid-canvas" aria-hidden="true"></canvas>
 
-  <button id="intro-skip" aria-label="Skip intro">Skip ↓</button>
+  <!-- Sound choice gate — shown before video starts -->
+  <div id="intro-sound-gate">
+    <div id="intro-sound-gate-inner">
+      <p id="intro-sound-label">// ACM VNIT</p>
+      <div id="intro-sound-buttons">
+        <button id="intro-btn-sound" aria-label="Play with sound">
+          <span>🔊</span> With Sound
+        </button>
+        <button id="intro-btn-mute" aria-label="Play muted">
+          <span>🔇</span> Muted
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button id="intro-skip" aria-label="Skip intro" style="display:none">Skip ↓</button>
 </div>
 
 <div id="team-intro-overlay" role="dialog" aria-label="Team intro">
@@ -4883,6 +4974,9 @@ body.intro-active { overflow: hidden; }
     }
 
     overlay.addEventListener('click', function(e) {
+      /* Don't burst if the sound gate is still visible */
+      var gate = document.getElementById('intro-sound-gate');
+      if (gate && !gate.classList.contains('hidden')) return;
       triggerBurst(e);
     });
 
@@ -4896,13 +4990,35 @@ body.intro-active { overflow: hidden; }
 
     setTimeout(function() { triggerBurst(null); }, 60000);
 
-    video.muted = false;
-    var pp = video.play();
-    if (pp !== undefined) {
-      pp.catch(function() {
-        console.warn('Intro autoplay blocked with sound; video remains unmuted until user interaction.');
-      });
+    /* ── Sound choice gate ─────────────────────────────────────
+       Video doesn't start until user clicks With Sound or Muted.
+       This click IS the user gesture — so video.play() with audio
+       is guaranteed to work on every browser including Vercel/HTTPS.
+    ────────────────────────────────────────────────────────────── */
+    var gate      = document.getElementById('intro-sound-gate');
+    var btnSound  = document.getElementById('intro-btn-sound');
+    var btnMute   = document.getElementById('intro-btn-mute');
+    var skipEl    = document.getElementById('intro-skip');
+
+    function startVideo(muted) {
+      /* Hide gate */
+      if (gate) gate.classList.add('hidden');
+      /* Show skip button now that video is playing */
+      if (skipEl) skipEl.style.display = '';
+
+      video.muted = muted;
+      video.play().catch(function() { triggerBurst(null); });
     }
+
+    if (btnSound) btnSound.addEventListener('click', function(e) {
+      e.stopPropagation();
+      startVideo(false);
+    }, { once: true });
+
+    if (btnMute) btnMute.addEventListener('click', function(e) {
+      e.stopPropagation();
+      startVideo(true);
+    }, { once: true });
 
     /* ── Fluid paint trail ── */
     var ctx = canvas.getContext('2d');
