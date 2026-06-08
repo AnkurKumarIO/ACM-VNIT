@@ -4335,6 +4335,25 @@ body.intro-active { overflow: hidden; }
     });
   });
 
+  // ── Auto-scroll to contact form when arriving from another page ──
+  (function() {
+    if (new URLSearchParams(window.location.search).get('scrollTo') === 'contact') {
+      window.addEventListener('load', function() {
+        var driver  = document.getElementById('contactDriver');
+        var section = document.getElementById('contact-us');
+        if (!driver || !section) return;
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          section.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        var driverH   = driver.offsetHeight;
+        var viewH     = window.innerHeight;
+        var target    = section.offsetTop + 0.82 * (driverH - viewH);
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      });
+    }
+  })();
+
   // ───── Domain Card Dealer (GSAP ScrollTrigger) ─────
   (function initDomains() {
     var DOMAINS_DATA = [
