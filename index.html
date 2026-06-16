@@ -2615,6 +2615,27 @@ body::before {
   transition: opacity 0.9s ease, visibility 0.9s ease;
   cursor: default;
 }
+/* intro-frame.png sits on a pseudo-element so it can fade out
+   independently when the video starts */
+#intro-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(1, 12, 24, 0.55) 0%,
+      rgba(1, 12, 24, 0.35) 40%,
+      rgba(1, 12, 24, 0.55) 100%),
+    url('intro-frame.png') center center / cover no-repeat;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+/* Fade the background image out once the user picks sound/muted */
+#intro-overlay.video-starting::before {
+  opacity: 0;
+}
 /* ── Sound choice gate ────────────────────────────────────────
    Shown before video starts. Fades out once user makes a choice.
 ────────────────────────────────────────────────────────────── */
@@ -2625,11 +2646,11 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(1, 12, 24, 0.92);
-  backdrop-filter: blur(4px);
+  /* Semi-transparent so the fantasy background shows through */
+  background: rgba(1, 12, 24, 0.62);
+  backdrop-filter: blur(2px);
   transition: opacity 0.4s ease;
-}
-#intro-sound-gate.hidden {
+}#intro-sound-gate.hidden {
   opacity: 0;
   pointer-events: none;
 }
@@ -2642,11 +2663,12 @@ body::before {
 }
 #intro-sound-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(11px, 1.2vw, 14px);
-  letter-spacing: 0.25em;
+  font-size: clamp(13px, 1.5vw, 17px);
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.65);
   margin: 0;
+  text-shadow: 0 0 20px rgba(76, 184, 245, 0.5);
 }
 #intro-sound-buttons {
   display: flex;
@@ -2704,6 +2726,14 @@ body::before {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Hidden until ready — background image stays visible */
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1; /* above ::before pseudo-element */
+}
+#intro-video.playing,
+#team-intro-video.playing {
+  opacity: 1;
 }
 #intro-fluid-canvas,
 #team-intro-fluid-canvas {
@@ -5029,10 +5059,14 @@ body.intro-active { overflow: hidden; }
     function startVideo(muted) {
       /* Hide gate */
       if (gate) gate.classList.add('hidden');
+      /* Fade background image to black as video takes over */
+      overlay.classList.add('video-starting');
       /* Show skip button now that video is playing */
       if (skipEl) skipEl.style.display = '';
 
       video.muted = muted;
+      /* Make video visible immediately — no waiting for canplay */
+      video.classList.add('playing');
       video.play().catch(function() { triggerBurst(null); });
     }
 
@@ -5503,6 +5537,7 @@ function playTeamIntro(onComplete) {
     overlay.classList.add('fade-out');
     video.pause();
     video.currentTime = 0;
+    video.classList.remove('playing');
 
     setTimeout(function() {
       overlay.classList.remove('fade-out');
@@ -5540,12 +5575,10 @@ function playTeamIntro(onComplete) {
   /* ── Audio: always unmuted, no prompt ── */
   video.muted = false;
   video.currentTime = 0;
+  video.classList.add('playing');
   var pp = video.play();
   if (pp !== undefined) {
     pp.catch(function() {
-      /* Autoplay blocked — still play muted so video works, audio will
-         need user gesture. Most browsers allow this after first interaction
-         (the user just clicked "View Full Team") so this rarely fires. */
       video.muted = true;
       video.play().catch(function() { finish(null); });
     });
