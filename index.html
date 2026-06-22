@@ -13,14 +13,12 @@
    RESET & BASE
    ═══════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html { scroll-behavior: smooth; }
 body {
   font-family: 'Inter', sans-serif;
   background: #010C18;
   color: #F5F0E8;
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100vw;
+  overflow-x: clip; /* 'clip' blocks horizontal scroll without creating a new scroll container — safe for sticky */
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; text-decoration: none; }
@@ -2538,9 +2536,6 @@ body::before {
 
 /* ── Small phones (≤ 480px) ── */
 @media (max-width: 480px) {
-  /* Prevent any child from causing horizontal overflow */
-  body > * { max-width: 100vw; overflow-x: hidden; }
-
   .hero-line-1, .hero-line-2 {
     font-size: clamp(2rem, 11vw, 3rem);
   }
