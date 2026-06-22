@@ -2497,23 +2497,46 @@ body::before {
     pointer-events: auto;
   }
   .contact-title { font-size: clamp(2.4rem, 11vw, 3.5rem); }
+
+  /* ── Contact: hide laptop shell entirely, show bare form ── */
+  .laptop-base,
+  .laptop-hinge,
+  .laptop-glow { display: none !important; }
+
   .laptop-wrap {
-    position: relative;
     width: 100%;
     transform: none !important;
   }
+
+  .laptop-lid {
+    width: 100%;
+    aspect-ratio: unset;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .laptop-lid::before { display: none; }
+
+  .laptop-camera { display: none; }
+
   .laptop-screen {
+    position: relative !important;
+    inset: auto !important;
+    border-radius: 16px !important;
     opacity: 1 !important;
+    background: linear-gradient(155deg, #ececec 0%, #f5f0ed 45%, #fad4c8 100%) !important;
   }
   .laptop-screen.screen-on,
   .laptop-screen:not(.screen-on) { opacity: 1 !important; }
-  .laptop-glow { display: none; }
-  /* Show form flat — skip the 3D lid on mobile */
-  .laptop-hinge { perspective: none; }
-  .laptop-lid {
-    transform: rotateX(-8deg) !important;
-    border-radius: 14px;
-  }
+
+  .screen-inner { padding: 24px 20px 28px; }
+  .screen-title { font-size: 1.2rem; margin-bottom: 14px; }
+  .screen-grid { grid-template-columns: 1fr; gap: 10px; }
+  .sf textarea { height: 80px; }
+  .sf input, .sf textarea { font-size: 14px; padding: 10px 14px; }
+  .screen-submit { font-size: 13px; padding: 12px 0; margin-top: 8px; }
 
   /* ── Footer: single column ── */
   .footer-grid {
