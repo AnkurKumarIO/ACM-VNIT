@@ -6003,104 +6003,104 @@ if (document.readyState === 'loading') {
 </script>
 
 <!-- ═══════════════════════════════════════════
-     CUSTOM CURSOR
+     CUSTOM CURSOR — POKER CHIP STYLE
      ═══════════════════════════════════════════ -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
+<div id="cursor-chip">
+  <img id="cursor-chip-img" src="cursor.png" alt="">
+</div>
 
 <style>
-  /* Hide default cursor site-wide on desktop */
   @media (pointer: fine) {
     *, *::before, *::after { cursor: none !important; }
 
-    #cursor-dot {
+    /* Wrapper — snaps to mouse */
+    #cursor-chip {
       position: fixed;
       top: 0; left: 0;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 8px 2px rgba(255,255,255,0.8);
+      width: 64px; height: 64px;
+      transform: translate(-50%, -50%);
       pointer-events: none;
       z-index: 99999;
-      transform: translate(-50%, -50%);
-      transition: width 0.15s, height 0.15s, opacity 0.15s;
+      transition: opacity 0.15s, width 0.2s ease, height 0.2s ease;
     }
 
-    #cursor-ring {
-      position: fixed;
-      top: 0; left: 0;
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.55);
-      pointer-events: none;
-      z-index: 99998;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s ease, height 0.2s ease, border-color 0.2s, opacity 0.15s;
-      /* ring lags behind via JS lerp, no CSS transition on position */
+    /* cursor.png image — dark bg removed via canvas at runtime */
+    #cursor-chip-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.2s ease;
     }
 
-    /* Hover state — ring expands, dot shrinks */
-    body.cursor-hover #cursor-ring {
-      width: 60px; height: 60px;
-      border-color: rgba(255,255,255,0.85);
-    }
-    body.cursor-hover #cursor-dot {
-      width: 4px; height: 4px;
-      opacity: 0.6;
+    /* Hover — scale up */
+    body.cursor-hover #cursor-chip {
+      width: 78px; height: 78px;
     }
   }
 </style>
 
 <script>
 (function() {
-  if (!window.matchMedia('(pointer: fine)').matches) return; // touch/mobile — skip
+  if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  var dot  = document.getElementById('cursor-dot');
-  var ring = document.getElementById('cursor-ring');
+  var chip = document.getElementById('cursor-chip');
+  if (!chip) return;
 
-  var mouseX = window.innerWidth / 2,  mouseY = window.innerHeight / 2;
-  var ringX  = mouseX, ringY = mouseY;
+  /* ── Remove dark background from cursor.png via canvas pixel processing ── */
+  (function stripDarkBg() {
+    var src = new Image();
+    src.onload = function() {
+      var canvas = document.createElement('canvas');
+      canvas.width  = src.naturalWidth;
+      canvas.height = src.naturalHeight;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(src, 0, 0);
+      try {
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var px = imageData.data;
+        for (var i = 0; i < px.length; i += 4) {
+          // Perceived brightness (0-255)
+          var bright = px[i] * 0.299 + px[i+1] * 0.587 + px[i+2] * 0.114;
+          if (bright < 25) {
+            px[i+3] = 0;                                   // fully transparent
+          } else if (bright < 60) {
+            px[i+3] = Math.round(((bright - 25) / 35) * px[i+3]); // soft edge
+          }
+        }
+        ctx.putImageData(imageData, 0, 0);
+        var chipImg = document.getElementById('cursor-chip-img');
+        if (chipImg) chipImg.src = canvas.toDataURL('image/png');
+      } catch(e) {
+        /* Canvas tainted — fall back to screen blend-mode */
+        var chipImg = document.getElementById('cursor-chip-img');
+        if (chipImg) chipImg.style.mixBlendMode = 'screen';
+      }
+    };
+    src.src = 'cursor.png';
+  })();
 
-  // Update dot position instantly
+  var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+
   document.addEventListener('mousemove', function(e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    dot.style.left = mouseX + 'px';
-    dot.style.top  = mouseY + 'px';
+    chip.style.left = mouseX + 'px';
+    chip.style.top  = mouseY + 'px';
   });
 
-  // Ring follows with smooth lerp
-  (function animateRing() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    ring.style.left = ringX + 'px';
-    ring.style.top  = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  })();
-
-  // Expand ring on interactive elements
-  var interactiveSelector = 'a, button, [role="button"], input, textarea, select, label, .cta-btn, .nav-pill a';
+  var sel = 'a, button, [role="button"], input, textarea, select, label, .cta-btn, .nav-pill a';
   document.addEventListener('mouseover', function(e) {
-    if (e.target.closest(interactiveSelector)) {
-      document.body.classList.add('cursor-hover');
-    }
+    if (e.target.closest(sel)) document.body.classList.add('cursor-hover');
   });
   document.addEventListener('mouseout', function(e) {
-    if (e.target.closest(interactiveSelector)) {
-      document.body.classList.remove('cursor-hover');
-    }
+    if (e.target.closest(sel)) document.body.classList.remove('cursor-hover');
   });
 
-  // Hide when leaving window
-  document.addEventListener('mouseleave', function() {
-    dot.style.opacity  = '0';
-    ring.style.opacity = '0';
-  });
-  document.addEventListener('mouseenter', function() {
-    dot.style.opacity  = '1';
-    ring.style.opacity = '1';
-  });
-})();
+  document.addEventListener('mouseleave', function() { chip.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function() { chip.style.opacity = '1'; });
+})()
 </script>
 </body>
 </html>
