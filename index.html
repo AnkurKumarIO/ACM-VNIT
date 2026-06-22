@@ -204,6 +204,17 @@ body::before {
   align-items: center;
   justify-content: center;
   pointer-events: auto;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.hamburger-line {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--cream);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
 }
 .mobile-overlay {
   display: none;
@@ -2403,19 +2414,71 @@ body::before {
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ── Nav brand: hide on mobile (hamburger handles nav) ── */
+  /* ── Nav brand: show on mobile in the navbar ── */
   .nav-brand-fixed { display: none; }
 
-  /* ── Hero CTA: move below fold so it doesn't clash with hamburger ── */
-  .hero-cta {
-    position: relative;
-    top: auto; right: auto;
-    display: inline-flex;
-    margin-top: 32px;
-    padding: 10px 22px;
-    font-size: 12px;
-    z-index: 10;
+  /* Mobile navbar: show brand + hamburger inline */
+  .navbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(1,12,24,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    box-sizing: border-box;
   }
+  .navbar.nav-hidden {
+    transform: translateY(-100%) !important;
+  }
+
+  /* Show the brand inside the navbar on mobile */
+  .navbar::before {
+    content: none;
+  }
+  .mobile-nav-brand {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    pointer-events: auto;
+  }
+  .mobile-nav-brand img {
+    height: 34px;
+    width: 34px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .mobile-nav-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .mobile-nav-brand-main {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+  .mobile-nav-brand-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  /* Hide Explore Domains CTA on mobile */
+  .hero-cta { display: none !important; }
 
   /* ── Hero layout ── */
   .hero {
@@ -3482,6 +3545,13 @@ body.intro-active { overflow: hidden; }
 </div>
 
 <nav class="navbar" id="navbar">
+  <a class="mobile-nav-brand" href="#hero" style="display:none;">
+    <img src="acm-logo.png" alt="ACM Logo">
+    <div class="mobile-nav-brand-text">
+      <span class="mobile-nav-brand-main">Association for Computing Machinery</span>
+      <span class="mobile-nav-brand-sub">VNIT Student Chapter</span>
+    </div>
+  </a>
   <div class="nav-pill">
     <a href="#hero" class="active">Home</a>
     <a href="#about">About</a>
@@ -3492,7 +3562,11 @@ body.intro-active { overflow: hidden; }
     <a href="#teams">Teams</a>
     <a href="#contact-us">Contact</a>
   </div>
-  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
 </nav>
 
 <!-- Mobile menu overlay -->
