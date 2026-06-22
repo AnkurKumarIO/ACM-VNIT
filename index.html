@@ -4863,8 +4863,15 @@ body.intro-active { overflow: hidden; }
       dot.className = 'domains-nav-dot';
       dot.setAttribute('aria-label', 'Go to ' + d.title);
       dot.addEventListener('click', function() {
-        currentIndex = i;
-        applyRotation();
+        var dir = i - currentIndex;
+        // take shortest arc
+        if (dir > N / 2) dir -= N;
+        if (dir < -N / 2) dir += N;
+        if (dir !== 0) {
+          totalRot -= dir * ANGLE_STEP;
+          currentIndex = i;
+          applyRotation();
+        }
       });
       if (navEl) navEl.appendChild(dot);
       return dot;
@@ -4880,10 +4887,11 @@ body.intro-active { overflow: hidden; }
     }
 
     /* ── Rotate carousel so card[currentIndex] faces front ── */
+    var totalRot = 0; // accumulates continuously — never resets, prevents reverse spin
+
     function applyRotation(instant) {
-      var rot = -currentIndex * ANGLE_STEP;
       if (instant) stage.classList.add('dragging');
-      stage.style.transform = 'rotateY(' + rot + 'deg)';
+      stage.style.transform = 'rotateY(' + totalRot + 'deg)';
       if (instant) {
         requestAnimationFrame(function() { stage.classList.remove('dragging'); });
       }
@@ -4900,6 +4908,7 @@ body.intro-active { overflow: hidden; }
 
     function rotate(dir) {
       currentIndex = (currentIndex + dir + N) % N;
+      totalRot -= dir * ANGLE_STEP; // always add/subtract — continuous, no wrap-back
       applyRotation();
     }
 
@@ -4913,7 +4922,7 @@ body.intro-active { overflow: hidden; }
 
     wrapEl.addEventListener('mousedown', function(e) {
       dragStart = e.clientX;
-      baseRot   = -currentIndex * ANGLE_STEP;
+      baseRot   = totalRot;
       stage.classList.add('dragging');
       wrapEl.classList.add('grabbing');
     });
@@ -4939,7 +4948,7 @@ body.intro-active { overflow: hidden; }
     /* Touch */
     wrapEl.addEventListener('touchstart', function(e) {
       dragStart = e.touches[0].clientX;
-      baseRot   = -currentIndex * ANGLE_STEP;
+      baseRot   = totalRot;
       stage.classList.add('dragging');
     }, { passive: true });
     wrapEl.addEventListener('touchmove', function(e) {
