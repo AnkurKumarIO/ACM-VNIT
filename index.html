@@ -394,6 +394,16 @@ body::before {
 }
 .hero-cta svg { width: 16px; height: 16px; }
 
+/* Hero particles canvas */
+#hero-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
 @media (max-width: 768px) {
   .hero {
     background-image:
@@ -803,74 +813,67 @@ body::before {
 }
 
 /* ═════════════════════════════════════════════
-   DOMAINS — CARD DEALER ANIMATION
+   DOMAINS — CLASSY GRID
    ═════════════════════════════════════════════ */
 .domains-section {
   position: relative;
   background: transparent;
   border-top: 1px solid var(--border-subtle);
+  padding: 100px 8vw 120px;
 }
 
-/* Inner stage: fixed viewport height, clips overflow */
-.domains-inner {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Header: top-left, pointer-events off so cards pass through */
 .domains-header {
-  position: absolute;
-  top: 4vh;
-  left: 6vw;
-  right: 6vw;   /* symmetric — no right panel */
-  z-index: 20;
-  pointer-events: none;
+  max-width: 1400px;
+  margin: 0 auto 64px;
 }
-.domains-header .section-label { margin-bottom: 8px; }
+.domains-header .section-label { margin-bottom: 12px; }
 .domains-header h2 {
-  font-size: clamp(1.6rem, 3.8vw, 3rem);
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
   font-weight: 900;
   text-transform: uppercase;
-  line-height: 0.9;
+  line-height: 0.95;
   letter-spacing: -0.03em;
   color: var(--cream);
 }
 .domains-header h2 .accent { color: var(--accent); }
 .domains-header p {
-  margin-top: 10px;
-  font-size: clamp(11px, 1vw, 13px);
-  line-height: 1.65;
-  color: #666677;
-  max-width: 480px;
+  margin-top: 16px;
+  font-size: clamp(13px, 1.2vw, 15px);
+  line-height: 1.7;
+  color: var(--text-muted);
+  max-width: 540px;
 }
 
-/* Right panel divider */
-.domains-divider {
-  display: none; /* shown only on md+ via JS */
+/* ── Grid ── */
+.domains-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
-/* Stage: cards are absolutely positioned here by GSAP */
-.domains-stage {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-}
-
-/* ── Individual domain card ──────────────────────────
-   Base state: GSAP sets position/size; we only define
-   the 3D flip behaviour and aesthetic here.
-   No fixed width/height — GSAP provides those.
-─────────────────────────────────────────────────── */
+/* ── Individual domain card ── */
 .domain-card {
-  position: absolute;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
   cursor: pointer;
+  aspect-ratio: 5 / 7;
   outline: none;
-  perspective: 1200px;
-  will-change: transform;
   -webkit-user-select: none;
   user-select: none;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.55);
+}
+
+.domain-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--dc-color, rgba(201,168,76,0.5));
+  box-shadow: 0 0 0 1px var(--dc-color, rgba(201,168,76,0.3)),
+              0 24px 60px rgba(0,0,0,0.7),
+              0 0 40px var(--dc-glow, rgba(201,168,76,0.15));
 }
 
 .domain-card-inner {
@@ -878,326 +881,189 @@ body::before {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .domain-card:hover .domain-card-inner,
 .domain-card.kb-flipped .domain-card-inner {
   transform: rotateY(180deg);
 }
 
-/* Both card faces */
+/* Both faces */
 .domain-card-face {
   position: absolute;
   inset: 0;
-  border-radius: 16px;
+  border-radius: 13px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: linear-gradient(155deg, #1e1e1e 0%, #111 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* padding scales with card width (GSAP sets width) */
-  padding: clamp(8px, 5%, 18px);
-  /* Thick black outer border on every card face */
-  box-sizing: border-box;
-  border: 4px solid #000 !important;
-}
-.domain-card-face::before {
-  content: '';
-  position: absolute;
-  /* thin inner border sits just inside the thick outer border */
-  inset: 8px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(255,255,255,0.18);
-  pointer-events: none;
-  z-index: 3;
 }
 
-.domain-card-front { justify-content: space-between; }
-.domain-card-back {
-  gap: 6%;
-  transform: rotateY(180deg);
-  /* Restored original dark theme */
-  background: linear-gradient(155deg, #1e1e1e 0%, #111 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-  /* overflow auto on back so text never clips */
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-.domain-card-back::-webkit-scrollbar { display: none; }
-.domain-card-back::before {
-  border-color: rgba(255,255,255,0.06) !important;
-  border-width: 1.5px !important;
-}
+/* Front */
+.domain-card-front { background: #000; }
 
-/* ── Front face elements ── */
-.dc-corner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1;
-  gap: 1px;
-  z-index: 2;
-  flex-shrink: 0;
-}
-.dc-corner-br { align-self: flex-end; transform: rotate(180deg); }
-
-/* ── Font scaling strategy ────────────────────────────────────
-   GSAP sets an inline font-size on .domain-card proportional
-   to the card's pixel width (CW * 0.065 ≈ 6.5% of card width).
-   All child text uses em fractions of that base, so every
-   element scales perfectly with the card at every resolution.
-   The clamp() fallback kicks in if JS hasn't run yet.
-────────────────────────────────────────────────────────────── */
-.domain-card { font-size: clamp(10px, 1.2vw, 16px); } /* JS overrides this */
-
-/* Front face */
-.dc-rank    { font-weight: 900; line-height: 1; font-size: 1.15em; }
-.dc-suit-sm { line-height: 1;                  font-size: 0.95em; }
-
-.dc-centre {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  z-index: 2;
-}
-.dc-suit-lg  { line-height: 1; font-size: 3.8em; pointer-events: none; }
-.dc-title {
-  font-weight: 800;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 1.15;
-  letter-spacing: 0.04em;
-  white-space: pre-line;
-  color: var(--cream);
-  font-size: 0.78em;
-}
-
-/* ── Back face elements ── */
-.domain-card-back::before {
-  border-color: rgba(255,255,255,0.06) !important;
-  border-width: 1.5px !important;
-}
-
-/* ── Image front face ── */
 .dc-img-front {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;
   display: block;
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.domain-card:hover .dc-img-front { transform: scale(1.04); }
+
+/* Subtle gradient overlay on front for readability */
+.dc-front-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.72) 0%,
+    rgba(0,0,0,0.18) 45%,
+    transparent 100%
+  );
+  z-index: 1;
 }
 
-/* ── Domain name label BELOW the card (not overlaid) ── */
-.dc-name-label {
+/* Domain name pinned to bottom of front face */
+.dc-front-label {
   position: absolute;
-  /* sits right below the card bottom edge */
-  top: 100%;
-  left: -8px;
-  right: -8px;
-  margin-top: 8px;
-  text-align: center;
-  pointer-events: none;
-  z-index: 5;
-  /* prevent clipping by parent */
-  overflow: visible;
-  opacity: 0;
-  visibility: hidden;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 16px 16px;
+  z-index: 2;
 }
-.dc-name-label-text {
-  display: inline-block;
-  font-family: 'Sora', sans-serif;
+.dc-front-label-name {
+  font-family: var(--font-heading);
+  font-size: clamp(11px, 1vw, 13px);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--cream);
   line-height: 1.2;
-  /* scale with the card's font-size set by GSAP */
-  font-size: 0.88em;
-  white-space: nowrap;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
 }
-
-/* Mobile: name label visible below each card in the grid */
-@media (max-width: 768px) {
-  .dc-name-label {
-    position: static;
-    margin-top: 6px;
-    display: block;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-}
-
-/* ── Back face elements (dark theme restored) ── */
-.dc-back-title {
-  font-weight: 800;
+.dc-front-label-hint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  letter-spacing: 0.10em;
-  text-align: center;
-  padding-bottom: 0.4em;
+  color: rgba(245,240,232,0.38);
+  margin-top: 4px;
+}
+
+/* Color accent bar at top of card */
+.dc-color-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.domain-card:hover .dc-color-bar { opacity: 1; }
+
+/* Back face */
+.domain-card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(155deg, #131313 0%, #0c0c0c 100%);
+  padding: 20px 18px;
+  gap: 0;
+  justify-content: space-between;
+  border: 1px solid var(--dc-color, rgba(201,168,76,0.25));
+}
+
+.dc-back-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   flex-shrink: 0;
-  z-index: 2;
-  font-size: 0.72em;
 }
+.dc-back-suit {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.dc-back-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(10px, 1.1vw, 13px);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+}
+
 .dc-back-desc {
-  line-height: 1.55;
-  color: #9999aa;
-  z-index: 2;
-  font-size: 0.85em;
-  flex-shrink: 1;   /* allow shrinking — never overflow the card */
+  font-size: clamp(10px, 0.95vw, 12px);
+  line-height: 1.6;
+  color: rgba(180,185,200,0.75);
+  flex: 1;
   overflow: hidden;
+  padding: 12px 0;
 }
+
 .dc-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3em;
-  z-index: 2;
-  margin-top: auto;
+  gap: 5px;
   flex-shrink: 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 .dc-tag {
   font-family: var(--font-mono);
-  font-size: 0.55em;
+  font-size: clamp(8px, 0.65vw, 10px);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.2em 0.5em;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
   border-radius: 4px;
 }
+
+/* Watermark */
 .dc-suit-watermark {
-  text-align: center;
-  font-size: 0.9em;
-  opacity: 0.22;
-  flex-shrink: 0;
-  z-index: 2;
-}
-
-/* Mobile: name label below each card in the grid */
-@media (max-width: 768px) {
-  .dc-name-label {
-    position: static;
-    margin-top: 6px;
-    display: block;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-}
-
-/* ── Scroll hint / deck label (desktop only) ── */
-.domains-scroll-hint,
-.domains-deck-label {
-  display: none;
   position: absolute;
-  z-index: 20;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  bottom: 18px;
+  right: 16px;
+  font-size: 48px;
+  opacity: 0.04;
   pointer-events: none;
-}
-.domains-scroll-hint {
-  left: 2vw;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.domains-deck-label {
-  right: 1.5vw;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.domains-scroll-hint span,
-.domains-deck-label span {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  opacity: 0.2;
-  color: var(--cream);
-  writing-mode: vertical-rl;
-}
-.domains-scroll-hint span { transform: rotate(180deg); }
-.hint-line { width: 1px; height: 56px; background: rgba(255,255,255,0.1); }
-
-/* Right-panel divider */
-.domains-divider {
-  position: absolute;
-  top: 4vh;
-  bottom: 4vh;
-  width: 1px;
-  background: rgba(255,255,255,0.06);
-  pointer-events: none;
-  z-index: 15;
+  z-index: 0;
+  line-height: 1;
 }
 
-/* scroll hint and deck label removed — no right panel */
-.domains-scroll-hint,
-.domains-deck-label { display: none !important; }
+/* Keyboard focus */
+.domain-card:focus-visible {
+  outline: 2px solid var(--dc-color, var(--gold));
+  outline-offset: 3px;
+}
 
-/* ── Mobile: flat scrollable grid ───────────────
-   On small screens the pinned GSAP dealer is
-   replaced by a responsive CSS grid.
-─────────────────────────────────────────────── */
+/* Responsive */
+@media (max-width: 1100px) {
+  .domains-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+}
 @media (max-width: 768px) {
-  .domains-inner {
-    height: auto;
-    overflow: visible;
-  }
-  .domains-header {
-    position: relative;
-    top: auto; left: auto; right: auto;
-    padding: 40px 6vw 24px;
-  }
-  .domains-stage {
-    position: relative;
-    inset: auto;
-    display: grid;
+  .domains-section { padding: 72px 6vw 80px; }
+  .domains-header { margin-bottom: 40px; }
+  .domains-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    padding: 0 4vw 40px;
   }
-  .domain-card {
-    position: relative;
-    width: auto;
-    height: auto;
-    /* restore natural document flow */
-    transform: none;
-  }
-  /* Aspect-ratio drives height on mobile — no GSAP sizes */
-  .domain-card-inner {
-    position: relative;
-    height: 0;
-    padding-bottom: 140%; /* 5:7 ratio */
-  }
-  .domain-card-face {
-    padding: clamp(10px, 4%, 16px);
-  }
-  /* On mobile cards are sized by aspect-ratio, so set a
-     sensible base font-size and let em values do the rest */
-  .domain-card { font-size: clamp(11px, 3.5vw, 16px); }
+  .domain-card { aspect-ratio: 5 / 7; }
+  .dc-back-desc { font-size: 10px; }
+}
+@media (max-width: 420px) {
+  .domains-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .domain-card { transition: none; }
   .domain-card-inner { transition: none; }
-}
-@media (max-width: 768px) {
-  .domains-inner { height:auto !important; overflow:visible; }
-  .domains-divider,.domains-scroll-hint,.domains-deck-label { display:none !important; }
-  .domains-header {
-    position:relative; top:auto; left:auto; right:auto;
-    padding:40px 6vw 24px;
-  }
-  .domains-stage  { position:relative; inset:auto; padding:0 4vw 40px; }
-  .domain-card {
-    position:relative !important;
-    width:100% !important; height:auto !important;
-    transform:none !important; margin-bottom:16px;
-  }
-  .domain-card-inner { height:0; padding-bottom:140%; }
+  .dc-img-front { transition: none; }
 }
 /* ═══════════════════════════════════════════
    EVENTS SECTION — ACM ACTIVITIES
@@ -2922,7 +2788,7 @@ body.intro-active { overflow: hidden; }
   display: flex;
   flex-wrap: nowrap;
   width: max-content;
-  animation: marquee-scroll 35s linear infinite;
+  animation: marquee-scroll 70s linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -2947,32 +2813,45 @@ body.intro-active { overflow: hidden; }
 .marquee-item {
   display: flex;
   align-items: center;
-  gap: 12px;
   font-family: var(--font-heading);
-  font-size: clamp(13px, 1.4vw, 16px);
-  font-weight: 500;
-  color: var(--cream);
+  font-size: clamp(1.1rem, 2.2vw, 2.4rem);
+  font-weight: 800;
   white-space: nowrap;
-  letter-spacing: 0.02em;
-  transition: color 0.3s ease, transform 0.3s ease;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: color 0.3s ease;
   cursor: default;
   user-select: none;
 }
 
-/* Hover effect on marquee text */
-.marquee-item:hover {
+/* Alternating: outlined vs filled */
+.marquee-item.outlined {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent);
+}
+.marquee-item.filled {
+  color: var(--cream);
+}
+.marquee-item:hover.outlined {
+  color: var(--accent);
+  -webkit-text-stroke: 1.5px var(--accent);
+}
+.marquee-item:hover.filled {
   color: var(--gold-light);
-  transform: translateY(-1px);
 }
 
-/* Stylized separator */
+/* 4-pointed star separator */
 .marquee-separator {
-  color: var(--gold);
-  font-size: clamp(14px, 1.6vw, 18px);
-  opacity: 0.65;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: clamp(0.9rem, 1.5vw, 1.8rem);
   user-select: none;
-  font-weight: 700;
-  margin: 0 clamp(0.5rem, 1vw, 1rem);
+  margin: 0 clamp(1rem, 2vw, 2.5rem);
+  flex-shrink: 0;
+  opacity: 0.9;
 }
 
 @keyframes marquee-scroll {
@@ -2990,7 +2869,7 @@ body.intro-active { overflow: hidden; }
     padding: 16px 0;
   }
   .marquee-track {
-    animation-duration: 25s; /* slightly faster flow on smaller screens to feel active */
+    animation-duration: 55s; /* slightly faster flow on smaller screens to feel active */
   }
 }
 
@@ -3496,6 +3375,9 @@ body.intro-active { overflow: hidden; }
      HERO SECTION
      ═══════════════════════════════════════════ -->
 <section class="hero" id="hero">
+  <!-- Floating particles canvas -->
+  <canvas id="hero-particles" aria-hidden="true"></canvas>
+
   <div class="hero-text-wrap">
     <div class="hero-badge">// ESTABLISHED 2009 — VNIT NAGPUR</div>
     <div class="hero-line-1">we are the</div>
@@ -3522,41 +3404,41 @@ body.intro-active { overflow: hidden; }
     <div class="marquee-track">
       <!-- Group 1 -->
       <div class="marquee-group">
-        <span class="marquee-item">🚀 Empowering Coders, Innovators &amp; Problem Solvers</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">💻 Competitive Programming • Hackathons • Open Source</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🏆 Learn • Build • Compete • Grow</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🔥 Workshops, Tech Talks &amp; Industry Insights</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🎯 Sharpen Your DSA Skills, Ace Coding Interviews</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🤝 Connecting Students Through Technology &amp; Innovation</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">⚡ Building the Next Generation of Developers</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🌍 Code • Collaborate • Create • Conquer</span>
-        <span class="marquee-separator">•</span>
+        <span class="marquee-item filled">Learn</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Build</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item filled">Connect</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Compete</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item filled">Innovate</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Collaborate</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item filled">Create</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Grow</span>
+        <span class="marquee-separator">✦</span>
       </div>
       <!-- Group 2 (Duplicate for seamless loop) -->
       <div class="marquee-group" aria-hidden="true">
-        <span class="marquee-item">🚀 Empowering Coders, Innovators &amp; Problem Solvers</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">💻 Competitive Programming • Hackathons • Open Source</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🏆 Learn • Build • Compete • Grow</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🔥 Workshops, Tech Talks &amp; Industry Insights</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🎯 Sharpen Your DSA Skills, Ace Coding Interviews</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🤝 Connecting Students Through Technology &amp; Innovation</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">⚡ Building the Next Generation of Developers</span>
-        <span class="marquee-separator">•</span>
-        <span class="marquee-item">🌍 Code • Collaborate • Create • Conquer</span>
-        <span class="marquee-separator">•</span>
+        <span class="marquee-item filled">Learn</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Build</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item filled">Connect</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Compete</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item filled">Innovate</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Collaborate</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item filled">Create</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item outlined">Grow</span>
+        <span class="marquee-separator">✦</span>
       </div>
     </div>
   </div>
@@ -3802,37 +3684,20 @@ body.intro-active { overflow: hidden; }
 </section>
 
 <!-- ════════════════════════════════════════════════
-     DOMAINS SECTION — CARD DEALER
+     DOMAINS SECTION — CLASSY GRID
      ════════════════════════════════════════════════ -->
 <section class="domains-section" id="domains">
-  <div class="domains-inner" id="domains-inner">
 
-    <!-- Header -->
-    <div class="domains-header" id="domains-header">
-      <div class="section-label">// Technical Ecosystem</div>
-      <h2>Architecting The <span class="accent">Core Specials</span></h2>
-      <p>Each domain is more than a skillset — it’s a mindset. Build, break, design, and communicate — not in silos, but in sync.</p>
-    </div>
-
-    <!-- Right-panel divider line (shown on desktop by JS) -->
-    <div class="domains-divider" id="domains-divider"></div>
-
-    <!-- Scroll hint (left edge, desktop only) -->
-    <div class="domains-scroll-hint">
-      <span>Scroll to Deal</span>
-      <div class="hint-line"></div>
-    </div>
-
-    <!-- Deck label (right edge, desktop only) -->
-    <div class="domains-deck-label">
-      <div class="hint-line"></div>
-      <span>Deck</span>
-    </div>
-
-    <!-- Stage: GSAP absolutely positions all 8 cards here -->
-    <div class="domains-stage" id="domains-stage"></div>
-
+  <!-- Header -->
+  <div class="domains-header reveal">
+    <div class="section-label">// Technical Ecosystem</div>
+    <h2>Architecting The <span class="accent">Core Specials</span></h2>
+    <p>Each domain is more than a skillset — it’s a mindset. Build, break, design, and communicate — not in silos, but in sync.</p>
   </div>
+
+  <!-- Classy card grid (built by JS) -->
+  <div class="domains-grid" id="domains-grid"></div>
+
 </section>
 
 <!-- ═══════════════════════════════════════════
@@ -4393,44 +4258,43 @@ body.intro-active { overflow: hidden; }
     }
   })();
 
-  // ───── Domain Card Dealer (GSAP ScrollTrigger) ─────
+  // ───── Domains Section — Classy Grid ─────
   (function initDomains() {
     var DOMAINS_DATA = [
-      { id:'app',        rank:'A',  suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
-        title:'App Development',         shortTitle:'App\nDevelopment',
+      { id:'app',        suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
+        title:'App Development',
         desc:'Engineering seamless mobile experiences across platforms with a focus on high-performance architecture and reactive UI patterns.',
         tags:['Flutter','React Native','SwiftUI','Kotlin'] },
-      { id:'web',        rank:'K',  suit:'\u2663', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
-        title:'Web Development',         shortTitle:'Web\nDevelopment',
+      { id:'web',        suit:'\u2663', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
+        title:'Web Development',
         desc:'Building the foundational fabric of the modern web using robust full-stack frameworks and scalable architectures.',
         tags:['Next.js','GoLang','Node.js','PostgreSQL'] },
-      { id:'aiml',       rank:'Q',  suit:'\u2666', color:'#B44AF5', glow:'rgba(180,74,245,0.35)',
-        title:'AI / Machine Learning',   shortTitle:'AI / Machine\nLearning',
+      { id:'aiml',       suit:'\u2666', color:'#B44AF5', glow:'rgba(180,74,245,0.35)',
+        title:'AI / Machine Learning',
         desc:'Developing intelligent systems through neural networks, predictive modeling, and cutting-edge research in artificial intelligence.',
         tags:['PyTorch','TensorFlow','Python','Pandas'] },
-      { id:'design',     rank:'J',  suit:'\u2665', color:'#F54A8A', glow:'rgba(245,74,138,0.35)',
-        title:'Design',                  shortTitle:'Design',
+      { id:'design',     suit:'\u2665', color:'#F54A8A', glow:'rgba(245,74,138,0.35)',
+        title:'Design',
         desc:'The visual blueprint. Crafting user-first interfaces and motion graphics that marry modern aesthetics with functional purpose.',
         tags:['Figma','After Effects','Blender','UI/UX'] },
-      { id:'cybersec',   rank:'10', suit:'\u2605', color:'#F5A44A', glow:'rgba(245,164,74,0.35)',
-        title:'Cybersecurity',           shortTitle:'Cyber\nSecurity',
+      { id:'cybersec',   suit:'\u2605', color:'#F5A44A', glow:'rgba(245,164,74,0.35)',
+        title:'Cybersecurity',
         desc:'Securing the perimeter. Offensive and defensive security research, penetration testing, and vulnerability assessment.',
         tags:['Burp Suite','OWASP','CTF','Wireshark'] },
-      { id:'cp',         rank:'9',  suit:'\u2663', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
-        title:'Competitive Programming', shortTitle:'Competitive\nProgramming',
+      { id:'cp',         suit:'\u2663', color:'#4AE6A0', glow:'rgba(74,230,160,0.35)',
+        title:'Competitive Programming',
         desc:'Sharpening algorithmic thinking through coding contests, data structures, optimization techniques, and problem-solving under pressure.',
         tags:['C++','Codeforces','LeetCode','DSA'] },
-      { id:'opensource', rank:'8',  suit:'\u2666', color:'#F5D44A', glow:'rgba(245,212,74,0.35)',
-        title:'Open Source Development', shortTitle:'Open Source\nDevelopment',
+      { id:'opensource', suit:'\u2666', color:'#F5D44A', glow:'rgba(245,212,74,0.35)',
+        title:'Open Source',
         desc:'Building impactful software collaboratively through open-source contributions, version control workflows, and community-driven innovation.',
         tags:['Git','GitHub','Linux','GSSoC'] },
-      { id:'clouddevops',rank:'7',  suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
-        title:'Cloud & DevOps',          shortTitle:'Cloud &\nDevOps',
+      { id:'clouddevops',suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
+        title:'Cloud & DevOps',
         desc:'Automating deployment pipelines, managing cloud infrastructure, and ensuring scalable, reliable software delivery.',
         tags:['AWS','Docker','Kubernetes','CI/CD'] },
     ];
 
-    // Cards that use a custom image for the front face
     var CARD_IMAGES = {
       'app':        'card-app-dev.jpg',
       'aiml':       'card-aiml.jpg',
@@ -4442,332 +4306,92 @@ body.intro-active { overflow: hidden; }
       'design':     'card-design.jpg'
     };
 
-    function makeCard(d) {
-      var wrap  = document.createElement('div');
-      wrap.className = 'domain-card';
-      wrap.setAttribute('tabindex', '0');
-      wrap.setAttribute('role', 'button');
-      wrap.setAttribute('aria-label', d.title + ' \u2014 hover or Enter to flip');
+    var grid = document.getElementById('domains-grid');
+    if (!grid) return;
+
+    DOMAINS_DATA.forEach(function(d, i) {
+      var card = document.createElement('div');
+      card.className = 'domain-card reveal reveal-delay-' + Math.min(i % 4 + 1, 7);
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', d.title + ' — hover to flip');
+      card.style.setProperty('--dc-color', d.color);
+      card.style.setProperty('--dc-glow', d.glow);
 
       var inner = document.createElement('div');
       inner.className = 'domain-card-inner';
 
-      // Front face
+      // ── Front face ──
       var front = document.createElement('div');
       front.className = 'domain-card-face domain-card-front';
 
-      if (CARD_IMAGES[d.id]) {
-        // Image-based front: full bleed photo card — NO name overlay
-        front.style.cssText = 'box-shadow:0 8px 28px #00000099;padding:0;background:#000;';
-        front.innerHTML = '<img class="dc-img-front" src="' + CARD_IMAGES[d.id] + '" alt="' + d.title + '" draggable="false">';
-      } else {
-        // Default icon front
-        front.style.cssText = 'box-shadow:0 8px 28px #00000099;';
-        front.innerHTML =
-          '<div class="dc-corner">' +
-            '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
-            '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
-          '</div>' +
-          '<div class="dc-centre">' +
-            '<span class="dc-suit-lg" style="color:' + d.color + ';filter:drop-shadow(0 0 18px ' + d.glow + ')">' + d.suit + '</span>' +
-            '<span class="dc-title" style="text-shadow:0 0 16px ' + d.color + '55">' + d.shortTitle + '</span>' +
-          '</div>' +
-          '<div class="dc-corner dc-corner-br">' +
-            '<span class="dc-rank" style="color:' + d.color + '">' + d.rank + '</span>' +
-            '<span class="dc-suit-sm" style="color:' + d.color + '">' + d.suit + '</span>' +
-          '</div>';
-      }
+      var img = document.createElement('img');
+      img.className = 'dc-img-front';
+      img.src = CARD_IMAGES[d.id] || '';
+      img.alt = d.title;
+      img.draggable = false;
+      front.appendChild(img);
 
-      // Back face — restored original dark theme
+      var overlay = document.createElement('div');
+      overlay.className = 'dc-front-overlay';
+      front.appendChild(overlay);
+
+      var colorBar = document.createElement('div');
+      colorBar.className = 'dc-color-bar';
+      colorBar.style.background = 'linear-gradient(90deg, transparent, ' + d.color + ', transparent)';
+      front.appendChild(colorBar);
+
+      var label = document.createElement('div');
+      label.className = 'dc-front-label';
+      label.innerHTML =
+        '<div class="dc-front-label-name" style="color:' + d.color + '">' + d.title + '</div>' +
+        '<div class="dc-front-label-hint">Hover to explore</div>';
+      front.appendChild(label);
+
+      // ── Back face ──
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
-      back.style.cssText = 'border:1.5px solid ' + d.color + '65;box-shadow:0 20px 55px ' + d.glow + ';background:linear-gradient(155deg,#1e1e1e 0%,#111 100%);';
+      back.style.setProperty('border-color', d.color + '40');
+
       var tagsHtml = d.tags.map(function(t) {
-        return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '12;color:' + d.color + '">' + t + '</span>';
+        return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '10;color:' + d.color + '">' + t + '</span>';
       }).join('');
+
       back.innerHTML =
-        '<div class="dc-back-title" style="color:' + d.color + ';text-shadow:0 0 12px ' + d.glow + ';border-bottom:1px solid ' + d.color + '30">' + d.title + '</div>' +
+        '<div class="dc-back-header">' +
+          '<span class="dc-back-suit" style="color:' + d.color + '">' + d.suit + '</span>' +
+          '<span class="dc-back-title" style="color:' + d.color + '">' + d.title + '</span>' +
+        '</div>' +
         '<p class="dc-back-desc">' + d.desc + '</p>' +
         '<div class="dc-tags">' + tagsHtml + '</div>' +
         '<div class="dc-suit-watermark" style="color:' + d.color + '">' + d.suit + '</div>';
 
       inner.appendChild(front);
       inner.appendChild(back);
+      card.appendChild(inner);
 
-      // Name label sits BELOW the card (outside domain-card-inner, inside domain-card)
-      var nameLabel = document.createElement('div');
-      nameLabel.className = 'dc-name-label';
-      nameLabel.innerHTML = '<span class="dc-name-label-text" style="color:' + d.color + '">' + d.title + '</span>';
-      wrap.appendChild(inner);
-      wrap.appendChild(nameLabel);
-
-      wrap.addEventListener('keydown', function(e) {
-        if (e.key==='Enter'||e.key===' ') { e.preventDefault(); wrap.classList.toggle('kb-flipped'); }
-        if (e.key==='Escape') wrap.classList.remove('kb-flipped');
+      // Keyboard support
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('kb-flipped'); }
+        if (e.key === 'Escape') card.classList.remove('kb-flipped');
       });
-      wrap.addEventListener('blur', function() { wrap.classList.remove('kb-flipped'); });
-      return wrap;
-    }
+      card.addEventListener('blur', function() { card.classList.remove('kb-flipped'); });
 
-    var stage   = document.getElementById('domains-stage');
-    var section = document.querySelector('.domains-section');
-    var header  = document.getElementById('domains-header');
-    if (!stage || !section || !header) return;
-
-    var cardEls = DOMAINS_DATA.map(function(d) {
-      var el = makeCard(d);
-      stage.appendChild(el);
-      return el;
+      grid.appendChild(card);
     });
 
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.warn('GSAP not loaded');
-      return;
-    }
-
-    /* ── Mobile: CSS grid layout, simple stagger entrance ── */
-    if (window.matchMedia('(max-width:768px)').matches) {
-      gsap.set(header, { opacity: 0, y: 16 });
-      gsap.set(cardEls, { opacity: 0, y: 30 });
-      ScrollTrigger.create({
-        trigger: section, start: 'top 72%',
-        onEnter: function() {
-          gsap.to(header, { opacity:1, y:0, duration:0.5, ease:'power2.out' });
-          gsap.to(cardEls, { opacity:1, y:0, stagger:0.07, duration:0.55, ease:'power3.out', delay:0.15 });
+    // Trigger scroll-reveal for cards already in view
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
       });
-      return;
-    }
+    }, { threshold: 0.1 });
 
-    /* ── Desktop: full card-dealer animation ── */
-    function buildDealer() {
-      var VW = window.innerWidth;
-      var VH = window.innerHeight;
-      var N  = cardEls.length; // 8
-
-      var COLS = 4, ROWS = 2;
-
-      /* ── Measure the actual rendered header height ────────────
-         Using getBoundingClientRect() means we always know the
-         true bottom of the header text regardless of font size,
-         browser zoom, OS scaling, or line-wrapping.
-      ────────────────────────────────────────────────────────── */
-      var hdrRect      = header.getBoundingClientRect();
-      var HDR_BOTTOM   = hdrRect.bottom;
-      var PAD_BELOW    = Math.max(VH * 0.03, 16);  // gap between header and row 1
-
-      /* ── Grid area: full viewport width, centred ─────────────
-         No right panel. Grid spans the full VW with equal
-         horizontal padding on both sides.
-      ────────────────────────────────────────────────────────── */
-      var H_PAD  = Math.max(VW * 0.05, 32);  // equal padding left AND right
-      var GAP    = Math.max(VW * 0.013, 10); // inter-card gap
-
-      var G_TOP  = HDR_BOTTOM + PAD_BELOW;
-      var G_BOT  = VH - 48; /* extra 28px so name labels below row-2 cards stay visible */
-      var G_H    = G_BOT - G_TOP;
-      var G_W    = VW - H_PAD * 2;           // full width minus equal margins
-
-      /* Bail-out for extreme zoom where header is very tall */
-      if (G_H < VH * 0.28) {
-        G_TOP = VH * 0.30;
-        G_H   = G_BOT - G_TOP;
-      }
-
-      /* ── Card sizing ──────────────────────────────────────────
-         Solve from both constraints and take the smaller result,
-         then enforce the overflow guard.
-      ────────────────────────────────────────────────────────── */
-      var CH_h   = (G_H - GAP * (ROWS - 1)) / ROWS;
-      var CW_max = (G_W - GAP * (COLS - 1)) / COLS;
-      var CH_w   = CW_max * (7 / 5);
-      var CH     = Math.floor(Math.min(CH_h, CH_w, VH * 0.40));
-      var CW     = Math.floor(CH * (5 / 7));
-
-      /* Hard cap: 4 cols must always fit in G_W */
-      var MAX_CW = Math.floor((G_W - GAP * (COLS - 1)) / COLS);
-      if (CW > MAX_CW) { CW = MAX_CW; CH = Math.floor(CW * (7 / 5)); }
-
-      /* ── True centre: equal space on all sides ───────────────*/
-      var GRID_TOTAL_W = COLS * CW + (COLS - 1) * GAP;
-      var GRID_TOTAL_H = ROWS * CH + (ROWS - 1) * GAP;
-      var GRID_START_X = Math.floor((VW - GRID_TOTAL_W) / 2);   // centred in full VW
-      var GRID_START_Y = G_TOP + Math.max(0, Math.floor((G_H - GRID_TOTAL_H) / 2));
-
-      var gridPos = cardEls.map(function(_, i) {
-        var row = Math.floor(i / COLS);
-        var yOffset = (row === 0) ? -24 : 0;
-        return {
-          x: GRID_START_X + (i % COLS) * (CW + GAP),
-          y: GRID_START_Y + row * (CH + GAP) + yOffset,
-          w: CW,
-          h: CH
-        };
-      });
-
-      /* ── Deck: stacked off the right edge, slides in ─────────
-         Cards start piled just beyond the right edge of the
-         viewport so they visually "come from the right".
-      ────────────────────────────────────────────────────────── */
-      var DECK_W  = Math.min(CW * 0.88, 200);
-      var DECK_H  = DECK_W * (7 / 5);
-      /* Centre the deck horizontally in the right 15% of VW */
-      var DECK_CX = VW - DECK_W / 2 - Math.max(VW * 0.04, 20);
-      var DECK_CY = VH / 2;
-      var MID     = (N - 1) / 2;
-
-      var pilePos = cardEls.map(function(_, i) {
-        var d = i - MID;
-        return {
-          x:        DECK_CX - DECK_W / 2 + d * 2.5,
-          y:        DECK_CY  - DECK_H / 2 + d * 1.5,
-          w:        DECK_W,
-          h:        DECK_H,
-          rotation: d * 3.5,
-          scale:    1 - Math.abs(d) * 0.01,
-          zIndex:   N - i
-        };
-      });
-
-      /* ── Spotlight: upper-right, fully inside viewport ───────*/
-      var SPOT_W  = DECK_W * 1.12;
-      var SPOT_H  = SPOT_W * (7 / 5);
-      var SPOT_X  = VW - SPOT_W - Math.max(VW * 0.04, 20);
-      var SPOT_Y  = Math.max(VH * 0.08, 20);
-
-      /* Hide the divider line — no right panel anymore */
-      var divider = document.querySelector('.domains-divider');
-      if (divider) { divider.style.display = 'none'; }
-
-      return {
-        pilePos: pilePos, gridPos: gridPos,
-        SPOT_X:  SPOT_X,  SPOT_Y:  SPOT_Y,
-        SPOT_W:  SPOT_W,  SPOT_H:  SPOT_H
-      };
-    }
-
-    /* Build a fresh timeline from geo — shared by init and onRefresh */
-    function buildTimeline(geo) {
-      var tl = gsap.timeline({ paused: true });
-      tl.to(header, { opacity: 1, y: 0, duration: 0.06, ease: 'power2.out' }, 0);
-
-      var N = cardEls.length;
-      var W_START = 0.07, W_END = 0.96;
-      var PER = (W_END - W_START) / N;
-
-      cardEls.forEach(function(el, i) {
-        var ws  = W_START + i * PER;
-        var wm1 = ws  + PER * 0.38;
-        var wm2 = wm1 + PER * 0.22;
-        var we  = ws  + PER;
-        var g   = geo.gridPos[i];
-        var lbl = el.querySelector('.dc-name-label');
-
-        /* Hide label at start */
-        if (lbl) { tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws); }
-
-        /* 1. Rise to spotlight */
-        tl.to(el, {
-          x: geo.SPOT_X, y: geo.SPOT_Y,
-          width: geo.SPOT_W, height: geo.SPOT_H,
-          rotation: 0, scale: 1, zIndex: 1000 + i, opacity: 1,
-          duration: wm1 - ws, ease: 'power2.out'
-        }, ws);
-
-        /* 2. Float (subtle bob) */
-        tl.to(el, { y: geo.SPOT_Y - 8, duration: (wm2 - wm1) * 0.5, ease: 'sine.inOut' }, wm1);
-        tl.to(el, { y: geo.SPOT_Y,     duration: (wm2 - wm1) * 0.5, ease: 'sine.inOut' }, wm1 + (wm2 - wm1) * 0.5);
-
-        /* 3. Fly to grid slot — also update font-size to match final card width */
-        tl.to(el, {
-          x: g.x, y: g.y, width: g.w, height: g.h,
-          rotation: 0, scale: 1, zIndex: i + 1, opacity: 1,
-          fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
-          duration: we - wm2, ease: 'power3.inOut'
-        }, wm2);
-
-        /* 4. Fade in name label as card lands */
-        if (lbl) {
-          tl.set(lbl, { visibility: 'visible' }, wm2);
-          tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
-        }
-      });
-
-      return tl;
-    }
-
-    /* Apply deck positions to all cards (called at init and on refresh) */
-    function setDeckState(geo) {
-      gsap.set(header, { opacity: 0, y: 20 });
-      cardEls.forEach(function(el, i) {
-        var p = geo.pilePos[i];
-        var lbl = el.querySelector('.dc-name-label');
-        if (lbl) { gsap.set(lbl, { opacity: 0, visibility: 'hidden' }); }
-        /* font-size = 6.5% of card width — all em-based child text scales with this */
-        el.style.fontSize = Math.max(Math.round(p.w * 0.065), 9) + 'px';
-        gsap.set(el, {
-          x: p.x, y: p.y,
-          width: p.w, height: p.h,
-          rotation: p.rotation,
-          scale: p.scale,
-          zIndex: p.zIndex,
-          opacity: 1,
-          transformOrigin: 'center center'
-        });
-        var lbl = el.querySelector('.dc-name-label');
-        if (lbl) {
-          gsap.set(lbl, { opacity: 0, visibility: 'hidden' });
-        }
-      });
-    }
-
-    /* ── Initialise ── */
-    var geo = buildDealer();
-    setDeckState(geo);
-    var tl  = buildTimeline(geo);
-
-    ScrollTrigger.create({
-      trigger:  section,
-      start:    'top top',
-      end:      function() { return '+=' + (window.innerHeight * 5); },
-      pin:      true,
-      scrub:    1.5,
-      anticipatePin: 1,
-      animation: tl,
-      invalidateOnRefresh: true,
-      onRefresh: function() {
-        /* Called by GSAP on init AND on every resize/zoom.
-           Recompute geometry, reset card positions, rebuild keyframes. */
-        geo = buildDealer();
-        setDeckState(geo);
-        tl.clear();
-        /* Rebuild keyframes inline (same logic as buildTimeline) */
-        tl.to(header, { opacity: 1, y: 0, duration: 0.06, ease: 'power2.out' }, 0);
-        var N2 = cardEls.length;
-        var W_START = 0.07, W_END = 0.96, PER = (W_END - W_START) / N2;
-        cardEls.forEach(function(el, i) {
-          var ws=W_START+i*PER, wm1=ws+PER*0.38, wm2=wm1+PER*0.22, we=ws+PER;
-          var g=geo.gridPos[i];
-          var lbl = el.querySelector('.dc-name-label');
-          if (lbl) {
-            tl.set(lbl, { opacity: 0, visibility: 'hidden' }, ws);
-          }
-          tl.to(el, { x:geo.SPOT_X, y:geo.SPOT_Y, width:geo.SPOT_W, height:geo.SPOT_H,
-            rotation:0, scale:1, zIndex:1000+i, opacity:1,
-            duration:wm1-ws, ease:'power2.out' }, ws);
-          tl.to(el, { y:geo.SPOT_Y-8, duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1);
-          tl.to(el, { y:geo.SPOT_Y,   duration:(wm2-wm1)*0.5, ease:'sine.inOut' }, wm1+(wm2-wm1)*0.5);
-          tl.to(el, { x:g.x, y:g.y, width:g.w, height:g.h,
-            rotation:0, scale:1, zIndex:i+1, opacity:1,
-            fontSize: Math.max(Math.round(g.w * 0.065), 9) + 'px',
-            duration:we-wm2, ease:'power3.inOut' }, wm2);
-          if (lbl) {
-            tl.set(lbl, { visibility: 'visible' }, wm2);
-            tl.to(lbl, { opacity: 1, duration: we - wm2, ease: 'power2.out' }, wm2);
-          }
-        });
-        tl.invalidate();
-      }
+    grid.querySelectorAll('.domain-card').forEach(function(el) {
+      observer.observe(el);
     });
 
   })();
@@ -5680,6 +5304,102 @@ if (document.readyState === 'loading') {
 } else {
   initTeamsPreview();
 }
+</script>
+
+<!-- ═══════════════════════════════════════════
+     HERO PARTICLES
+     ═══════════════════════════════════════════ -->
+<script>
+(function () {
+  const canvas = document.getElementById('hero-particles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, particles = [];
+
+  function resize() {
+    const hero = canvas.parentElement;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+  }
+
+  function randomBetween(a, b) { return a + Math.random() * (b - a); }
+
+  function createParticle() {
+    return {
+      x: randomBetween(0.05 * W, 0.95 * W),
+      y: H + randomBetween(10, 60),          // start just below the bottom
+      vy: randomBetween(0.3, 1.0),            // upward speed (subtracted each frame)
+      vx: randomBetween(-0.15, 0.15),         // slight horizontal drift
+      radius: randomBetween(1.5, 3.5),
+      opacity: 0,
+      maxOpacity: randomBetween(0.25, 0.55),
+      fadeInY: H - randomBetween(H * 0.10, H * 0.25),  // start fading in here
+      fadeOutY: randomBetween(H * 0.05, H * 0.25),     // fully gone by this Y
+    };
+  }
+
+  // Seed with staggered particles spread across the full height
+  function initParticles() {
+    particles = [];
+    const count = Math.max(6, Math.round(W / 120)); // sparse — ~8–12 dots
+    for (let i = 0; i < count; i++) {
+      const p = createParticle();
+      p.y = randomBetween(0, H);       // random start position on first load
+      particles.push(p);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    particles.forEach((p, i) => {
+      // Move upward
+      p.y -= p.vy;
+      p.x += p.vx;
+
+      // Fade in as it rises from the bottom
+      if (p.y < p.fadeInY) {
+        p.opacity = Math.min(p.maxOpacity, p.opacity + 0.018);
+      }
+      // Fade out as it approaches the top
+      if (p.y < p.fadeOutY) {
+        p.opacity = Math.max(0, p.opacity - 0.025);
+      }
+
+      // Recycle when invisible and above the top
+      if (p.opacity <= 0 && p.y < p.fadeOutY - 20) {
+        particles[i] = createParticle();
+        return;
+      }
+
+      // Draw glowing dot
+      const r = p.radius;
+      const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 2);
+      grd.addColorStop(0,   `rgba(201, 168, 76, ${p.opacity * 0.5})`);
+      grd.addColorStop(1,   `rgba(201, 168, 76, 0)`);
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r * 2, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+
+      // Hard centre dot
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(230, 190, 100, ${p.opacity})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  initParticles();
+  draw();
+
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+})();
 </script>
 </body>
 </html>
