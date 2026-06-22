@@ -1128,27 +1128,118 @@ body::before {
 }
 
 /* Mobile card in flat grid */
+/* Mobile card flip grid */
+.domains-mobile-grid .dm-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
 .domains-mobile-grid .dm-card {
   position: relative;
-  border-radius: 12px;
-  overflow: hidden;
+  width: 100%;
   aspect-ratio: 5 / 7;
-  border: 1px solid rgba(255,255,255,0.07);
+  perspective: 900px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.dm-card-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
-.domains-mobile-grid .dm-card img {
+.dm-card.dm-flipped .dm-card-inner {
+  transform: rotateY(180deg);
+}
+.dm-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.dm-front {
+  background: #000;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.dm-front img {
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
 }
-.domains-mobile-grid .dm-name {
-  margin-top: 7px;
+.dm-color-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 3;
+}
+.dm-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(155deg, #141414 0%, #0c0c0c 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.dm-back-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dm-back-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+}
+.dm-back-desc {
+  font-size: 10px;
+  line-height: 1.55;
+  color: rgba(180,185,200,0.75);
+  flex: 1;
+  overflow: hidden;
+  padding: 8px 0;
+}
+.dm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.dm-tag {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 999px;
+  border: 1px solid;
+  background: rgba(255,255,255,0.03);
+}
+.dm-tap-hint {
+  font-size: 8px;
   text-align: center;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.domains-mobile-grid .dm-name {
   font-family: var(--font-heading);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  text-align: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4608,18 +4699,66 @@ body.intro-active { overflow: hidden; }
 
     var N = DOMAINS_DATA.length;   // 8
 
-    /* ── Mobile: simple flat grid ── */
+    /* ── Mobile: flip grid ── */
     var mobileGrid = document.getElementById('domains-mobile-grid');
     if (mobileGrid) {
       DOMAINS_DATA.forEach(function(d) {
         var wrap = document.createElement('div');
+        wrap.className = 'dm-wrap';
+
+        // Card with flip inner
         var card = document.createElement('div');
         card.className = 'dm-card';
-        card.innerHTML = '<img src="' + (CARD_IMAGES[d.id] || '') + '" alt="' + d.title + '" loading="lazy">';
+
+        var inner = document.createElement('div');
+        inner.className = 'dm-card-inner';
+
+        // Front face — card image
+        var front = document.createElement('div');
+        front.className = 'dm-face dm-front';
+        var img = document.createElement('img');
+        img.src = CARD_IMAGES[d.id] || '';
+        img.alt = d.title;
+        img.loading = 'lazy';
+        front.appendChild(img);
+
+        // Color bar on front
+        var bar = document.createElement('div');
+        bar.className = 'dm-color-bar';
+        bar.style.background = 'linear-gradient(90deg, ' + d.color + ', transparent)';
+        front.appendChild(bar);
+
+        // Back face — info
+        var back = document.createElement('div');
+        back.className = 'dm-face dm-back';
+        back.style.setProperty('--dm-color', d.color);
+        back.innerHTML =
+          '<div class="dm-back-header" style="border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:10px;margin-bottom:10px;">' +
+            '<span style="font-size:18px;">' + (d.suit || '♠') + '</span>' +
+            '<span class="dm-back-title" style="color:' + d.color + ';">' + d.title + '</span>' +
+          '</div>' +
+          '<p class="dm-back-desc">' + (d.desc || '') + '</p>' +
+          '<div class="dm-tags">' +
+            (d.tags || []).map(function(t) {
+              return '<span class="dm-tag" style="border-color:' + d.color + '33;color:' + d.color + ';">' + t + '</span>';
+            }).join('') +
+          '</div>' +
+          '<div class="dm-tap-hint">tap to flip back</div>';
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+
+        // Tap to flip
+        card.addEventListener('click', function() {
+          card.classList.toggle('dm-flipped');
+        });
+
         var name = document.createElement('div');
         name.className = 'dm-name';
         name.style.color = d.color;
         name.textContent = d.title;
+
         wrap.appendChild(card);
         wrap.appendChild(name);
         mobileGrid.appendChild(wrap);
