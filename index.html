@@ -813,18 +813,20 @@ body::before {
 }
 
 /* ═════════════════════════════════════════════
-   DOMAINS — CLASSY GRID
+   DOMAINS — 3D CURVED CAROUSEL
    ═════════════════════════════════════════════ */
 .domains-section {
   position: relative;
   background: transparent;
   border-top: 1px solid var(--border-subtle);
-  padding: 100px 8vw 120px;
+  padding: 100px 0 130px;
+  overflow: hidden;
 }
 
 .domains-header {
   max-width: 1400px;
-  margin: 0 auto 64px;
+  margin: 0 auto 56px;
+  padding: 0 8vw;
 }
 .domains-header .section-label { margin-bottom: 12px; }
 .domains-header h2 {
@@ -844,55 +846,62 @@ body::before {
   max-width: 540px;
 }
 
-/* ── Grid ── */
-.domains-grid {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-/* Each grid cell wraps card + label */
-.domains-grid > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ── Individual domain card ── */
-.domain-card {
+/* ── Carousel viewport ── */
+.domains-carousel-wrap {
   position: relative;
   width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  aspect-ratio: 5 / 7;
-  outline: none;
-  -webkit-user-select: none;
+  height: 480px;
+  perspective: 1400px;
+  perspective-origin: 50% 48%;
+  cursor: grab;
   user-select: none;
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
-  box-shadow: 0 10px 36px rgba(0,0,0,0.55);
+  -webkit-user-select: none;
 }
+.domains-carousel-wrap.grabbing { cursor: grabbing; }
 
-.domain-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: var(--dc-color, rgba(201,168,76,0.5));
-  box-shadow: 0 0 0 1px var(--dc-color, rgba(201,168,76,0.3)),
-              0 24px 60px rgba(0,0,0,0.7),
-              0 0 40px var(--dc-glow, rgba(201,168,76,0.15));
-}
-
-.domain-card-inner {
-  position: relative;
+/* The rotating stage — all cards live here */
+.domains-stage {
+  position: absolute;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.72s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+.domains-stage.dragging { transition: none; }
+
+/* ── Individual domain card ── */
+.domain-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  height: 240px;
+  margin-top: -120px;
+  margin-left: -90px;
+  border-radius: 14px;
+  overflow: visible;           /* allow name label below */
+  cursor: pointer;
+  outline: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transform-style: preserve-3d;
+  /* individual card tilt set by JS via inline style */
 }
 
-.domain-card:hover .domain-card-inner,
+.domain-card-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: visible;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* Flip only the center card on hover */
+.domain-card.is-center:hover .domain-card-inner,
 .domain-card.kb-flipped .domain-card-inner {
   transform: rotateY(180deg);
 }
@@ -906,7 +915,7 @@ body::before {
   -webkit-backface-visibility: hidden;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: hidden;             /* clip content within each face independently */
 }
 
 /* Front */
@@ -919,31 +928,11 @@ body::before {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.5s ease;
 }
-.domain-card:hover .dc-img-front { transform: scale(1.04); }
+.domain-card.is-center:hover .dc-img-front { transform: scale(1.04); }
 
-/* Domain name below each card */
-.dc-below-name {
-  margin-top: 10px;
-  text-align: center;
-  font-family: var(--font-heading);
-  font-size: clamp(10px, 0.95vw, 12px);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  line-height: 1.25;
-  color: var(--cream);
-  opacity: 0.8;
-  transition: opacity 0.3s ease, color 0.3s ease;
-}
-.domain-card:hover ~ .dc-below-name,
-.domain-card-wrap:hover .dc-below-name {
-  opacity: 1;
-  color: var(--dc-color, var(--cream));
-}
-
-/* Color accent bar at top of card */
+/* Color bar at top */
 .dc-color-bar {
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -952,107 +941,209 @@ body::before {
   opacity: 0;
   transition: opacity 0.4s ease;
 }
-.domain-card:hover .dc-color-bar { opacity: 1; }
+.domain-card.is-center .dc-color-bar { opacity: 1; }
 
 /* Back face */
 .domain-card-back {
   transform: rotateY(180deg);
-  background: linear-gradient(155deg, #131313 0%, #0c0c0c 100%);
-  padding: 20px 18px;
-  gap: 0;
+  background: linear-gradient(155deg, #141414 0%, #0c0c0c 100%);
+  padding: 18px 16px;
   justify-content: space-between;
-  border: 1px solid var(--dc-color, rgba(201,168,76,0.25));
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 .dc-back-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding-bottom: 12px;
+  gap: 8px;
+  padding-bottom: 10px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   flex-shrink: 0;
 }
-.dc-back-suit {
-  font-size: 18px;
-  line-height: 1;
-  flex-shrink: 0;
-}
+.dc-back-suit { font-size: 16px; line-height: 1; flex-shrink: 0; }
 .dc-back-title {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: clamp(10px, 1.1vw, 13px);
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   line-height: 1.25;
 }
 
 .dc-back-desc {
-  font-size: clamp(10px, 0.95vw, 12px);
-  line-height: 1.6;
+  font-size: 11px;
+  line-height: 1.55;
   color: rgba(180,185,200,0.75);
   flex: 1;
   overflow: hidden;
-  padding: 12px 0;
+  padding: 10px 0;
 }
 
 .dc-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   flex-shrink: 0;
-  padding-top: 10px;
+  padding-top: 8px;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 .dc-tag {
   font-family: var(--font-mono);
-  font-size: clamp(8px, 0.65vw, 10px);
+  font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 2px 6px;
+  border-radius: 3px;
 }
 
-/* Watermark */
 .dc-suit-watermark {
   position: absolute;
-  bottom: 18px;
-  right: 16px;
-  font-size: 48px;
+  bottom: 14px;
+  right: 12px;
+  font-size: 40px;
   opacity: 0.04;
   pointer-events: none;
   z-index: 0;
   line-height: 1;
 }
 
+/* Name label below each card */
+.dc-below-name {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(245,240,232,0.55);
+  pointer-events: none;
+  transition: color 0.3s, opacity 0.3s;
+  z-index: 10;
+}
+.domain-card.is-center .dc-below-name {
+  color: var(--dc-color, var(--cream));
+  opacity: 1;
+}
+
+/* Card ground reflection */
+.domain-card-inner::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 10%; right: 10%;
+  height: 30px;
+  background: inherit;
+  filter: blur(12px) brightness(0.4);
+  opacity: 0.35;
+  transform: scaleY(-1) translateY(100%);
+  pointer-events: none;
+}
+
+/* Nav dots */
+.domains-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.domains-nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.2);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: background 0.3s, transform 0.3s;
+}
+.domains-nav-dot.active {
+  background: var(--gold);
+  transform: scale(1.4);
+}
+
+/* Arrow buttons */
+.domains-arrows {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+.domains-arrow {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.05);
+  border: 1px solid rgba(245,240,232,0.12);
+  color: rgba(245,240,232,0.5);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+.domains-arrow:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: rgba(201,168,76,0.4);
+  color: var(--gold);
+}
+
 /* Keyboard focus */
-.domain-card:focus-visible {
+.domain-card:focus-visible .domain-card-inner {
   outline: 2px solid var(--dc-color, var(--gold));
   outline-offset: 3px;
 }
 
-/* Responsive */
-@media (max-width: 1100px) {
-  .domains-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
-}
+/* ── Mobile: flat 2-col grid ── */
 @media (max-width: 768px) {
   .domains-section { padding: 72px 6vw 80px; }
-  .domains-header { margin-bottom: 40px; }
-  .domains-grid {
+  .domains-header { margin-bottom: 40px; padding: 0; }
+  .domains-carousel-wrap,
+  .domains-arrows,
+  .domains-nav { display: none; }
+  .domains-mobile-grid {
+    display: grid !important;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 14px;
   }
-  .domain-card { aspect-ratio: 5 / 7; }
-  .dc-back-desc { font-size: 10px; }
-  .dc-below-name { font-size: 11px; }
 }
+.domains-mobile-grid { display: none; }
+
 @media (max-width: 420px) {
-  .domains-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .domains-mobile-grid { gap: 10px; }
+}
+
+/* Mobile card in flat grid */
+.domains-mobile-grid .dm-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 5 / 7;
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.domains-mobile-grid .dm-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.domains-mobile-grid .dm-name {
+  margin-top: 7px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .domain-card { transition: none; }
-  .domain-card-inner { transition: none; }
-  .dc-img-front { transition: none; }
+  .domains-stage    { transition: none; }
+  .domain-card-inner{ transition: none; }
+  .dc-img-front     { transition: none; }
 }
 /* ═══════════════════════════════════════════
    EVENTS SECTION — ACM ACTIVITIES
@@ -3684,8 +3775,20 @@ body.intro-active { overflow: hidden; }
     <p>Each domain is more than a skillset — it’s a mindset. Build, break, design, and communicate — not in silos, but in sync.</p>
   </div>
 
-  <!-- Classy card grid (built by JS) -->
-  <div class="domains-grid" id="domains-grid"></div>
+  <!-- 3D Carousel (desktop) -->
+  <div class="domains-carousel-wrap" id="domains-carousel-wrap">
+    <div class="domains-stage" id="domains-stage"></div>
+  </div>
+
+  <!-- Nav dots + arrows (desktop) -->
+  <div class="domains-nav" id="domains-nav"></div>
+  <div class="domains-arrows">
+    <button class="domains-arrow" id="domains-prev" aria-label="Previous domain">←</button>
+    <button class="domains-arrow" id="domains-next" aria-label="Next domain">→</button>
+  </div>
+
+  <!-- Flat grid (mobile) -->
+  <div class="domains-mobile-grid" id="domains-mobile-grid"></div>
 
 </section>
 
@@ -4247,7 +4350,7 @@ body.intro-active { overflow: hidden; }
     }
   })();
 
-  // ───── Domains Section — Classy Grid ─────
+  // ───── Domains Section — 3D Curved Carousel ─────
   (function initDomains() {
     var DOMAINS_DATA = [
       { id:'app',        suit:'\u2660', color:'#4A9FF5', glow:'rgba(74,159,245,0.35)',
@@ -4295,15 +4398,45 @@ body.intro-active { overflow: hidden; }
       'design':     'card-design.jpg'
     };
 
-    var grid = document.getElementById('domains-grid');
-    if (!grid) return;
+    var N = DOMAINS_DATA.length;   // 8
 
-    DOMAINS_DATA.forEach(function(d, i) {
-      // Wrapper: card + name label below
-      var wrap = document.createElement('div');
+    /* ── Mobile: simple flat grid ── */
+    var mobileGrid = document.getElementById('domains-mobile-grid');
+    if (mobileGrid) {
+      DOMAINS_DATA.forEach(function(d) {
+        var wrap = document.createElement('div');
+        var card = document.createElement('div');
+        card.className = 'dm-card';
+        card.innerHTML = '<img src="' + (CARD_IMAGES[d.id] || '') + '" alt="' + d.title + '" loading="lazy">';
+        var name = document.createElement('div');
+        name.className = 'dm-name';
+        name.style.color = d.color;
+        name.textContent = d.title;
+        wrap.appendChild(card);
+        wrap.appendChild(name);
+        mobileGrid.appendChild(wrap);
+      });
+    }
 
+    /* ── Skip carousel on mobile ── */
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+
+    var stage     = document.getElementById('domains-stage');
+    var navEl     = document.getElementById('domains-nav');
+    var prevBtn   = document.getElementById('domains-prev');
+    var nextBtn   = document.getElementById('domains-next');
+    var wrapEl    = document.getElementById('domains-carousel-wrap');
+    if (!stage || !wrapEl) return;
+
+    /* ── Carousel state ── */
+    var currentIndex = 0;   // which card is at center
+    var RADIUS = 520;       /* cylinder radius in px */
+    var ANGLE_STEP = 360 / N;
+
+    /* ── Build cards ── */
+    var cardEls = DOMAINS_DATA.map(function(d, i) {
       var card = document.createElement('div');
-      card.className = 'domain-card reveal reveal-delay-' + Math.min(i % 4 + 1, 7);
+      card.className = 'domain-card';
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
       card.setAttribute('aria-label', d.title);
@@ -4313,31 +4446,26 @@ body.intro-active { overflow: hidden; }
       var inner = document.createElement('div');
       inner.className = 'domain-card-inner';
 
-      // Front face — clean image, no text overlay
+      /* Front */
       var front = document.createElement('div');
       front.className = 'domain-card-face domain-card-front';
-
       var img = document.createElement('img');
       img.className = 'dc-img-front';
       img.src = CARD_IMAGES[d.id] || '';
       img.alt = d.title;
       img.draggable = false;
       front.appendChild(img);
+      var bar = document.createElement('div');
+      bar.className = 'dc-color-bar';
+      bar.style.background = 'linear-gradient(90deg,transparent,' + d.color + ',transparent)';
+      front.appendChild(bar);
 
-      var colorBar = document.createElement('div');
-      colorBar.className = 'dc-color-bar';
-      colorBar.style.background = 'linear-gradient(90deg, transparent, ' + d.color + ', transparent)';
-      front.appendChild(colorBar);
-
-      // Back face
+      /* Back */
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
-      back.style.setProperty('border-color', d.color + '40');
-
       var tagsHtml = d.tags.map(function(t) {
         return '<span class="dc-tag" style="border:1px solid ' + d.color + '40;background:' + d.color + '10;color:' + d.color + '">' + t + '</span>';
       }).join('');
-
       back.innerHTML =
         '<div class="dc-back-header">' +
           '<span class="dc-back-suit" style="color:' + d.color + '">' + d.suit + '</span>' +
@@ -4351,37 +4479,147 @@ body.intro-active { overflow: hidden; }
       inner.appendChild(back);
       card.appendChild(inner);
 
-      // Keyboard support
+      /* Name below */
+      var nameEl = document.createElement('div');
+      nameEl.className = 'dc-below-name';
+      nameEl.textContent = d.title;
+      card.appendChild(nameEl);
+
+      /* Click non-center → rotate to center; center → flip handled by CSS hover */
+      card.addEventListener('click', function() {
+        var offset = i - currentIndex;
+        // take shortest arc
+        if (offset > N / 2) offset -= N;
+        if (offset < -N / 2) offset += N;
+        if (offset !== 0) {
+          currentIndex = (currentIndex + offset + N) % N;
+          applyRotation();
+        }
+      });
+
+      /* Keyboard */
       card.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('kb-flipped'); }
         if (e.key === 'Escape') card.classList.remove('kb-flipped');
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); rotate(-1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); rotate(1); }
       });
       card.addEventListener('blur', function() { card.classList.remove('kb-flipped'); });
 
-      // Name label sits below the card
-      var nameEl = document.createElement('div');
-      nameEl.className = 'dc-below-name';
-      nameEl.style.color = d.color;
-      nameEl.textContent = d.title;
-
-      wrap.appendChild(card);
-      wrap.appendChild(nameEl);
-      grid.appendChild(wrap);
+      stage.appendChild(card);
+      return card;
     });
 
-    // Scroll-reveal for cards
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+    /* ── Nav dots ── */
+    var dots = DOMAINS_DATA.map(function(d, i) {
+      var dot = document.createElement('button');
+      dot.className = 'domains-nav-dot';
+      dot.setAttribute('aria-label', 'Go to ' + d.title);
+      dot.addEventListener('click', function() {
+        currentIndex = i;
+        applyRotation();
       });
-    }, { threshold: 0.1 });
-
-    grid.querySelectorAll('.domain-card').forEach(function(el) {
-      observer.observe(el);
+      if (navEl) navEl.appendChild(dot);
+      return dot;
     });
+
+    /* ── Position cards on the cylinder ── */
+    function positionCards() {
+      cardEls.forEach(function(el, i) {
+        var angle = i * ANGLE_STEP;   // base angle on cylinder (degrees)
+        el.style.transform =
+          'rotateY(' + angle + 'deg) translateZ(' + RADIUS + 'px)';
+      });
+    }
+
+    /* ── Rotate carousel so card[currentIndex] faces front ── */
+    function applyRotation(instant) {
+      var rot = -currentIndex * ANGLE_STEP;
+      if (instant) stage.classList.add('dragging');
+      stage.style.transform = 'rotateY(' + rot + 'deg)';
+      if (instant) {
+        requestAnimationFrame(function() { stage.classList.remove('dragging'); });
+      }
+
+      /* Update center/active states */
+      cardEls.forEach(function(el, i) {
+        el.classList.toggle('is-center', i === currentIndex);
+        el.classList.remove('kb-flipped');
+      });
+      dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    function rotate(dir) {
+      currentIndex = (currentIndex + dir + N) % N;
+      applyRotation();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function() { rotate(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function() { rotate(1); });
+
+    /* ── Drag / swipe ── */
+    var dragStart = null;
+    var dragDelta = 0;
+    var baseRot   = 0;
+
+    wrapEl.addEventListener('mousedown', function(e) {
+      dragStart = e.clientX;
+      baseRot   = -currentIndex * ANGLE_STEP;
+      stage.classList.add('dragging');
+      wrapEl.classList.add('grabbing');
+    });
+    window.addEventListener('mousemove', function(e) {
+      if (dragStart === null) return;
+      dragDelta = e.clientX - dragStart;
+      var liveRot = baseRot + dragDelta * 0.18;
+      stage.style.transform = 'rotateY(' + liveRot + 'deg)';
+    });
+    window.addEventListener('mouseup', function() {
+      if (dragStart === null) return;
+      stage.classList.remove('dragging');
+      wrapEl.classList.remove('grabbing');
+      if (Math.abs(dragDelta) > 40) {
+        rotate(dragDelta < 0 ? 1 : -1);
+      } else {
+        applyRotation();
+      }
+      dragStart = null;
+      dragDelta = 0;
+    });
+
+    /* Touch */
+    wrapEl.addEventListener('touchstart', function(e) {
+      dragStart = e.touches[0].clientX;
+      baseRot   = -currentIndex * ANGLE_STEP;
+      stage.classList.add('dragging');
+    }, { passive: true });
+    wrapEl.addEventListener('touchmove', function(e) {
+      if (dragStart === null) return;
+      dragDelta = e.touches[0].clientX - dragStart;
+      stage.style.transform = 'rotateY(' + (baseRot + dragDelta * 0.18) + 'deg)';
+    }, { passive: true });
+    wrapEl.addEventListener('touchend', function() {
+      if (dragStart === null) return;
+      stage.classList.remove('dragging');
+      if (Math.abs(dragDelta) > 40) rotate(dragDelta < 0 ? 1 : -1);
+      else applyRotation();
+      dragStart = null; dragDelta = 0;
+    });
+
+    /* ── Init ── */
+    positionCards();
+    applyRotation(true);
+
+    /* ── Scroll-reveal for section header ── */
+    var headerEl = document.querySelector('.domains-header');
+    if (headerEl) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.2 });
+      obs.observe(headerEl);
+    }
 
   })();
 
