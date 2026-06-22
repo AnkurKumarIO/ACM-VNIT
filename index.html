@@ -853,9 +853,17 @@ body::before {
   gap: 20px;
 }
 
+/* Each grid cell wraps card + label */
+.domains-grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* ── Individual domain card ── */
 .domain-card {
   position: relative;
+  width: 100%;
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
@@ -915,44 +923,24 @@ body::before {
 }
 .domain-card:hover .dc-img-front { transform: scale(1.04); }
 
-/* Subtle gradient overlay on front for readability */
-.dc-front-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.72) 0%,
-    rgba(0,0,0,0.18) 45%,
-    transparent 100%
-  );
-  z-index: 1;
-}
-
-/* Domain name pinned to bottom of front face */
-.dc-front-label {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 18px 16px 16px;
-  z-index: 2;
-}
-.dc-front-label-name {
+/* Domain name below each card */
+.dc-below-name {
+  margin-top: 10px;
+  text-align: center;
   font-family: var(--font-heading);
-  font-size: clamp(11px, 1vw, 13px);
-  font-weight: 800;
+  font-size: clamp(10px, 0.95vw, 12px);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
   color: var(--cream);
-  line-height: 1.2;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, color 0.3s ease;
 }
-.dc-front-label-hint {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(245,240,232,0.38);
-  margin-top: 4px;
+.domain-card:hover ~ .dc-below-name,
+.domain-card-wrap:hover .dc-below-name {
+  opacity: 1;
+  color: var(--dc-color, var(--cream));
 }
 
 /* Color accent bar at top of card */
@@ -1051,10 +1039,11 @@ body::before {
   .domains-header { margin-bottom: 40px; }
   .domains-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
   }
   .domain-card { aspect-ratio: 5 / 7; }
   .dc-back-desc { font-size: 10px; }
+  .dc-below-name { font-size: 11px; }
 }
 @media (max-width: 420px) {
   .domains-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -4310,18 +4299,21 @@ body.intro-active { overflow: hidden; }
     if (!grid) return;
 
     DOMAINS_DATA.forEach(function(d, i) {
+      // Wrapper: card + name label below
+      var wrap = document.createElement('div');
+
       var card = document.createElement('div');
       card.className = 'domain-card reveal reveal-delay-' + Math.min(i % 4 + 1, 7);
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', d.title + ' — hover to flip');
+      card.setAttribute('aria-label', d.title);
       card.style.setProperty('--dc-color', d.color);
       card.style.setProperty('--dc-glow', d.glow);
 
       var inner = document.createElement('div');
       inner.className = 'domain-card-inner';
 
-      // ── Front face ──
+      // Front face — clean image, no text overlay
       var front = document.createElement('div');
       front.className = 'domain-card-face domain-card-front';
 
@@ -4332,23 +4324,12 @@ body.intro-active { overflow: hidden; }
       img.draggable = false;
       front.appendChild(img);
 
-      var overlay = document.createElement('div');
-      overlay.className = 'dc-front-overlay';
-      front.appendChild(overlay);
-
       var colorBar = document.createElement('div');
       colorBar.className = 'dc-color-bar';
       colorBar.style.background = 'linear-gradient(90deg, transparent, ' + d.color + ', transparent)';
       front.appendChild(colorBar);
 
-      var label = document.createElement('div');
-      label.className = 'dc-front-label';
-      label.innerHTML =
-        '<div class="dc-front-label-name" style="color:' + d.color + '">' + d.title + '</div>' +
-        '<div class="dc-front-label-hint">Hover to explore</div>';
-      front.appendChild(label);
-
-      // ── Back face ──
+      // Back face
       var back = document.createElement('div');
       back.className = 'domain-card-face domain-card-back';
       back.style.setProperty('border-color', d.color + '40');
@@ -4377,10 +4358,18 @@ body.intro-active { overflow: hidden; }
       });
       card.addEventListener('blur', function() { card.classList.remove('kb-flipped'); });
 
-      grid.appendChild(card);
+      // Name label sits below the card
+      var nameEl = document.createElement('div');
+      nameEl.className = 'dc-below-name';
+      nameEl.style.color = d.color;
+      nameEl.textContent = d.title;
+
+      wrap.appendChild(card);
+      wrap.appendChild(nameEl);
+      grid.appendChild(wrap);
     });
 
-    // Trigger scroll-reveal for cards already in view
+    // Scroll-reveal for cards
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
