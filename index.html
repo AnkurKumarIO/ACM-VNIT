@@ -2393,6 +2393,11 @@ body::before {
   .sf textarea { height: 48px; }
 }
 
+/* ── Mobile-only contact form (shown only on ≤768px) ── */
+.mobile-contact-form {
+  display: none; /* hidden by default — shown in mobile media query */
+}
+
 /* ═══════════════════════════════════════════
    COMPREHENSIVE MOBILE FIXES (≤ 768px)
    ═══════════════════════════════════════════ */
@@ -2496,47 +2501,82 @@ body::before {
     padding-bottom: 8px;
     pointer-events: auto;
   }
-  .contact-title { font-size: clamp(2.4rem, 11vw, 3.5rem); }
-
-  /* ── Contact: hide laptop shell entirely, show bare form ── */
-  .laptop-base,
-  .laptop-hinge,
-  .laptop-glow { display: none !important; }
-
-  .laptop-wrap {
+  /* ── Contact: hide laptop on mobile, show flat form instead ── */
+  .contact-scroll-driver { display: none; }
+  .mobile-contact-form {
+    display: block;
+    padding: 80px 6vw 60px;
+    background: var(--bg);
+    border-top: 1px solid var(--border-subtle);
+    text-align: left;
+  }
+  .mobile-contact-form .contact-badge {
+    margin-bottom: 16px;
+  }
+  .mcf-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .mcf-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .mcf-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mcf-field label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+  }
+  .mcf-field input,
+  .mcf-field textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--cream);
+    outline: none;
     width: 100%;
-    transform: none !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
-
-  .laptop-lid {
+  .mcf-field input::placeholder,
+  .mcf-field textarea::placeholder { color: rgba(245,240,232,0.25); }
+  .mcf-field input:focus,
+  .mcf-field textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+  }
+  .mcf-field textarea {
+    resize: none;
+    height: 110px;
+  }
+  .mcf-submit {
     width: 100%;
-    aspect-ratio: unset;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    transform: none !important;
-    box-shadow: none !important;
+    padding: 14px 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light, #e8c96a));
+    color: #010C18;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 4px;
   }
-  .laptop-lid::before { display: none; }
-
-  .laptop-camera { display: none; }
-
-  .laptop-screen {
-    position: relative !important;
-    inset: auto !important;
-    border-radius: 16px !important;
-    opacity: 1 !important;
-    background: linear-gradient(155deg, #ececec 0%, #f5f0ed 45%, #fad4c8 100%) !important;
-  }
-  .laptop-screen.screen-on,
-  .laptop-screen:not(.screen-on) { opacity: 1 !important; }
-
-  .screen-inner { padding: 24px 20px 28px; }
-  .screen-title { font-size: 1.2rem; margin-bottom: 14px; }
-  .screen-grid { grid-template-columns: 1fr; gap: 10px; }
-  .sf textarea { height: 80px; }
-  .sf input, .sf textarea { font-size: 14px; padding: 10px 14px; }
-  .screen-submit { font-size: 13px; padding: 12px 0; margin-top: 8px; }
+  .mcf-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
 
   /* ── Footer: single column ── */
   .footer-grid {
@@ -4144,7 +4184,7 @@ body.intro-active { overflow: hidden; }
         <div class="contact-title">CONTACT US!</div>
       </div>
 
-      <!-- Laptop rises from below -->
+      <!-- Laptop rises from below (desktop only) -->
       <div class="laptop-wrap" id="laptopWrap">
         <div class="laptop-hinge">
           <div class="laptop-lid" id="laptopLid">
@@ -4170,6 +4210,38 @@ body.intro-active { overflow: hidden; }
 
     </div>
   </div>
+
+  <!-- Mobile-only flat form (hidden on desktop) -->
+  <div class="mobile-contact-form">
+    <div class="contact-badge">Contact</div>
+    <div class="contact-title" style="margin-bottom: 32px;">CONTACT US!</div>
+    <form class="mcf-form" onsubmit="handleMobileContactSubmit(event)">
+      <div class="mcf-row">
+        <div class="mcf-field">
+          <label for="mcf-first">First Name</label>
+          <input type="text" id="mcf-first" placeholder="Ankur" autocomplete="given-name" required>
+        </div>
+        <div class="mcf-field">
+          <label for="mcf-last">Last Name</label>
+          <input type="text" id="mcf-last" placeholder="Kumar" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="mcf-field">
+        <label for="mcf-email">Email</label>
+        <input type="email" id="mcf-email" placeholder="you@example.com" autocomplete="email" required>
+      </div>
+      <div class="mcf-field">
+        <label for="mcf-phone">Phone</label>
+        <input type="tel" id="mcf-phone" placeholder="+91 00000 00000" autocomplete="tel">
+      </div>
+      <div class="mcf-field">
+        <label for="mcf-msg">Message</label>
+        <textarea id="mcf-msg" placeholder="What's on your mind?" required></textarea>
+      </div>
+      <button type="submit" class="mcf-submit">Send Message →</button>
+    </form>
+  </div>
+
 </section>
 
 <!-- ═══════════════════════════════════════════
@@ -4851,6 +4923,32 @@ body.intro-active { overflow: hidden; }
       document.getElementById('cf-email').value = '';
       document.getElementById('cf-phone').value = '';
       document.getElementById('cf-msg').value   = '';
+    }, 2500);
+  }
+
+  // ── Mobile contact form submit handler ──
+  function handleMobileContactSubmit(e) {
+    e.preventDefault();
+    var first = document.getElementById('mcf-first').value.trim();
+    var email = document.getElementById('mcf-email').value.trim();
+    var msg   = document.getElementById('mcf-msg').value.trim();
+    if (!first || !email || !msg) {
+      alert('Please fill in your name, email, and message.');
+      return;
+    }
+    var btn = document.querySelector('.mcf-submit');
+    btn.textContent = '✓ Message Sent!';
+    btn.style.background = '#1a6b3a';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = 'Send Message →';
+      btn.style.background = '';
+      btn.style.color = '';
+      document.getElementById('mcf-first').value = '';
+      document.getElementById('mcf-last').value  = '';
+      document.getElementById('mcf-email').value = '';
+      document.getElementById('mcf-phone').value = '';
+      document.getElementById('mcf-msg').value   = '';
     }, 2500);
   }
 
