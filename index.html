@@ -230,10 +230,10 @@ body::before {
 .mobile-overlay.open { display: flex; }
 .mobile-overlay a {
   font-family: var(--font-heading);
-  font-size: 28px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--cream);
   transition: color 0.3s;
 }
@@ -2573,11 +2573,12 @@ body::before {
 
   /* ── Hero layout ── */
   .hero {
-    padding: 80px 6vw 100px;
-    min-height: 100svh;
+    padding: 80px 6vw 48px;
+    min-height: unset;
+    height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
   }
   .hero-text-wrap {
@@ -2586,7 +2587,6 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0;
   }
   .hero-badge {
     font-size: 10px;
@@ -2600,25 +2600,23 @@ body::before {
     line-height: 1.05;
     letter-spacing: -0.02em;
   }
-  .hero-sub {
-    margin-top: 20px;
-    font-size: 14px;
-    line-height: 1.7;
-    max-width: 88%;
-    opacity: 0.75;
-  }
 
-  /* ── Legend: stack vertically instead of side-by-side ── */
+  /* ── Legend: show inline below the title, no absolute positioning ── */
   .legend-container {
     position: relative;
     bottom: auto;
     left: auto; right: auto;
-    padding: 28px 6vw 40px;
+    padding: 24px 0 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
+    width: 100%;
   }
-  .legend-text { font-size: 13px; opacity: 0.85; }
+  .legend-text {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.75;
+  }
   .legend-text[style*="text-align: right"] { text-align: left !important; }
 
   /* ── Section padding — breathable but not wasteful ── */
