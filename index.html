@@ -4569,7 +4569,7 @@ body.intro-active { overflow: hidden; }
   const mobileOverlay = document.getElementById('mobileOverlay');
   const mobileClose = document.getElementById('mobileClose');
 
-  mobileBtn?.addEventListener('click', () => mobileOverlay.classList.add('open'));
+  mobileBtn?.addEventListener('click', () => mobileOverlay.classList.toggle('open'));
   mobileClose?.addEventListener('click', () => mobileOverlay.classList.remove('open'));
   function closeMobileMenu() {
     mobileOverlay.classList.remove('open');
