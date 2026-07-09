@@ -3599,6 +3599,104 @@ body.intro-active { overflow: hidden; }
   .team-grid-featured,
   .team-grid-members { grid-template-columns: repeat(4, minmax(0, 320px)); }
 }
+
+/* ── Team directory: role-grouped layout ─────────────────────────────────── */
+.tdr-group {
+  margin-bottom: 56px;
+}
+.tdr-role-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.tdr-role-label {
+  font-family: var(--font-heading);
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.tdr-role-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  opacity: 0.4;
+}
+.tdr-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+/* ── Card: image + info below ── */
+.team-card {
+  width: clamp(160px, 18vw, 220px);
+  background: rgba(4, 22, 40, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.35s ease, border-color 0.35s;
+  flex-shrink: 0;
+}
+.team-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.45), 0 0 16px rgba(108,182,227,0.2);
+  border-color: rgba(108,182,227,0.4);
+}
+.team-card-image-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+.team-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.team-card:hover .team-card-image-wrap img { transform: scale(1.06); }
+
+/* Info strip below image */
+.tc-info {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tc-name {
+  font-family: var(--font-heading);
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.2;
+}
+.tc-quote {
+  font-size: clamp(9px, 0.75vw, 11px);
+  color: var(--text-muted);
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tc-socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.tcl-link {
+  color: rgba(255,255,255,0.45);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.tcl-link:hover { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -5623,95 +5721,210 @@ body.intro-active { overflow: hidden; }
       <button class="btn-close-overlay" onclick="closeTeamOverlay()">← Back</button>
     </div>
   </div>
-  <div class="team-directory-content">
-    <div class="team-directory-section-title">Leadership</div>
-    <div class="team-grid-featured" id="team-grid-leadership"></div>
-    <div class="team-directory-section-title">Team Members</div>
-    <div class="team-grid-members" id="team-grid-members"></div>
+  <div class="team-directory-content" id="team-directory-content">
+    <!-- Populated by renderTeamDirectory() — grouped by role -->
   </div>
 </div>
 
 <script>
-// ── Team Data ──────────────────────────────────────────────────────────────
+// ── Team Data ────────────────────────────────────────────────────────────────
 const teamData = {
   "2026": {
     year: "2026",
-    president:     { name: "Ankur Kumar", role: "President",      image: "team-cards/Ankur Kumar.png" },
-    vicePresident: { name: "Ankur Kumar", role: "Vice President", image: "team-cards/Ankur Kumar.png" },
-    members: Array.from({ length: 18 }, (_, i) => ({
-      name:  "Ankur Kumar",
-      role:  `Team Member ${i + 1}`,
-      image: "team-cards/Ankur Kumar.png",
-    }))
+    /* Groups: role → array of members.
+       Order of groups determines display order in overlay. */
+    groups: [
+      {
+        role: "President",
+        members: [
+          {
+            name:    "Ankur Kumar",
+            quote:   "",
+            image:   "team-cards/Ankur Kumar.png",
+            linkedin:"",
+            github:  "",
+            email:   "",
+          }
+        ]
+      },
+      {
+        role: "Vice President",
+        members: [
+          {
+            name:    "Chinmay Sabharwal",
+            quote:   "Engineering the impossible into reality",
+            image:   "team-cards/Chinmay.png",
+            linkedin:"https://www.linkedin.com/in/chinmay-sabharwal-b29980313",
+            github:  "",
+            email:   "chinmaysabharwal123@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "Senior Advisor",
+        members: [
+          {
+            name:    "Manjeet Singh",
+            quote:   "if you can't code without AI, you shouldn't use it",
+            image:   "team-cards/Manjeet.png",
+            linkedin:"https://www.linkedin.com/in/manjeetvnit/",
+            github:  "",
+            email:   "manjeetsinghmmiv@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "Web Lead",
+        members: [
+          {
+            name:    "Sanvi Y",
+            quote:   "Passionate about building and learning.",
+            image:   "team-cards/Sanvi.png",
+            linkedin:"https://www.linkedin.com/in/sanvi-yanagandula-b054a5296/",
+            github:  "",
+            email:   "yanagsanvi@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "AI/ML Lead",
+        members: [
+          {
+            name:    "Prince Kumar",
+            quote:   "The purpose of AI is to amplify human ingenuity, not replace it.",
+            image:   "team-cards/Prince.png",
+            linkedin:"https://www.linkedin.com/in/prince-kumar-364252332",
+            github:  "",
+            email:   "prince307339@gmail.com",
+          },
+          {
+            name:    "Ayush Vairagade",
+            quote:   "Creating technology that thinks, with people at its core",
+            image:   "team-cards/Ayush.png",
+            linkedin:"https://www.linkedin.com/in/ayush-vivekanand-vairagade-8626022bb",
+            github:  "",
+            email:   "vairagadeayush01@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "CP Lead",
+        members: [
+          {
+            name:    "Divyansh Chaurasia",
+            quote:   "Making memories until life throws an MLE",
+            image:   "team-cards/Divyansh.png",
+            linkedin:"https://www.linkedin.com/in/divyansh006chaurasia",
+            github:  "",
+            email:   "divyansh006@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "Treasurer",
+        members: [
+          {
+            name:    "Vishvesh Singh",
+            quote:   "Driven by curiosity, powered by logic, and inspired by innovation",
+            image:   "team-cards/Vishvesh.png",
+            linkedin:"https://www.linkedin.com/in/vishvesh-singh-16909233a",
+            github:  "",
+            email:   "connectvishvesh@gmail.com",
+          }
+        ]
+      },
+    ],
+    /* President/VP for homepage preview */
+    president:     { name: "Ankur Kumar",       role: "President",      image: "team-cards/Ankur Kumar.png" },
+    vicePresident: { name: "Chinmay Sabharwal", role: "Vice President", image: "team-cards/Chinmay.png" },
   }
 };
 
-const borderThemes = [
-  { name: "blue", hex: "#60A5FA", rgb: "96, 165, 250" },
-  { name: "purple", hex: "#A78BFA", rgb: "167, 139, 250" },
-  { name: "emerald", hex: "#34D399", rgb: "52, 211, 153" },
-  { name: "gold", hex: "#FBBF24", rgb: "251, 191, 36" },
-  { name: "cyan", hex: "#22D3EE", rgb: "34, 211, 238" },
-  { name: "pink", hex: "#F472B6", rgb: "244, 114, 182" },
-];
-
 // ── Card HTML generator ────────────────────────────────────────────────────
-function generateTeamCardHTML(member, index = 0) {
+function generateTeamCardHTML(member, index) {
   if (!member) return '';
-  const img = member.image || member.photo || '';
-  const theme = borderThemes[index % borderThemes.length];
-  const roleHtml = index < 2 && member.role ? `<div class="team-card-role">${member.role}</div>` : '';
+  if (index === undefined) index = 0;
+  const img   = member.image || '';
+  const name  = member.name  || '';
+  const quote = member.quote || '';
+
+  /* Social links */
+  const li = member.linkedin
+    ? `<a class="tcl-link" href="${member.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+        </svg></a>` : '';
+  const gh = member.github
+    ? `<a class="tcl-link" href="${member.github}" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+        </svg></a>` : '';
+  const em = member.email
+    ? `<a class="tcl-link" href="mailto:${member.email}" aria-label="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg></a>` : '';
+
+  const socials = (li || gh || em)
+    ? `<div class="tc-socials">${li}${gh}${em}</div>` : '';
+  const quoteHtml = quote
+    ? `<p class="tc-quote">\u201c${quote}\u201d</p>` : '';
+
   return `
-    <div class="team-card-wrapper">
-      <div class="team-card team-card--${theme.name}" style="--team-card-glow: ${theme.hex}; --team-card-glow-rgb: ${theme.rgb};">
-        <div class="team-card-image-wrap">
-          <img src="${img}" alt="${member.name}" loading="lazy">
-        </div>
-        <div class="team-card-links">
-          <a class="team-card-link" href="#" aria-label="LinkedIn placeholder"></a>
-          <a class="team-card-link" href="#" aria-label="GitHub placeholder"></a>
-          <a class="team-card-link" href="#" aria-label="LeetCode placeholder"></a>
-        </div>
+    <div class="team-card">
+      <div class="team-card-image-wrap">
+        <img src="${img}" alt="${name}" loading="lazy">
       </div>
-      ${roleHtml}
+      <div class="tc-info">
+        <div class="tc-name">${name}</div>
+        ${quoteHtml}
+        ${socials}
+      </div>
     </div>`;
 }
 
-// ── Main page: President + VP cards (always visible, no reveal gating) ─────
+// ── Main page: President + VP preview ────────────────────────────────────────
 function initTeamsPreview() {
   const grid = document.getElementById('teams-preview-grid');
-  if (!grid || grid.children.length > 0) return; // guard double-run
+  if (!grid || grid.children.length > 0) return;
 
   const data          = teamData["2026"];
-  const president     = data?.president     ?? { name:"Ankur Kumar", role:"President",      image:"team-cards/Ankur Kumar.png" };
-  const vicePresident = data?.vicePresident ?? { name:"Ankur Kumar", role:"Vice President", image:"team-cards/Ankur Kumar.png" };
+  const president     = data.president     || { name:"Ankur Kumar",       role:"President",      image:"team-cards/Ankur Kumar.png" };
+  const vicePresident = data.vicePresident || { name:"Chinmay Sabharwal", role:"Vice President", image:"team-cards/Chinmay.png" };
 
   grid.innerHTML =
     generateTeamCardHTML(president, 0) +
     generateTeamCardHTML(vicePresident, 1);
 }
 
-// ── Full team overlay ──────────────────────────────────────────────────────
+// ── Full team overlay — grouped by role ──────────────────────────────────────
 function renderTeamDirectory() {
-  const yearEl     = document.getElementById('team-year-selector');
-  const year       = yearEl ? yearEl.value : "2026";
-  const data       = teamData[year] || teamData["2026"];
-  const leadGrid   = document.getElementById('team-grid-leadership');
-  const memberGrid = document.getElementById('team-grid-members');
-  if (!leadGrid || !memberGrid) return;
+  const container = document.getElementById('team-directory-content');
+  if (!container) return;
 
-  const president     = data?.president     ?? { name:"Ankur Kumar", role:"President",      image:"team-cards/Ankur Kumar.png" };
-  const vicePresident = data?.vicePresident ?? { name:"Ankur Kumar", role:"Vice President", image:"team-cards/Ankur Kumar.png" };
-  const membersList   = data?.members       ?? Array.from({length:18},(_,i)=>({
-    name:"Ankur Kumar", role:`Team Member ${i+1}`, image:"team-cards/Ankur Kumar.png"
-  }));
+  const yearEl = document.getElementById('team-year-selector');
+  const year   = yearEl ? yearEl.value : "2026";
+  const data   = teamData[year] || teamData["2026"];
+  const groups = data.groups || [];
 
-  leadGrid.innerHTML =
-    generateTeamCardHTML(president, 0) +
-    generateTeamCardHTML(vicePresident, 1);
-
-  memberGrid.innerHTML = membersList.map((m, i) => generateTeamCardHTML(m, i + 2)).join('');
+  container.innerHTML = groups.map(function(group) {
+    if (!group.members || group.members.length === 0) return '';
+    const cards = group.members
+      .map(function(m, i) { return generateTeamCardHTML(m, i); })
+      .join('');
+    return `
+      <div class="tdr-group">
+        <div class="tdr-role-header">
+          <span class="tdr-role-label">${group.role}</span>
+          <span class="tdr-role-line"></span>
+        </div>
+        <div class="tdr-cards">${cards}</div>
+      </div>`;
+  }).join('');
 }
+
 
 var teamIntroActive = false;
 
