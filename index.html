@@ -2829,6 +2829,30 @@ body::before {
 #intro-overlay.video-starting::before {
   opacity: 0;
 }
+
+/* ── Intro video + fluid canvas ── */
+#intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+#intro-video.playing {
+  opacity: 1;
+}
+#intro-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
+}
 /* ── Sound choice gate ────────────────────────────────────────
    Shown before video starts. Fades out once user makes a choice.
 ────────────────────────────────────────────────────────────── */
@@ -2911,80 +2935,6 @@ body::before {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-}
-#intro-video,
-#team-intro-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Hidden until ready — background image stays visible */
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 1; /* above ::before pseudo-element */
-}
-#intro-video.playing,
-#team-intro-video.playing {
-  opacity: 1;
-}
-#intro-fluid-canvas,
-#team-intro-fluid-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 3;
-  mix-blend-mode: screen;
-}
-#team-intro-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: #010C18;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.9s ease, visibility 0.9s ease;
-  cursor: default;
-  pointer-events: none;
-}
-#team-intro-overlay.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-#team-intro-overlay.fade-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-/* Skip button — same style as main intro */
-#team-intro-skip {
-  position: absolute;
-  bottom: clamp(20px, 4vh, 40px);
-  right: clamp(20px, 4vw, 48px);
-  z-index: 10;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 50px;
-  color: #F5F0E8;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 10px 22px;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-#team-intro-skip:hover {
-  background: rgba(201,168,76,0.18);
-  border-color: rgba(201,168,76,0.5);
-  color: #C9A84C;
 }
 #intro-unmute {
   position: absolute;
@@ -3630,13 +3580,14 @@ body.intro-active { overflow: hidden; }
   flex-wrap: wrap;
   gap: 20px;
 }
-/* ── Card: image + info below ── */
+/* ── Card: image only, full card visible, overlay links ── */
 .team-card {
-  width: clamp(160px, 18vw, 220px);
-  background: rgba(4, 22, 40, 0.5);
+  width: clamp(200px, 22vw, 280px);
+  background: #000;
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
   overflow: hidden;
+  position: relative;  /* needed for overlay links */
   transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
               box-shadow 0.35s ease, border-color 0.35s;
   flex-shrink: 0;
@@ -3650,53 +3601,50 @@ body.intro-active { overflow: hidden; }
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
+  background: #000;
 }
 .team-card-image-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;   /* show full card, no crop */
   display: block;
-  transition: transform 0.5s ease;
 }
-.team-card:hover .team-card-image-wrap img { transform: scale(1.06); }
 
-/* Info strip below image */
-.tc-info {
-  padding: 12px 14px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+/* ── Overlay social links ─────────────────────────────────────────────────
+   Transparent hotspots over the LinkedIn and mail icons on the card artwork.
+   Adjust --li-left, --em-left, --icon-top if icons don't align perfectly
+   (values are % of card container width/height).
+────────────────────────────────────────────────────────────────────────── */
+:root {
+  --tc-icon-top:  90.5%;   /* how far down the icons are */
+  --tc-li-left:   38%;   /* LinkedIn icon left edge */
+  --tc-em-left:   50%;   /* Mail icon left edge */
+  --tc-icon-w:    11%;   /* width of each hotspot */
+  --tc-icon-h:     6%;   /* height of each hotspot */
 }
-.tc-name {
-  font-family: var(--font-heading);
-  font-size: clamp(12px, 1.1vw, 15px);
-  font-weight: 700;
-  color: var(--cream);
-  line-height: 1.2;
+.tc-link-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
 }
-.tc-quote {
-  font-size: clamp(9px, 0.75vw, 11px);
-  color: var(--text-muted);
-  line-height: 1.5;
-  font-style: italic;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.tc-link-hotspot-li,
+.tc-link-hotspot-em {
+  position: absolute;
+  top: var(--tc-icon-top);
+  width: var(--tc-icon-w);
+  height: var(--tc-icon-h);
+  border-radius: 6px;
+  pointer-events: auto;
+  cursor: pointer;
+  /* DEBUG: temporarily visible so you can confirm alignment */
+  background: transparent;
+  transition: background 0.2s;
 }
-.tc-socials {
-  display: flex;
-  gap: 10px;
-  margin-top: 4px;
-}
-.tcl-link {
-  color: rgba(255,255,255,0.45);
-  display: flex;
-  align-items: center;
-  transition: color 0.2s;
-}
-.tcl-link:hover { color: var(--gold); }
+.tc-link-hotspot-li { left: var(--tc-li-left); }
+.tc-link-hotspot-em { left: var(--tc-em-left); }
+.tc-link-hotspot-li:hover,
+.tc-link-hotspot-em:hover { background: rgba(255,255,255,0.35); }
 </style>
 </head>
 <body>
@@ -3732,18 +3680,6 @@ body.intro-active { overflow: hidden; }
   </div>
 
   <button id="intro-skip" aria-label="Skip intro" style="display:none">Skip ↓</button>
-</div>
-
-<div id="team-intro-overlay" role="dialog" aria-label="Team intro">
-  <video
-    id="team-intro-video"
-    src="team-cards/team-intro.mp4"
-    playsinline
-    preload="auto"
-    aria-hidden="true"
-  ></video>
-  <canvas id="team-intro-fluid-canvas" aria-hidden="true"></canvas>
-  <button id="team-intro-skip" aria-label="Skip intro">Skip ↓</button>
 </div>
 
 <!-- Burst circle that expands on click -->
@@ -5840,48 +5776,40 @@ const teamData = {
   }
 };
 
-// ── Card HTML generator ────────────────────────────────────────────────────
+// ── Card HTML generator ──────────────────────────────────────────────────────
+// Shows the card image fully (no crop). LinkedIn and mail are transparent
+// hotspot links positioned over the icons already printed on the card artwork.
 function generateTeamCardHTML(member, index) {
   if (!member) return '';
   if (index === undefined) index = 0;
   const img   = member.image || '';
   const name  = member.name  || '';
-  const quote = member.quote || '';
 
-  /* Social links */
-  const li = member.linkedin
-    ? `<a class="tcl-link" href="${member.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-          <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-        </svg></a>` : '';
-  const gh = member.github
-    ? `<a class="tcl-link" href="${member.github}" target="_blank" rel="noopener" aria-label="GitHub">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-        </svg></a>` : '';
-  const em = member.email
-    ? `<a class="tcl-link" href="mailto:${member.email}" aria-label="Email">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
-        </svg></a>` : '';
+  /* Build overlay hotspots only for links that exist */
+  const liHotspot = member.linkedin
+    ? `<a class="tc-link-hotspot-li"
+          href="${member.linkedin}"
+          target="_blank"
+          rel="noopener"
+          aria-label="${name} LinkedIn"
+          title="LinkedIn"></a>` : '';
 
-  const socials = (li || gh || em)
-    ? `<div class="tc-socials">${li}${gh}${em}</div>` : '';
-  const quoteHtml = quote
-    ? `<p class="tc-quote">\u201c${quote}\u201d</p>` : '';
+  const emHotspot = member.email
+    ? `<a class="tc-link-hotspot-em"
+          href="mailto:${member.email}"
+          aria-label="${name} Email"
+          title="${member.email}"></a>` : '';
+
+  /* Only render overlay if at least one link exists */
+  const overlay = (member.linkedin || member.email)
+    ? `<div class="tc-link-overlay">${liHotspot}${emHotspot}</div>` : '';
 
   return `
     <div class="team-card">
       <div class="team-card-image-wrap">
         <img src="${img}" alt="${name}" loading="lazy">
       </div>
-      <div class="tc-info">
-        <div class="tc-name">${name}</div>
-        ${quoteHtml}
-        ${socials}
-      </div>
+      ${overlay}
     </div>`;
 }
 
@@ -5926,171 +5854,13 @@ function renderTeamDirectory() {
 }
 
 
-var teamIntroActive = false;
-
-function playTeamIntro(onComplete) {
-  var overlay   = document.getElementById('team-intro-overlay');
-  var video     = document.getElementById('team-intro-video');
-  var skipBtn   = document.getElementById('team-intro-skip');
-  var canvas    = document.getElementById('team-intro-fluid-canvas');
-  var burst     = document.getElementById('intro-burst');
-  var burstCirc = document.getElementById('intro-burst-circle');
-
-  if (!overlay || !video) { if (onComplete) onComplete(); return; }
-  if (teamIntroActive) return;
-  teamIntroActive = true;
-
-  if (burst) burst.style.opacity = '';
-  overlay.classList.add('active');
-  overlay.classList.remove('fade-out');
-  document.body.classList.add('intro-active');
-
-  /* ── Burst + reveal team overlay ── */
-  function finish(e) {
-    if (!teamIntroActive) return;
-    teamIntroActive = false;
-    fluidActive = false;
-
-    var cx = (e && e.clientX) ? e.clientX : window.innerWidth  / 2;
-    var cy = (e && e.clientY) ? e.clientY : window.innerHeight / 2;
-
-    if (burstCirc) {
-      var diag = Math.sqrt(
-        window.innerWidth  * window.innerWidth +
-        window.innerHeight * window.innerHeight
-      ) * 2.2;
-      burstCirc.style.width  = diag + 'px';
-      burstCirc.style.height = diag + 'px';
-      burstCirc.style.left   = cx + 'px';
-      burstCirc.style.top    = cy + 'px';
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          burstCirc.classList.add('expand');
-        });
-      });
-    }
-
-    overlay.classList.remove('active');
-    overlay.classList.add('fade-out');
-    video.pause();
-    video.currentTime = 0;
-    video.classList.remove('playing');
-
-    setTimeout(function() {
-      overlay.classList.remove('fade-out');
-      document.body.classList.remove('intro-active');
-      if (burst) {
-        burst.style.transition = 'opacity 0.4s ease';
-        burst.style.opacity    = '0';
-        setTimeout(function() {
-          burst.style.opacity = '';
-          if (burstCirc) burstCirc.classList.remove('expand');
-        }, 420);
-      }
-      if (onComplete) onComplete();
-    }, 680);
-  }
-
-  /* Click anywhere → finish */
-  overlay.addEventListener('click', function(e) {
-    e.stopPropagation();
-    finish(e);
-  }, { once: true });
-
-  /* Skip button */
-  if (skipBtn) {
-    skipBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      finish(e);
-    }, { once: true });
-  }
-
-  video.addEventListener('ended', function() { finish(null); }, { once: true });
-  video.addEventListener('error', function() { finish(null); }, { once: true });
-  setTimeout(function() { finish(null); }, 60000);
-
-  /* ── Audio: always unmuted, no prompt ── */
-  video.muted = false;
-  video.currentTime = 0;
-  video.classList.add('playing');
-  var pp = video.play();
-  if (pp !== undefined) {
-    pp.catch(function() {
-      video.muted = true;
-      video.play().catch(function() { finish(null); });
-    });
-  }
-
-  /* ── Fluid paint trail ── */
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var fluidActive = true;
-
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  var fMouseX = window.innerWidth / 2, fMouseY = window.innerHeight / 2, fMoved = false;
-  function onFMove(e) { fMouseX = e.clientX; fMouseY = e.clientY; fMoved = true; }
-  document.addEventListener('mousemove', onFMove);
-
-  var FN = 6, fPoints = [];
-  for (var i = 0; i < FN; i++) {
-    var lag = 0.04 + i * 0.045;
-    fPoints.push({ x: fMouseX, y: fMouseY, vx: 0, vy: 0, lag: lag,
-      damp: 0.72 - i * 0.04, hue: [270,22,190,290,30,200][i],
-      size: 38 - i * 3.5, alpha: 0.18 - i * 0.015 });
-  }
-
-  function fPaint(p, px, py) {
-    var dx = p.x - px, dy = p.y - py, dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 0.5) return;
-    var spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy), inten = Math.min(spd/8,1);
-    var bs = p.size * (0.6 + inten*0.8), hue = p.hue, alpha = p.alpha*(0.4+inten*0.6);
-    var steps = Math.max(1, Math.floor(dist/(bs*0.4)));
-    for (var s = 0; s <= steps; s++) {
-      var t=s/steps, bx=px+dx*t, by=py+dy*t;
-      var g = ctx.createRadialGradient(bx,by,0,bx,by,bs);
-      g.addColorStop(0,   'hsla('+hue+',100%,65%,'+alpha.toFixed(3)+')');
-      g.addColorStop(0.4, 'hsla('+hue+',90%,45%,'+(alpha*0.5).toFixed(3)+')');
-      g.addColorStop(1,   'hsla('+hue+',80%,20%,0)');
-      ctx.beginPath(); ctx.arc(bx,by,bs,0,Math.PI*2);
-      ctx.fillStyle = g; ctx.fill();
-    }
-  }
-
-  var fPrev = fPoints.map(function(p){ return {x:p.x, y:p.y}; });
-  function fLoop() {
-    if (!fluidActive) {
-      document.removeEventListener('mousemove', onFMove);
-      return;
-    }
-    requestAnimationFrame(fLoop);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    if (!fMoved) return;
-    ctx.globalCompositeOperation = 'lighter';
-    for (var i = 0; i < FN; i++) {
-      var p=fPoints[i], prev=fPrev[i];
-      p.vx += (fMouseX-p.x)*p.lag; p.vy += (fMouseY-p.y)*p.lag;
-      p.vx *= p.damp; p.vy *= p.damp;
-      var nx=p.x+p.vx, ny=p.y+p.vy;
-      fPaint(p,prev.x,prev.y);
-      prev.x=p.x; prev.y=p.y; p.x=nx; p.y=ny;
-    }
-  }
-  fLoop();
-}
-
 
 function openTeamOverlay() {
   var overlay = document.getElementById('team-directory-overlay');
   if (!overlay) return;
-  playTeamIntro(function() {
-    renderTeamDirectory();
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  });
+  renderTeamDirectory();
+  overlay.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeTeamOverlay() {
