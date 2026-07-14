@@ -2829,6 +2829,30 @@ body::before {
 #intro-overlay.video-starting::before {
   opacity: 0;
 }
+
+/* ── Intro video + fluid canvas ── */
+#intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+#intro-video.playing {
+  opacity: 1;
+}
+#intro-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
+}
 /* ── Sound choice gate ────────────────────────────────────────
    Shown before video starts. Fades out once user makes a choice.
 ────────────────────────────────────────────────────────────── */
@@ -2911,80 +2935,6 @@ body::before {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-}
-#intro-video,
-#team-intro-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Hidden until ready — background image stays visible */
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 1; /* above ::before pseudo-element */
-}
-#intro-video.playing,
-#team-intro-video.playing {
-  opacity: 1;
-}
-#intro-fluid-canvas,
-#team-intro-fluid-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 3;
-  mix-blend-mode: screen;
-}
-#team-intro-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: #010C18;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.9s ease, visibility 0.9s ease;
-  cursor: default;
-  pointer-events: none;
-}
-#team-intro-overlay.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-#team-intro-overlay.fade-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-/* Skip button — same style as main intro */
-#team-intro-skip {
-  position: absolute;
-  bottom: clamp(20px, 4vh, 40px);
-  right: clamp(20px, 4vw, 48px);
-  z-index: 10;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 50px;
-  color: #F5F0E8;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 10px 22px;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-#team-intro-skip:hover {
-  background: rgba(201,168,76,0.18);
-  border-color: rgba(201,168,76,0.5);
-  color: #C9A84C;
 }
 #intro-unmute {
   position: absolute;
@@ -3599,6 +3549,102 @@ body.intro-active { overflow: hidden; }
   .team-grid-featured,
   .team-grid-members { grid-template-columns: repeat(4, minmax(0, 320px)); }
 }
+
+/* ── Team directory: role-grouped layout ─────────────────────────────────── */
+.tdr-group {
+  margin-bottom: 56px;
+}
+.tdr-role-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.tdr-role-label {
+  font-family: var(--font-heading);
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.tdr-role-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  opacity: 0.4;
+}
+.tdr-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+/* ── Card: image only, full card visible, overlay links ── */
+.team-card {
+  width: clamp(200px, 22vw, 280px);
+  background: #000;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;  /* needed for overlay links */
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.35s ease, border-color 0.35s;
+  flex-shrink: 0;
+}
+.team-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.45), 0 0 16px rgba(108,182,227,0.2);
+  border-color: rgba(108,182,227,0.4);
+}
+.team-card-image-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #000;
+}
+.team-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* show full card, no crop */
+  display: block;
+}
+
+/* ── Overlay social links ─────────────────────────────────────────────────
+   Transparent hotspots over the LinkedIn and mail icons on the card artwork.
+   Adjust --li-left, --em-left, --icon-top if icons don't align perfectly
+   (values are % of card container width/height).
+────────────────────────────────────────────────────────────────────────── */
+:root {
+  --tc-icon-top:  90.5%;   /* how far down the icons are */
+  --tc-li-left:   38%;   /* LinkedIn icon left edge */
+  --tc-em-left:   50%;   /* Mail icon left edge */
+  --tc-icon-w:    11%;   /* width of each hotspot */
+  --tc-icon-h:     6%;   /* height of each hotspot */
+}
+.tc-link-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.tc-link-hotspot-li,
+.tc-link-hotspot-em {
+  position: absolute;
+  top: var(--tc-icon-top);
+  width: var(--tc-icon-w);
+  height: var(--tc-icon-h);
+  border-radius: 6px;
+  pointer-events: auto;
+  cursor: pointer;
+  /* DEBUG: temporarily visible so you can confirm alignment */
+  background: transparent;
+  transition: background 0.2s;
+}
+.tc-link-hotspot-li { left: var(--tc-li-left); }
+.tc-link-hotspot-em { left: var(--tc-em-left); }
+.tc-link-hotspot-li:hover,
+.tc-link-hotspot-em:hover { background: rgba(255,255,255,0.35); }
 </style>
 </head>
 <body>
@@ -3634,18 +3680,6 @@ body.intro-active { overflow: hidden; }
   </div>
 
   <button id="intro-skip" aria-label="Skip intro" style="display:none">Skip ↓</button>
-</div>
-
-<div id="team-intro-overlay" role="dialog" aria-label="Team intro">
-  <video
-    id="team-intro-video"
-    src="team-cards/team-intro.mp4"
-    playsinline
-    preload="auto"
-    aria-hidden="true"
-  ></video>
-  <canvas id="team-intro-fluid-canvas" aria-hidden="true"></canvas>
-  <button id="team-intro-skip" aria-label="Skip intro">Skip ↓</button>
 </div>
 
 <!-- Burst circle that expands on click -->
@@ -5623,261 +5657,210 @@ body.intro-active { overflow: hidden; }
       <button class="btn-close-overlay" onclick="closeTeamOverlay()">← Back</button>
     </div>
   </div>
-  <div class="team-directory-content">
-    <div class="team-directory-section-title">Leadership</div>
-    <div class="team-grid-featured" id="team-grid-leadership"></div>
-    <div class="team-directory-section-title">Team Members</div>
-    <div class="team-grid-members" id="team-grid-members"></div>
+  <div class="team-directory-content" id="team-directory-content">
+    <!-- Populated by renderTeamDirectory() — grouped by role -->
   </div>
 </div>
 
 <script>
-// ── Team Data ──────────────────────────────────────────────────────────────
+// ── Team Data ────────────────────────────────────────────────────────────────
 const teamData = {
   "2026": {
     year: "2026",
-    president:     { name: "Ankur Kumar", role: "President",      image: "team-cards/Ankur Kumar.png" },
-    vicePresident: { name: "Ankur Kumar", role: "Vice President", image: "team-cards/Ankur Kumar.png" },
-    members: Array.from({ length: 18 }, (_, i) => ({
-      name:  "Ankur Kumar",
-      role:  `Team Member ${i + 1}`,
-      image: "team-cards/Ankur Kumar.png",
-    }))
+    /* Groups: role → array of members.
+       Order of groups determines display order in overlay. */
+    groups: [
+      {
+        role: "President",
+        members: [
+          {
+            name:    "Ankur Kumar",
+            quote:   "",
+            image:   "team-cards/Ankur Kumar.png",
+            linkedin:"",
+            github:  "",
+            email:   "",
+          }
+        ]
+      },
+      {
+        role: "Vice President",
+        members: [
+          {
+            name:    "Chinmay Sabharwal",
+            quote:   "Engineering the impossible into reality",
+            image:   "team-cards/Chinmay.png",
+            linkedin:"https://www.linkedin.com/in/chinmay-sabharwal-b29980313",
+            github:  "",
+            email:   "chinmaysabharwal123@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "Senior Advisor",
+        members: [
+          {
+            name:    "Manjeet Singh",
+            quote:   "if you can't code without AI, you shouldn't use it",
+            image:   "team-cards/Manjeet.png",
+            linkedin:"https://www.linkedin.com/in/manjeetvnit/",
+            github:  "",
+            email:   "manjeetsinghmmiv@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "Web Lead",
+        members: [
+          {
+            name:    "Sanvi Y",
+            quote:   "Passionate about building and learning.",
+            image:   "team-cards/Sanvi.png",
+            linkedin:"https://www.linkedin.com/in/sanvi-yanagandula-b054a5296/",
+            github:  "",
+            email:   "yanagsanvi@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "AI/ML Lead",
+        members: [
+          {
+            name:    "Prince Kumar",
+            quote:   "The purpose of AI is to amplify human ingenuity, not replace it.",
+            image:   "team-cards/Prince.png",
+            linkedin:"https://www.linkedin.com/in/prince-kumar-364252332",
+            github:  "",
+            email:   "prince307339@gmail.com",
+          },
+          {
+            name:    "Ayush Vairagade",
+            quote:   "Creating technology that thinks, with people at its core",
+            image:   "team-cards/Ayush.png",
+            linkedin:"https://www.linkedin.com/in/ayush-vivekanand-vairagade-8626022bb",
+            github:  "",
+            email:   "vairagadeayush01@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "CP Lead",
+        members: [
+          {
+            name:    "Divyansh Chaurasia",
+            quote:   "Making memories until life throws an MLE",
+            image:   "team-cards/Divyansh.png",
+            linkedin:"https://www.linkedin.com/in/divyansh006chaurasia",
+            github:  "",
+            email:   "divyansh006@gmail.com",
+          }
+        ]
+      },
+      {
+        role: "Treasurer",
+        members: [
+          {
+            name:    "Vishvesh Singh",
+            quote:   "Driven by curiosity, powered by logic, and inspired by innovation",
+            image:   "team-cards/Vishvesh.png",
+            linkedin:"https://www.linkedin.com/in/vishvesh-singh-16909233a",
+            github:  "",
+            email:   "connectvishvesh@gmail.com",
+          }
+        ]
+      },
+    ],
+    /* President/VP for homepage preview */
+    president:     { name: "Ankur Kumar",       role: "President",      image: "team-cards/Ankur Kumar.png" },
+    vicePresident: { name: "Chinmay Sabharwal", role: "Vice President", image: "team-cards/Chinmay.png" },
   }
 };
 
-const borderThemes = [
-  { name: "blue", hex: "#60A5FA", rgb: "96, 165, 250" },
-  { name: "purple", hex: "#A78BFA", rgb: "167, 139, 250" },
-  { name: "emerald", hex: "#34D399", rgb: "52, 211, 153" },
-  { name: "gold", hex: "#FBBF24", rgb: "251, 191, 36" },
-  { name: "cyan", hex: "#22D3EE", rgb: "34, 211, 238" },
-  { name: "pink", hex: "#F472B6", rgb: "244, 114, 182" },
-];
-
-// ── Card HTML generator ────────────────────────────────────────────────────
-function generateTeamCardHTML(member, index = 0) {
+// ── Card HTML generator ──────────────────────────────────────────────────────
+// Shows the card image fully (no crop). LinkedIn and mail are transparent
+// hotspot links positioned over the icons already printed on the card artwork.
+function generateTeamCardHTML(member, index) {
   if (!member) return '';
-  const img = member.image || member.photo || '';
-  const theme = borderThemes[index % borderThemes.length];
-  const roleHtml = index < 2 && member.role ? `<div class="team-card-role">${member.role}</div>` : '';
+  if (index === undefined) index = 0;
+  const img   = member.image || '';
+  const name  = member.name  || '';
+
+  /* Build overlay hotspots only for links that exist */
+  const liHotspot = member.linkedin
+    ? `<a class="tc-link-hotspot-li"
+          href="${member.linkedin}"
+          target="_blank"
+          rel="noopener"
+          aria-label="${name} LinkedIn"
+          title="LinkedIn"></a>` : '';
+
+  const emHotspot = member.email
+    ? `<a class="tc-link-hotspot-em"
+          href="mailto:${member.email}"
+          aria-label="${name} Email"
+          title="${member.email}"></a>` : '';
+
+  /* Only render overlay if at least one link exists */
+  const overlay = (member.linkedin || member.email)
+    ? `<div class="tc-link-overlay">${liHotspot}${emHotspot}</div>` : '';
+
   return `
-    <div class="team-card-wrapper">
-      <div class="team-card team-card--${theme.name}" style="--team-card-glow: ${theme.hex}; --team-card-glow-rgb: ${theme.rgb};">
-        <div class="team-card-image-wrap">
-          <img src="${img}" alt="${member.name}" loading="lazy">
-        </div>
-        <div class="team-card-links">
-          <a class="team-card-link" href="#" aria-label="LinkedIn placeholder"></a>
-          <a class="team-card-link" href="#" aria-label="GitHub placeholder"></a>
-          <a class="team-card-link" href="#" aria-label="LeetCode placeholder"></a>
-        </div>
+    <div class="team-card">
+      <div class="team-card-image-wrap">
+        <img src="${img}" alt="${name}" loading="lazy">
       </div>
-      ${roleHtml}
+      ${overlay}
     </div>`;
 }
 
-// ── Main page: President + VP cards (always visible, no reveal gating) ─────
+// ── Main page: President + VP preview ────────────────────────────────────────
 function initTeamsPreview() {
   const grid = document.getElementById('teams-preview-grid');
-  if (!grid || grid.children.length > 0) return; // guard double-run
+  if (!grid || grid.children.length > 0) return;
 
   const data          = teamData["2026"];
-  const president     = data?.president     ?? { name:"Ankur Kumar", role:"President",      image:"team-cards/Ankur Kumar.png" };
-  const vicePresident = data?.vicePresident ?? { name:"Ankur Kumar", role:"Vice President", image:"team-cards/Ankur Kumar.png" };
+  const president     = data.president     || { name:"Ankur Kumar",       role:"President",      image:"team-cards/Ankur Kumar.png" };
+  const vicePresident = data.vicePresident || { name:"Chinmay Sabharwal", role:"Vice President", image:"team-cards/Chinmay.png" };
 
   grid.innerHTML =
     generateTeamCardHTML(president, 0) +
     generateTeamCardHTML(vicePresident, 1);
 }
 
-// ── Full team overlay ──────────────────────────────────────────────────────
+// ── Full team overlay — grouped by role ──────────────────────────────────────
 function renderTeamDirectory() {
-  const yearEl     = document.getElementById('team-year-selector');
-  const year       = yearEl ? yearEl.value : "2026";
-  const data       = teamData[year] || teamData["2026"];
-  const leadGrid   = document.getElementById('team-grid-leadership');
-  const memberGrid = document.getElementById('team-grid-members');
-  if (!leadGrid || !memberGrid) return;
+  const container = document.getElementById('team-directory-content');
+  if (!container) return;
 
-  const president     = data?.president     ?? { name:"Ankur Kumar", role:"President",      image:"team-cards/Ankur Kumar.png" };
-  const vicePresident = data?.vicePresident ?? { name:"Ankur Kumar", role:"Vice President", image:"team-cards/Ankur Kumar.png" };
-  const membersList   = data?.members       ?? Array.from({length:18},(_,i)=>({
-    name:"Ankur Kumar", role:`Team Member ${i+1}`, image:"team-cards/Ankur Kumar.png"
-  }));
+  const yearEl = document.getElementById('team-year-selector');
+  const year   = yearEl ? yearEl.value : "2026";
+  const data   = teamData[year] || teamData["2026"];
+  const groups = data.groups || [];
 
-  leadGrid.innerHTML =
-    generateTeamCardHTML(president, 0) +
-    generateTeamCardHTML(vicePresident, 1);
-
-  memberGrid.innerHTML = membersList.map((m, i) => generateTeamCardHTML(m, i + 2)).join('');
+  container.innerHTML = groups.map(function(group) {
+    if (!group.members || group.members.length === 0) return '';
+    const cards = group.members
+      .map(function(m, i) { return generateTeamCardHTML(m, i); })
+      .join('');
+    return `
+      <div class="tdr-group">
+        <div class="tdr-role-header">
+          <span class="tdr-role-label">${group.role}</span>
+          <span class="tdr-role-line"></span>
+        </div>
+        <div class="tdr-cards">${cards}</div>
+      </div>`;
+  }).join('');
 }
 
-var teamIntroActive = false;
-
-function playTeamIntro(onComplete) {
-  var overlay   = document.getElementById('team-intro-overlay');
-  var video     = document.getElementById('team-intro-video');
-  var skipBtn   = document.getElementById('team-intro-skip');
-  var canvas    = document.getElementById('team-intro-fluid-canvas');
-  var burst     = document.getElementById('intro-burst');
-  var burstCirc = document.getElementById('intro-burst-circle');
-
-  if (!overlay || !video) { if (onComplete) onComplete(); return; }
-  if (teamIntroActive) return;
-  teamIntroActive = true;
-
-  if (burst) burst.style.opacity = '';
-  overlay.classList.add('active');
-  overlay.classList.remove('fade-out');
-  document.body.classList.add('intro-active');
-
-  /* ── Burst + reveal team overlay ── */
-  function finish(e) {
-    if (!teamIntroActive) return;
-    teamIntroActive = false;
-    fluidActive = false;
-
-    var cx = (e && e.clientX) ? e.clientX : window.innerWidth  / 2;
-    var cy = (e && e.clientY) ? e.clientY : window.innerHeight / 2;
-
-    if (burstCirc) {
-      var diag = Math.sqrt(
-        window.innerWidth  * window.innerWidth +
-        window.innerHeight * window.innerHeight
-      ) * 2.2;
-      burstCirc.style.width  = diag + 'px';
-      burstCirc.style.height = diag + 'px';
-      burstCirc.style.left   = cx + 'px';
-      burstCirc.style.top    = cy + 'px';
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          burstCirc.classList.add('expand');
-        });
-      });
-    }
-
-    overlay.classList.remove('active');
-    overlay.classList.add('fade-out');
-    video.pause();
-    video.currentTime = 0;
-    video.classList.remove('playing');
-
-    setTimeout(function() {
-      overlay.classList.remove('fade-out');
-      document.body.classList.remove('intro-active');
-      if (burst) {
-        burst.style.transition = 'opacity 0.4s ease';
-        burst.style.opacity    = '0';
-        setTimeout(function() {
-          burst.style.opacity = '';
-          if (burstCirc) burstCirc.classList.remove('expand');
-        }, 420);
-      }
-      if (onComplete) onComplete();
-    }, 680);
-  }
-
-  /* Click anywhere → finish */
-  overlay.addEventListener('click', function(e) {
-    e.stopPropagation();
-    finish(e);
-  }, { once: true });
-
-  /* Skip button */
-  if (skipBtn) {
-    skipBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      finish(e);
-    }, { once: true });
-  }
-
-  video.addEventListener('ended', function() { finish(null); }, { once: true });
-  video.addEventListener('error', function() { finish(null); }, { once: true });
-  setTimeout(function() { finish(null); }, 60000);
-
-  /* ── Audio: always unmuted, no prompt ── */
-  video.muted = false;
-  video.currentTime = 0;
-  video.classList.add('playing');
-  var pp = video.play();
-  if (pp !== undefined) {
-    pp.catch(function() {
-      video.muted = true;
-      video.play().catch(function() { finish(null); });
-    });
-  }
-
-  /* ── Fluid paint trail ── */
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var fluidActive = true;
-
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  var fMouseX = window.innerWidth / 2, fMouseY = window.innerHeight / 2, fMoved = false;
-  function onFMove(e) { fMouseX = e.clientX; fMouseY = e.clientY; fMoved = true; }
-  document.addEventListener('mousemove', onFMove);
-
-  var FN = 6, fPoints = [];
-  for (var i = 0; i < FN; i++) {
-    var lag = 0.04 + i * 0.045;
-    fPoints.push({ x: fMouseX, y: fMouseY, vx: 0, vy: 0, lag: lag,
-      damp: 0.72 - i * 0.04, hue: [270,22,190,290,30,200][i],
-      size: 38 - i * 3.5, alpha: 0.18 - i * 0.015 });
-  }
-
-  function fPaint(p, px, py) {
-    var dx = p.x - px, dy = p.y - py, dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 0.5) return;
-    var spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy), inten = Math.min(spd/8,1);
-    var bs = p.size * (0.6 + inten*0.8), hue = p.hue, alpha = p.alpha*(0.4+inten*0.6);
-    var steps = Math.max(1, Math.floor(dist/(bs*0.4)));
-    for (var s = 0; s <= steps; s++) {
-      var t=s/steps, bx=px+dx*t, by=py+dy*t;
-      var g = ctx.createRadialGradient(bx,by,0,bx,by,bs);
-      g.addColorStop(0,   'hsla('+hue+',100%,65%,'+alpha.toFixed(3)+')');
-      g.addColorStop(0.4, 'hsla('+hue+',90%,45%,'+(alpha*0.5).toFixed(3)+')');
-      g.addColorStop(1,   'hsla('+hue+',80%,20%,0)');
-      ctx.beginPath(); ctx.arc(bx,by,bs,0,Math.PI*2);
-      ctx.fillStyle = g; ctx.fill();
-    }
-  }
-
-  var fPrev = fPoints.map(function(p){ return {x:p.x, y:p.y}; });
-  function fLoop() {
-    if (!fluidActive) {
-      document.removeEventListener('mousemove', onFMove);
-      return;
-    }
-    requestAnimationFrame(fLoop);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    if (!fMoved) return;
-    ctx.globalCompositeOperation = 'lighter';
-    for (var i = 0; i < FN; i++) {
-      var p=fPoints[i], prev=fPrev[i];
-      p.vx += (fMouseX-p.x)*p.lag; p.vy += (fMouseY-p.y)*p.lag;
-      p.vx *= p.damp; p.vy *= p.damp;
-      var nx=p.x+p.vx, ny=p.y+p.vy;
-      fPaint(p,prev.x,prev.y);
-      prev.x=p.x; prev.y=p.y; p.x=nx; p.y=ny;
-    }
-  }
-  fLoop();
-}
 
 
 function openTeamOverlay() {
   var overlay = document.getElementById('team-directory-overlay');
   if (!overlay) return;
-  playTeamIntro(function() {
-    renderTeamDirectory();
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  });
+  renderTeamDirectory();
+  overlay.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeTeamOverlay() {
