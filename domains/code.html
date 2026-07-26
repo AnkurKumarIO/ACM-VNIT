@@ -1,415 +1,310 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>ACM VNIT | Domains — Technical Ecosystem</title>
-<meta name="description" content="Explore the five core technical domains of ACM VNIT Nagpur — App Development, Web Development, AI/ML, Design, and Cybersecurity."/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                "colors": {
-                    "tertiary-fixed-dim": "#ffb95b",
-                    "on-primary": "#00344e",
-                    "on-surface-variant": "#bfc7d0",
-                    "error-container": "#93000a",
-                    "surface-container-lowest": "#0b0f12",
-                    "surface-container": "#1c2023",
-                    "secondary-fixed": "#c4e7ff",
-                    "on-primary-fixed": "#001e2f",
-                    "outline": "#89929a",
-                    "on-secondary-container": "#9ad9ff",
-                    "secondary-fixed-dim": "#89cff8",
-                    "outline-variant": "#3f484f",
-                    "surface-dim": "#101417",
-                    "secondary": "#89cff8",
-                    "on-tertiary-fixed": "#2a1800",
-                    "on-error": "#690005",
-                    "inverse-surface": "#e0e3e7",
-                    "surface": "#101417",
-                    "primary": "#8aceff",
-                    "on-secondary-fixed": "#001e2c",
-                    "tertiary-fixed": "#ffddb6",
-                    "on-primary-fixed-variant": "#004c6e",
-                    "on-tertiary-fixed-variant": "#643f00",
-                    "surface-container-low": "#181c1f",
-                    "on-surface": "#e0e3e7",
-                    "on-background": "#e0e3e7",
-                    "tertiary-container": "#c38426",
-                    "inverse-on-surface": "#2d3134",
-                    "primary-fixed-dim": "#8aceff",
-                    "surface-container-high": "#272a2e",
-                    "on-secondary-fixed-variant": "#004c69",
-                    "inverse-primary": "#006491",
-                    "surface-variant": "#313539",
-                    "primary-fixed": "#c9e6ff",
-                    "secondary-container": "#006084",
-                    "on-error-container": "#ffdad6",
-                    "primary-container": "#4298cd",
-                    "on-secondary": "#00344a",
-                    "tertiary": "#ffb95b",
-                    "on-primary-container": "#002d44",
-                    "on-tertiary": "#462a00",
-                    "on-tertiary-container": "#3d2400",
-                    "error": "#ffb4ab",
-                    "surface-container-highest": "#313539",
-                    "surface-tint": "#8aceff",
-                    "background": "#050505",
-                    "surface-bright": "#363a3d"
-                },
-                "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-                },
-                "spacing": {
-                    "base": "8px", "gutter": "24px", "xl": "80px", "sm": "12px",
-                    "margin-desktop": "64px", "md": "24px", "xs": "4px",
-                    "margin-mobile": "16px", "lg": "48px", "section-gap": "100px"
-                },
-                "fontFamily": {
-                    "display": ["Sora"], "headline": ["Sora"],
-                    "body": ["Sora"], "label": ["Sora"]
-                },
-                "fontSize": {
-                    "display-xl": ["72px", {"lineHeight": "0.95", "letterSpacing": "-0.03em", "fontWeight": "700"}],
-                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "500"}],
-                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}]
-                }
-            }
-        }
-    }
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACM VNIT — Technical Domains</title>
+<meta name="description" content="Explore the eight core technical domains of ACM VNIT Nagpur — CP & DSA, AI/ML, Web Dev, App Dev, Cybersecurity, Cloud & DevOps, Design, and Open Source.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-    }
-    body { font-family: 'Sora', sans-serif; }
+  ::selection { background: rgba(56,189,248,0.3); }
+  .reveal { opacity: 0; transform: translateY(28px); }
+  .magnetic { transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94); }
 
-    .blueprint-bg {
-        background-image:
-            linear-gradient(to right, rgba(138, 206, 255, 0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(138, 206, 255, 0.04) 1px, transparent 1px);
-        background-size: 40px 40px;
-    }
-
-    .domain-card {
-        background: rgba(11, 15, 18, 0.75);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(138, 206, 255, 0.08);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    .domain-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #8aceff, transparent);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-    .domain-card:hover::before { opacity: 0.7; }
-    .domain-card:hover {
-        border-color: rgba(138, 206, 255, 0.3);
-        box-shadow: 0 0 30px rgba(138, 206, 255, 0.08);
-        transform: translateY(-4px);
-    }
-
-    .glass-stat {
-        background: rgba(11, 15, 18, 0.5);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(138, 206, 255, 0.08);
-        transition: all 0.3s ease;
-    }
-    .glass-stat:hover {
-        border-color: rgba(138, 206, 255, 0.25);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    /* Hide on scroll down behavior */
-    header {
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-    }
-    header.nav-hidden {
-        transform: translateY(-100%) !important;
-        opacity: 0 !important;
-        pointer-events: none;
-    }
+  .domain-card {
+    position: relative; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(3,3,3,0.7);
+    transition: border-color 0.3s, transform 0.3s, background 0.3s;
+  }
+  .domain-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #38BDF8, transparent);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .domain-card:hover::before { opacity: 0.7; }
+  .domain-card:hover {
+    border-color: rgba(56,189,248,0.35);
+    background: rgba(56,189,248,0.03);
+    transform: translateY(-4px);
+  }
 </style>
 </head>
-<body class="bg-background text-on-background font-body text-body-md selection:bg-primary/30 overflow-x-hidden">
+<body class="bg-[#030303] text-white antialiased overflow-x-hidden" style="font-family: 'Sora', sans-serif;">
 
-<!-- ═══════════ NAVBAR ═══════════ -->
-<header class="bg-background/70 backdrop-blur-xl border-b border-white/[0.06] sticky top-0 z-50">
-<nav class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-[1440px] mx-auto">
-    <div class="flex items-center gap-2">
-        <img src="../acm-logo.png" alt="ACM Logo" class="w-7 h-7 rounded-sm opacity-90"/>
-        <span class="font-headline text-headline-lg font-bold text-primary tracking-tighter">ACM VNIT</span>
+
+  <!-- Dot-grid overlay -->
+  <div class="fixed inset-0 z-0 pointer-events-none opacity-[0.14]" style="background-image: linear-gradient(135deg, rgba(255,255,255,0.08) 0.0625rem, transparent 0.0625rem); background-size: 1.25rem 1.25rem;"></div>
+  <!-- Ambient radial gradients -->
+  <div class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at 50% 0%, rgba(56,189,248,0.10), transparent 34rem), radial-gradient(circle at 85% 28%, rgba(99,102,241,0.05), transparent 28rem);"></div>
+
+  <!-- ═══════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════ -->
+  <header class="fixed left-0 right-0 top-5 z-50 px-6 pointer-events-none">
+    <div class="mx-auto flex max-w-7xl items-center justify-between">
+      <!-- Brand -->
+      <a href="../index.html" class="pointer-events-auto flex items-center gap-3 transition-all duration-300">
+        <img src="../images/acm-logo.png" alt="ACM Logo" class="size-8 object-contain">
+        <div>
+          <p class="text-sm font-bold tracking-tight text-white uppercase" style="font-family: 'JetBrains Mono', monospace; line-height: 1.1;">Association for Computing Machinery</p>
+          <p class="text-[10px] text-zinc-500 uppercase tracking-widest" style="font-family: 'JetBrains Mono', monospace;">VNIT Student Chapter</p>
+        </div>
+      </a>
+
+      <!-- Pill Nav -->
+      <nav class="pointer-events-auto hidden items-center gap-1 rounded-full border border-white/10 bg-[#070707]/90 px-2 py-1.5 backdrop-blur-xl shadow-2xl md:flex">
+        <a href="../index.html#home" class="rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-white" style="font-family: 'JetBrains Mono', monospace;">HOME</a>
+        <a href="../index.html#about" class="rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-white" style="font-family: 'JetBrains Mono', monospace;">ABOUT</a>
+        <a href="#" class="rounded-full bg-[#f8d481] px-4 py-1.5 text-xs font-semibold text-black" style="font-family: 'JetBrains Mono', monospace;">DOMAINS</a>
+        <a href="../events/code.html" class="rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-white" style="font-family: 'JetBrains Mono', monospace;">EVENTS</a>
+        <a href="../projects/code.html" class="rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-white" style="font-family: 'JetBrains Mono', monospace;">PROJECTS</a>
+        <a href="../index.html#team" class="rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-white" style="font-family: 'JetBrains Mono', monospace;">TEAMS</a>
+        <a href="../index.html#join" class="rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-white" style="font-family: 'JetBrains Mono', monospace;">CONTACT</a>
+      </nav>
+
+      <!-- CTA -->
+      <a href="../index.html#join" class="pointer-events-auto magnetic group inline-flex items-center gap-2 rounded-full bg-[#38BDF8] px-5 py-2.5 text-xs font-bold text-[#030303] transition-all duration-300 hover:bg-[#7DD3FC]" style="font-family: 'JetBrains Mono', monospace;">
+        JOIN US
+        <iconify-icon icon="solar:arrow-right-up-linear" class="text-xs"></iconify-icon>
+      </a>
     </div>
-    <div class="hidden md:flex items-center gap-gutter">
-        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../about_acm_vnit_z_layout_edition/code.html">About</a>
-        <a class="text-label-md text-primary font-semibold border-b-2 border-primary pb-1" href="#">Domains</a>
-        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../events/code.html">Events</a>
-        <a class="text-label-md text-on-surface-variant hover:text-primary transition-colors" href="../projects/code.html">Projects</a>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       PAGE HERO
+       ═══════════════════════════════════════════ -->
+  <section class="relative w-full min-h-[55vh] flex flex-col justify-end pt-32 pb-16 px-6 sm:px-8 border-b border-white/5 overflow-hidden">
+    <div class="absolute inset-0 z-0 pointer-events-none" style="background-image: linear-gradient(rgba(56,189,248,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.04) 1px, transparent 1px); background-size: 48px 48px;"></div>
+    <div class="relative z-10 max-w-7xl mx-auto w-full">
+      <div class="reveal mb-6 inline-flex items-center gap-2 border border-[#f8d481]/30 bg-[#f8d481]/5 px-3 py-1 text-xs font-mono tracking-widest text-[#f8d481] uppercase">
+        // 02 &mdash; Technical Domains
+      </div>
+      <h1 class="max-w-2xl text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl" style="font-family: 'Sora', sans-serif;">
+        EIGHT VERTICALS.<br>
+        <span class="text-zinc-400">DEEP EXPERTISE</span><br>
+        IN EACH.
+      </h1>
+      <p class="reveal mt-6 max-w-xl text-sm leading-7 text-zinc-400">From algorithmic problem solving to production-grade cloud infrastructure &mdash; our members specialize across the full engineering spectrum.</p>
     </div>
-    <button class="bg-primary text-on-primary px-6 py-2 rounded-full text-label-md font-semibold hover:brightness-110 transition-all active:scale-95 flex items-center gap-1">
-        Join Us <span class="material-symbols-outlined text-[16px]">north_east</span>
-    </button>
-</nav>
-</header>
+  </section>
 
-<main class="relative min-h-screen pt-section-gap pb-section-gap blueprint-bg">
+  <!-- MAIN CONTENT -->
+  <main class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 py-20 space-y-20">
 
-<!-- ═══════════ HERO ═══════════ -->
-<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop mb-section-gap">
-    <div class="max-w-3xl">
-        <div class="inline-block px-3 py-1.5 border border-primary/30 rounded-sm mb-6">
-            <span class="text-label-caps text-primary uppercase">Technical Ecosystem</span>
+    <!-- Domain Cards Grid -->
+    <section>
+      <div class="grid gap-px bg-white/10 overflow-hidden rounded-xl border border-white/10 sm:grid-cols-2 lg:grid-cols-4">
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:programming-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_01</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">CP &amp; DSA</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Algorithms, data structures, and competitive programming mastery at national and international level.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Codeforces</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">LeetCode</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">ICPC</span>
+          </div>
         </div>
-        <h1 class="font-display text-display-xl text-on-background uppercase mb-8">Architecting The<br/><span class="text-primary">Core Specials</span></h1>
-        <p class="text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
-            Our technical domains are the structural pillars of ACM VNIT. We operate at the intersection of engineering precision and creative exploration, pushing the boundaries of modern computation.
-        </p>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:cpu-bolt-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_02</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">AI / ML</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Neural networks, deep learning models, NLP, and computer vision systems built end-to-end.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">PyTorch</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">TensorFlow</span>
+          </div>
+        </div>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:code-square-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_03</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">Web Dev</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Full-stack architecture, modern UI systems, REST APIs, GraphQL, and production deployments.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Next.js</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">GoLang</span>
+          </div>
+        </div>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:smartphone-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_04</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">App Dev</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Native Android, iOS, and cross-platform mobile applications with Flutter and React Native.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Flutter</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">SwiftUI</span>
+          </div>
+        </div>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:shield-check-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_05</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">Cybersecurity</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Network defense, ethical hacking, CTF challenges, and system hardening techniques.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">CTF</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Pen Test</span>
+          </div>
+        </div>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:cloud-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_06</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">Cloud &amp; DevOps</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Docker, Kubernetes, CI/CD pipelines, and cloud-native infrastructure on AWS and GCP.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">AWS</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Docker</span>
+          </div>
+        </div>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:pallete-2-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_07</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">Design</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">UI/UX design systems, user-centric product logic, typography, motion, and wireframes.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Figma</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">Framer</span>
+          </div>
+        </div>
+
+        <div class="reveal domain-card bg-[#030303] p-8">
+          <iconify-icon icon="solar:document-add-linear" class="text-4xl text-[#38BDF8]"></iconify-icon>
+          <span class="mt-4 block text-[10px] font-mono text-zinc-600 uppercase tracking-widest">DOM_08</span>
+          <h2 class="mt-3 text-2xl font-semibold tracking-tight text-white">Open Source</h2>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Contributing to global open-source codebases, GSoC guidance, and building ecosystem modules.</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">GSoC</span>
+            <span class="px-2.5 py-1 border border-white/10 rounded text-[10px] uppercase text-zinc-500 tracking-wider">GitHub</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="reveal">
+      <div class="grid gap-px bg-white/10 overflow-hidden rounded-xl border border-white/10 sm:grid-cols-4">
+        <div class="bg-[#030303] p-8">
+          <p class="text-xs text-[#38BDF8]" style="font-family: 'JetBrains Mono', monospace;">active.builders</p>
+          <h3 class="mt-6 text-5xl font-medium tracking-tight text-white">120<span class="text-[#38BDF8]">+</span></h3>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Active members across all 8 technical verticals.</p>
+        </div>
+        <div class="bg-[#030303] p-8">
+          <p class="text-xs text-[#38BDF8]" style="font-family: 'JetBrains Mono', monospace;">projects.deployed</p>
+          <h3 class="mt-6 text-5xl font-medium tracking-tight text-white">45<span class="text-[#38BDF8]">+</span></h3>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Deployed projects touching real users and codebases.</p>
+        </div>
+        <div class="bg-[#030303] p-8">
+          <p class="text-xs text-[#38BDF8]" style="font-family: 'JetBrains Mono', monospace;">domains.active</p>
+          <h3 class="mt-6 text-5xl font-medium tracking-tight text-white">8</h3>
+          <p class="mt-3 text-sm leading-6 text-zinc-400">Parallel technical tracks operating simultaneously.</p>
+        </div>
+        <div class="bg-[#0e1f33]/70 p-8">
+          <p class="text-xs text-sky-100" style="font-family: 'JetBrains Mono', monospace;">lab.uptime</p>
+          <h3 class="mt-6 text-5xl font-medium tracking-tight text-white">24/7</h3>
+          <p class="mt-3 text-sm leading-6 text-sky-100/70">Continuous collaboration, knowledge sharing, and building.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="reveal relative overflow-hidden rounded-2xl border border-[#38BDF8]/25 bg-[#0e1f33]/50 p-8 sm:p-12 lg:p-16 text-center">
+      <span class="absolute left-3 top-3 h-6 w-6 border-l border-t border-[#38BDF8]/50"></span>
+      <span class="absolute right-3 top-3 h-6 w-6 border-r border-t border-[#38BDF8]/50"></span>
+      <span class="absolute bottom-3 left-3 h-6 w-6 border-b border-l border-[#38BDF8]/50"></span>
+      <span class="absolute bottom-3 right-3 h-6 w-6 border-b border-r border-[#38BDF8]/50"></span>
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% 0%, rgba(56,189,248,0.12), transparent 60%);"></div>
+      <div class="relative z-10">
+        <p class="text-xs font-semibold uppercase tracking-[0.18rem] text-[#38BDF8] mb-6" style="font-family: 'JetBrains Mono', monospace;">Ready to Build?</p>
+        <h2 class="mx-auto max-w-2xl text-3xl font-medium leading-tight tracking-tight sm:text-4xl text-white">Find your domain.<br>Start <em class="not-italic text-[#38BDF8]">shipping</em>.</h2>
+        <p class="mx-auto mt-4 max-w-md text-sm leading-7 text-sky-100/70">Join a team of engineers, designers, and thinkers building real software at VNIT Nagpur.</p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href="../index.html#join" class="magnetic group relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-[#38BDF8] px-8 py-4 text-sm font-medium text-[#030303] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#7DD3FC]">
+            Join ACM VNIT
+            <iconify-icon icon="solar:arrow-right-linear" class="ml-2 text-lg"></iconify-icon>
+          </a>
+          <a href="../index.html" class="magnetic inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-8 py-4 text-sm font-medium transition-all duration-300 hover:bg-white/[0.08] text-white">
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-10 border-t border-white/10 bg-[#030303]">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <img src="../images/acm-logo.png" alt="ACM" class="size-8 object-contain">
+          <span class="text-lg font-medium tracking-tight" style="font-family: 'JetBrains Mono', monospace;">ACM VNIT</span>
+        </div>
+        <p class="text-sm leading-6 text-zinc-500">Architecting the future through precision engineering and collaborative innovation. VNIT Nagpur.</p>
+      </div>
+      <div>
+        <h5 class="mb-4 text-xs font-semibold uppercase tracking-[0.16rem] text-zinc-500" style="font-family: 'JetBrains Mono', monospace;">Navigate</h5>
+        <div class="space-y-2">
+          <a href="../index.html#about" class="block text-sm text-zinc-400 transition-colors hover:text-white">About</a>
+          <a href="#" class="block text-sm text-zinc-400 transition-colors hover:text-white">Domains</a>
+          <a href="../events/code.html" class="block text-sm text-zinc-400 transition-colors hover:text-white">Events</a>
+          <a href="../projects/code.html" class="block text-sm text-zinc-400 transition-colors hover:text-white">Projects</a>
+        </div>
+      </div>
+      <div>
+        <h5 class="mb-4 text-xs font-semibold uppercase tracking-[0.16rem] text-zinc-500" style="font-family: 'JetBrains Mono', monospace;">Community</h5>
+        <div class="space-y-2">
+          <a href="https://vnit.ac.in" target="_blank" rel="noopener" class="block text-sm text-zinc-400 transition-colors hover:text-white">VNIT Nagpur</a>
+          <a href="https://www.acm.org" target="_blank" rel="noopener" class="block text-sm text-zinc-400 transition-colors hover:text-white">ACM International</a>
+          <a href="https://india.acm.org" target="_blank" rel="noopener" class="block text-sm text-zinc-400 transition-colors hover:text-white">ACM India</a>
+        </div>
+      </div>
+      <div>
+        <h5 class="mb-4 text-xs font-semibold uppercase tracking-[0.16rem] text-zinc-500" style="font-family: 'JetBrains Mono', monospace;">Connect</h5>
+        <div class="space-y-2">
+          <a href="#" class="block text-sm text-zinc-400 transition-colors hover:text-white">Instagram</a>
+          <a href="#" class="block text-sm text-zinc-400 transition-colors hover:text-white">LinkedIn</a>
+          <a href="#" class="block text-sm text-zinc-400 transition-colors hover:text-white">GitHub</a>
+        </div>
+      </div>
     </div>
-</section>
-
-<!-- ═══════════ DOMAIN CARDS BENTO GRID ═══════════ -->
-<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-12 gap-gutter">
-
-    <!-- App Development -->
-    <div class="col-span-12 md:col-span-7 domain-card rounded-xl group">
-        <div class="p-8 md:p-10 flex flex-col h-full justify-between min-h-[380px]">
-            <div>
-                <div class="flex justify-between items-start mb-10">
-                    <span class="text-label-caps text-on-surface-variant/50 uppercase tracking-widest">DOM_01</span>
-                    <div class="w-14 h-14 flex items-center justify-center border border-primary/20 rounded-full group-hover:bg-primary/10 transition-colors">
-                        <span class="material-symbols-outlined text-primary text-2xl">phone_iphone</span>
-                    </div>
-                </div>
-                <h3 class="font-headline text-headline-lg text-on-background mb-3">App Development</h3>
-                <p class="text-body-md text-on-surface-variant max-w-md">Engineering seamless mobile experiences across platforms with a focus on high-performance architecture and reactive UI patterns.</p>
-            </div>
-            <div class="mt-8 flex gap-2 flex-wrap">
-                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Flutter</span>
-                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">React Native</span>
-                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">SwiftUI</span>
-            </div>
-        </div>
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-white/5 px-4 py-6 sm:flex-row">
+      <p class="text-xs text-zinc-600">&copy; 2026 ACM VNIT Nagpur. All rights reserved.</p>
+      <p class="text-xs uppercase tracking-[0.12rem] text-zinc-600" style="font-family: 'JetBrains Mono', monospace;">Architecting the Future</p>
     </div>
+  </footer>
 
-    <!-- Web Development -->
-    <div class="col-span-12 md:col-span-5 domain-card rounded-xl group">
-        <div class="p-8 md:p-10 flex flex-col h-full justify-between min-h-[380px]">
-            <div>
-                <div class="flex justify-between items-start mb-10">
-                    <span class="text-label-caps text-on-surface-variant/50 uppercase tracking-widest">DOM_02</span>
-                    <div class="w-14 h-14 flex items-center justify-center border border-primary/20 rounded-full group-hover:bg-primary/10 transition-colors">
-                        <span class="material-symbols-outlined text-primary text-2xl">language</span>
-                    </div>
-                </div>
-                <h3 class="font-headline text-headline-lg text-on-background mb-3">Web Dev</h3>
-                <p class="text-body-md text-on-surface-variant">Building the foundational fabric of the modern web using robust full-stack frameworks.</p>
-            </div>
-            <div class="mt-8 flex gap-2 flex-wrap">
-                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">Next.js</span>
-                <span class="px-3 py-1 border border-white/10 rounded-lg text-[11px] uppercase text-on-surface-variant/60 tracking-wider">GoLang</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI/ML -->
-    <div class="col-span-12 md:col-span-4 domain-card rounded-xl group">
-        <div class="p-8 md:p-10 flex flex-col h-full min-h-[340px]">
-            <div class="flex justify-between items-start mb-8">
-                <span class="text-label-caps text-on-surface-variant/50 uppercase tracking-widest">DOM_03</span>
-                <span class="material-symbols-outlined text-primary text-2xl">psychology</span>
-            </div>
-            <h3 class="font-headline text-headline-lg text-on-background mb-3">AI / ML</h3>
-            <p class="text-body-md text-on-surface-variant mb-6">Developing intelligent systems through neural networks and predictive data modeling.</p>
-            <div class="mt-auto pt-4 border-t border-white/[0.05]">
-                <div class="flex justify-between items-center text-primary text-[13px]">
-                    <span>Processing Nodes</span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-                        Active
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Design -->
-    <div class="col-span-12 md:col-span-4 domain-card rounded-xl group">
-        <div class="p-8 md:p-10 flex flex-col h-full min-h-[340px]">
-            <div class="flex justify-between items-start mb-8">
-                <span class="text-label-caps text-on-surface-variant/50 uppercase tracking-widest">DOM_04</span>
-                <span class="material-symbols-outlined text-primary text-2xl">architecture</span>
-            </div>
-            <h3 class="font-headline text-headline-lg text-on-background mb-3">Design</h3>
-            <p class="text-body-md text-on-surface-variant mb-6">The visual blueprint. Marrying modern aesthetics with user-centric functionality.</p>
-            <div class="mt-auto grid grid-cols-4 gap-1.5">
-                <div class="h-2 bg-primary/15 rounded-sm"></div>
-                <div class="h-2 bg-primary/30 rounded-sm"></div>
-                <div class="h-2 bg-primary/50 rounded-sm"></div>
-                <div class="h-2 bg-primary rounded-sm"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cybersecurity -->
-    <div class="col-span-12 md:col-span-4 domain-card rounded-xl group">
-        <div class="p-8 md:p-10 flex flex-col h-full min-h-[340px]">
-            <div class="flex justify-between items-start mb-8">
-                <span class="text-label-caps text-on-surface-variant/50 uppercase tracking-widest">DOM_05</span>
-                <span class="material-symbols-outlined text-primary text-2xl">security</span>
-            </div>
-            <h3 class="font-headline text-headline-lg text-on-background mb-3">CyberSec</h3>
-            <p class="text-body-md text-on-surface-variant mb-6">Securing the perimeter. Offensive and defensive security research and implementation.</p>
-            <div class="mt-auto">
-                <div class="text-[10px] text-on-surface-variant/25 overflow-hidden whitespace-nowrap font-mono tracking-wider">
-                    01010111 01000001 01010100 01000011 01001000 01000101 01010010
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
-
-<!-- ═══════════ DOMAIN STATISTICS ═══════════ -->
-<section class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin-desktop mt-section-gap">
-    <div class="grid grid-cols-1 md:grid-cols-4 glass-stat rounded-xl overflow-hidden divide-y md:divide-y-0 md:divide-x divide-white/[0.05]">
-        <div class="p-10">
-            <div class="font-headline text-headline-lg text-primary mb-1">120+</div>
-            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-widest">Active Builders</div>
-        </div>
-        <div class="p-10">
-            <div class="font-headline text-headline-lg text-primary mb-1">45+</div>
-            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-widest">Projects Deployed</div>
-        </div>
-        <div class="p-10">
-            <div class="font-headline text-headline-lg text-primary mb-1">05</div>
-            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-widest">Core Domains</div>
-        </div>
-        <div class="p-10">
-            <div class="font-headline text-headline-lg text-primary mb-1">24/7</div>
-            <div class="text-label-caps text-on-surface-variant/60 uppercase tracking-widest">Lab Uptime</div>
-        </div>
-    </div>
-</section>
-
-</main>
-
-<!-- ═══════════ FOOTER ═══════════ -->
-<footer class="bg-surface-container-lowest border-t border-white/[0.05] w-full">
-<div class="px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto py-xl">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
-        <div class="space-y-4">
-            <div class="flex items-center gap-2">
-                <img src="../acm-logo.png" alt="ACM" class="w-6 h-6 rounded-sm opacity-80"/>
-                <span class="font-headline text-headline-md text-primary font-bold tracking-tighter">ACM VNIT</span>
-            </div>
-            <p class="max-w-xs text-on-surface-variant text-label-sm leading-relaxed">Advancing Computing as a Science & Profession. Empowering student innovators at VNIT Nagpur since 2009.</p>
-            <div class="flex gap-3 pt-2">
-                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
-                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">public</span>
-                </a>
-                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
-                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">code</span>
-                </a>
-                <a href="#" class="w-9 h-9 border border-white/10 rounded-lg flex items-center justify-center hover:bg-primary/10 hover:border-primary/30 transition-all">
-                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant hover:text-primary">share</span>
-                </a>
-            </div>
-        </div>
-        <div class="flex flex-col gap-3">
-            <span class="text-on-surface text-label-md font-semibold mb-1">Navigate</span>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../about_acm_vnit_z_layout_edition/code.html">About</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Domains</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../events/code.html">Events</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="../projects/code.html">Projects</a>
-        </div>
-        <div class="flex flex-col gap-3">
-            <span class="text-on-surface text-label-md font-semibold mb-1">Legal</span>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Privacy Policy</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Code of Conduct</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Contact Us</a>
-        </div>
-        <div class="flex flex-col gap-3">
-            <span class="text-on-surface text-label-md font-semibold mb-1">Connect</span>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">LinkedIn</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Instagram</a>
-            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">GitHub</a>
-        </div>
-    </div>
-    <div class="mt-lg pt-md border-t border-white/[0.05] flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-on-surface-variant text-label-sm">© 2024 ACM VNIT. Architecting the Future.</p>
-        <div class="flex gap-md items-center">
-            <span class="material-symbols-outlined text-on-surface-variant/30 hover:text-primary cursor-pointer transition-colors">hub</span>
-            <span class="material-symbols-outlined text-on-surface-variant/30 hover:text-primary cursor-pointer transition-colors">code</span>
-        </div>
-    </div>
-</div>
-</footer>
-
-<script>
-    // Micro-interactions for domain cards
-    document.querySelectorAll('.domain-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-            card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-        });
+  <script>
+  // Scroll reveal
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        e.target.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+        obs.unobserve(e.target);
+      }
     });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => {
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight) { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }
+    else { obs.observe(el); }
+  });
 
-    // Atmospheric parallax on scroll
-    window.addEventListener('scroll', () => {
-        const bg = document.querySelector('.blueprint-bg');
-        if (bg) bg.style.backgroundPositionY = -(window.pageYOffset * 0.05) + 'px';
-    });
-
-    // Hide Navbar on Scroll Down, Show on Scroll Up
-    (function() {
-        let lastScrollY = window.scrollY;
-        let ticking = false;
-        const threshold = 80;
-        const headerEl = document.querySelector('header');
-
-        if (!headerEl) return;
-
-        function updateNavbar() {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY > lastScrollY && currentScrollY > threshold) {
-                headerEl.classList.add('nav-hidden');
-            } else if (currentScrollY < lastScrollY) {
-                headerEl.classList.remove('nav-hidden');
-            }
-            lastScrollY = Math.max(0, currentScrollY);
-            ticking = false;
-        }
-
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                window.requestAnimationFrame(updateNavbar);
-                ticking = true;
-            }
-        }, { passive: true });
-    })();
-</script>
+  </script>
 </body>
 </html>
