@@ -1200,9 +1200,8 @@
       const navPills = document.querySelectorAll('.nav-pill');
       const sections = document.querySelectorAll('section[id]');
 
-      function onScroll() {
+      function checkNavbarCollapse() {
         const scrollY = window.scrollY || window.pageYOffset;
-
         if (scrollY > 50) {
           if (brand) { brand.style.opacity = '0'; brand.style.pointerEvents = 'none'; brand.style.transform = 'translateY(-8px)'; }
           if (cta) { cta.style.opacity = '0'; cta.style.pointerEvents = 'none'; cta.style.transform = 'translateY(-8px)'; }
@@ -1210,35 +1209,40 @@
           if (brand) { brand.style.opacity = '1'; brand.style.pointerEvents = 'auto'; brand.style.transform = 'translateY(0)'; }
           if (cta) { cta.style.opacity = '1'; cta.style.pointerEvents = 'auto'; cta.style.transform = 'translateY(0)'; }
         }
+      }
 
-        let currentSectionId = '';
-        sections.forEach(sec => {
-          const top = sec.offsetTop - 160;
-          const height = sec.offsetHeight;
-          if (scrollY >= top && scrollY < top + height) {
-            currentSectionId = sec.getAttribute('id');
+      window.addEventListener('scroll', checkNavbarCollapse, { passive: true });
+      if (typeof lenis !== 'undefined') {
+        lenis.on('scroll', checkNavbarCollapse);
+      }
+      checkNavbarCollapse();
+
+      // Intersection Observer for scroll-spy (instant highlights)
+      const observerOptions = {
+        root: null,
+        rootMargin: '-25% 0px -35% 0px',
+        threshold: 0
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const currentSectionId = entry.target.getAttribute('id');
+            navPills.forEach(pill => {
+              const navTarget = pill.getAttribute('data-nav');
+              if (navTarget === currentSectionId) {
+                pill.classList.add('bg-[#f8d481]', 'text-black', 'font-semibold');
+                pill.classList.remove('text-zinc-400', 'font-medium');
+              } else {
+                pill.classList.remove('bg-[#f8d481]', 'text-black', 'font-semibold');
+                pill.classList.add('text-zinc-400', 'font-medium');
+              }
+            });
           }
         });
+      }, observerOptions);
 
-        if (currentSectionId) {
-          navPills.forEach(pill => {
-            const navTarget = pill.getAttribute('data-nav');
-            if (navTarget === currentSectionId) {
-              pill.classList.add('bg-[#f8d481]', 'text-black', 'font-semibold');
-              pill.classList.remove('text-zinc-400', 'font-medium');
-            } else {
-              pill.classList.remove('bg-[#f8d481]', 'text-black', 'font-semibold');
-              pill.classList.add('text-zinc-400', 'font-medium');
-            }
-          });
-        }
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      if (typeof lenis !== 'undefined') {
-        lenis.on('scroll', onScroll);
-      }
-      onScroll();
+      sections.forEach(sec => observer.observe(sec));
     })();
   })();
   </script>
