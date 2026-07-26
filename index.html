@@ -661,15 +661,7 @@
     </div>
   </div>
 
-  <!-- ── Team Intro Overlay ── -->
-  <div id="team-intro-overlay">
-    <video id="team-intro-video" src="introvid.mp4" playsinline></video>
-    <canvas id="team-intro-fluid-canvas"></canvas>
-    <button id="team-intro-skip">Skip Intro</button>
-  </div>
-  <div id="intro-burst">
-    <div id="intro-burst-circle"></div>
-  </div>
+
 
   <!-- ═══════════════════════════════════════════
        CUSTOM CURSOR
@@ -1052,11 +1044,9 @@
   function openTeamOverlay() {
     var overlay = document.getElementById('team-directory-overlay');
     if (!overlay) return;
-    playTeamIntro(function() {
-      renderTeamDirectory();
-      overlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    });
+    renderTeamDirectory();
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
   }
 
   function closeTeamOverlay() {
