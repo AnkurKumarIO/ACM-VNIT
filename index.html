@@ -318,6 +318,190 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       TYPOGRAPHY TRANSITIONS
+       ═══════════════════════════════════════════ -->
+  <style>
+    @keyframes terminal-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .animate-blink {
+      animation: terminal-blink 1s step-end infinite;
+    }
+    .bp-card {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s, box-shadow 0.5s, opacity 0.5s;
+    }
+    .bp-card:hover {
+      transform: translateY(-8px) scale(1.05) !important;
+    }
+  </style>
+
+  <div id="typography-transitions" class="relative z-10 w-full bg-[#030303] divide-y divide-white/5 border-b border-white/5">
+
+    <!-- Scroll Position 01 — The Spark -->
+    <section id="transition-spark" class="min-h-screen flex flex-col justify-center items-center px-6 py-16 relative overflow-hidden">
+      <div class="max-w-4xl text-center space-y-6 z-10">
+        <p class="font-mono text-xs md:text-sm tracking-[0.3em] uppercase text-[#f8d481] mb-2 animate-pulse">
+          // Scroll Position 01 — The Spark
+        </p>
+        <h2 class="text-3xl md:text-5xl lg:text-7xl font-bold text-white uppercase tracking-tight leading-tight mb-8" style="font-family: 'Sora', sans-serif;">
+          The Spark
+        </h2>
+        <div class="min-h-[120px] md:min-h-[160px] flex items-center justify-center">
+          <p id="spark-typing-text" class="text-xl md:text-3xl lg:text-4xl font-semibold text-zinc-100 max-w-2xl leading-relaxed tracking-wide font-sans">
+            <span id="typed-content"></span>
+            <span class="inline-block w-[3px] h-[1.2em] bg-[#38BDF8] ml-2 animate-blink align-middle"></span>
+          </p>
+        </div>
+      </div>
+      <!-- Background glow -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+        <div class="w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-[#38BDF8] filter blur-[120px] mix-blend-screen animate-pulse"></div>
+      </div>
+    </section>
+
+    <!-- Scroll Position 02 — The Momentum -->
+    <section id="transition-momentum" class="min-h-screen flex flex-col justify-center items-center px-6 py-16 relative overflow-hidden">
+      <div class="max-w-6xl w-full text-center space-y-12 z-10">
+        <div>
+          <p class="font-mono text-xs md:text-sm tracking-[0.3em] uppercase text-[#f8d481] mb-2">
+            // Scroll Position 02 — The Momentum
+          </p>
+          <h2 class="text-3xl md:text-5xl lg:text-7xl font-bold text-white uppercase tracking-tight leading-tight" style="font-family: 'Sora', sans-serif;">
+            The Momentum
+          </h2>
+          <p class="text-lg md:text-xl text-zinc-400 max-w-xl mx-auto mt-4 font-mono">
+            "15+ Years. 500+ Events. 10,000+ Minds Impacted."
+          </p>
+        </div>
+
+        <!-- Counters -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div class="bg-[#0c0d14] p-8 rounded-2xl border border-white/5 hover:border-[#38BDF8]/40 transition-all duration-300">
+            <div id="counter-years" class="text-4xl md:text-6xl font-extrabold text-[#38BDF8] mb-2">0+</div>
+            <div class="text-zinc-500 font-mono text-sm uppercase tracking-wider">Years of Legacy</div>
+          </div>
+          <div class="bg-[#0c0d14] p-8 rounded-2xl border border-white/5 hover:border-[#38BDF8]/40 transition-all duration-300">
+            <div id="counter-events" class="text-4xl md:text-6xl font-extrabold text-[#38BDF8] mb-2">0+</div>
+            <div class="text-zinc-500 font-mono text-sm uppercase tracking-wider">Events Organised</div>
+          </div>
+          <div class="bg-[#0c0d14] p-8 rounded-2xl border border-white/5 hover:border-[#38BDF8]/40 transition-all duration-300">
+            <div id="counter-minds" class="text-4xl md:text-6xl font-extrabold text-[#38BDF8] mb-2">0+</div>
+            <div class="text-zinc-500 font-mono text-sm uppercase tracking-wider">Minds Impacted</div>
+          </div>
+        </div>
+
+        <!-- Past Hackathons Grid -->
+        <div class="space-y-6 pt-6">
+          <h3 class="font-mono text-xs md:text-sm tracking-[0.25em] uppercase text-zinc-600">
+            // Dynamic Grid of Past Hackathons
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto text-left">
+            <div class="group relative bg-[#0c0d14] border border-white/5 p-6 rounded-xl hover:border-[#f8d481]/60 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" style="background: radial-gradient(circle at center, #f8d481 0%, transparent 70%);"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="font-bold text-lg md:text-xl uppercase text-[#f8d481]">Insomnia</span>
+                <span class="font-mono text-xs text-zinc-500 bg-white/5 px-2 py-0.5 rounded">2023</span>
+              </div>
+              <p class="text-sm text-zinc-400 font-mono">Unsleeping Innovation</p>
+            </div>
+            <div class="group relative bg-[#0c0d14] border border-white/5 p-6 rounded-xl hover:border-[#38BDF8]/60 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" style="background: radial-gradient(circle at center, #38BDF8 0%, transparent 70%);"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="font-bold text-lg md:text-xl uppercase text-[#38BDF8]">ACM Meet</span>
+                <span class="font-mono text-xs text-zinc-500 bg-white/5 px-2 py-0.5 rounded">2024</span>
+              </div>
+              <p class="text-sm text-zinc-400 font-mono">Algorithmic Mastery</p>
+            </div>
+            <div class="group relative bg-[#0c0d14] border border-white/5 p-6 rounded-xl hover:border-[#a855f7]/60 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" style="background: radial-gradient(circle at center, #a855f7 0%, transparent 70%);"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="font-bold text-lg md:text-xl uppercase text-[#a855f7]">PyDev</span>
+                <span class="font-mono text-xs text-zinc-500 bg-white/5 px-2 py-0.5 rounded">2023</span>
+              </div>
+              <p class="text-sm text-zinc-400 font-mono">AI & Data Science</p>
+            </div>
+            <div class="group relative bg-[#0c0d14] border border-white/5 p-6 rounded-xl hover:border-[#4ade80]/60 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none" style="background: radial-gradient(circle at center, #4ade80 0%, transparent 70%);"></div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="font-bold text-lg md:text-xl uppercase text-[#4ade80]">Cyber Hack</span>
+                <span class="font-mono text-xs text-zinc-500 bg-white/5 px-2 py-0.5 rounded">2024</span>
+              </div>
+              <p class="text-sm text-zinc-400 font-mono">Securing the Future</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scroll Position 03 — The Blueprint -->
+    <section id="transition-blueprint" class="min-h-screen flex flex-col justify-center items-center px-6 py-16 relative overflow-hidden">
+      <div class="max-w-6xl w-full text-center space-y-12 z-10">
+        <div>
+          <p class="font-mono text-xs md:text-sm tracking-[0.3em] uppercase text-[#f8d481] mb-2">
+            // Scroll Position 03 — The Blueprint
+          </p>
+          <h2 class="text-3xl md:text-5xl lg:text-7xl font-bold text-white uppercase tracking-tight leading-tight" style="font-family: 'Sora', sans-serif;">
+            The Blueprint
+          </h2>
+        </div>
+        <p class="text-2xl md:text-4xl font-extrabold text-white leading-snug tracking-tight max-w-4xl mx-auto">
+          "We're not just another tech chapter. We're the blueprint that <span class="text-[#38BDF8] underline decoration-[#38BDF8]/40 decoration-2 underline-offset-8">actually ships</span>."
+        </p>
+
+        <!-- Illuminated Interactive 3D cards visual -->
+        <div class="space-y-6 pt-6">
+          <h3 class="font-mono text-xs md:text-sm tracking-[0.25em] uppercase text-zinc-600">
+            // Interactive 3D Domain Cards
+          </h3>
+          <div id="blueprint-domains" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 max-w-6xl mx-auto">
+            <!-- Web -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#4ade80]/60 hover:shadow-[0_0_20px_rgba(74,222,128,0.15)]">
+              <div class="text-3xl mb-2 text-[#4ade80]">♣</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">Web</div>
+            </div>
+            <!-- App -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#38bdf8]/60 hover:shadow-[0_0_20px_rgba(56,189,248,0.15)]">
+              <div class="text-3xl mb-2 text-[#38bdf8]">♠</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">App</div>
+            </div>
+            <!-- AI/ML -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#c084fc]/60 hover:shadow-[0_0_20px_rgba(192,132,252,0.15)]">
+              <div class="text-3xl mb-2 text-[#c084fc]">♦</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">AI/ML</div>
+            </div>
+            <!-- Cyber -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#f87171]/60 hover:shadow-[0_0_20px_rgba(248,113,113,0.15)]">
+              <div class="text-3xl mb-2 text-[#f87171]">★</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">Cyber</div>
+            </div>
+            <!-- CP -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#fbbf24]/60 hover:shadow-[0_0_20px_rgba(251,191,36,0.15)]">
+              <div class="text-3xl mb-2 text-[#fbbf24]">♣</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">CP</div>
+            </div>
+            <!-- Open Source -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#fb923c]/60 hover:shadow-[0_0_20px_rgba(251,146,60,0.15)]">
+              <div class="text-3xl mb-2 text-[#fb923c]">♦</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">OpenSource</div>
+            </div>
+            <!-- Cloud -->
+            <div class="bp-card group relative bg-[#0c0d14] border border-white/5 p-5 rounded-xl transition-all duration-500 cursor-pointer text-center hover:border-[#2dd4bf]/60 hover:shadow-[0_0_20px_rgba(45,212,191,0.15)]">
+              <div class="text-3xl mb-2 text-[#2dd4bf]">♠</div>
+              <div class="font-mono text-xs text-white uppercase tracking-wider font-bold">Cloud</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Futuristic Blueprint background grid -->
+      <div class="absolute inset-0 pointer-events-none opacity-[0.03]">
+        <div class="w-full h-full" style="background-image: linear-gradient(#38BDF8 1px, transparent 1px), linear-gradient(90deg, #38BDF8 1px, transparent 1px); background-size: 40px 40px;"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════
        COUPLED CONTINUOUS WEB CANVAS
        ═══════════════════════════════════════════ -->
   <main id="main" class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 space-y-24 py-16">
@@ -1243,6 +1427,108 @@
       }, observerOptions);
 
       sections.forEach(sec => observer.observe(sec));
+    })();
+
+    // ── Typography Transitions Animators ──────────────────────────────────────
+    (function initTypographyTransitions() {
+      // 1. Spark Typing Animation
+      const sparkSection = document.getElementById('transition-spark');
+      const typedContent = document.getElementById('typed-content');
+      const sparkText = "A quiet curiosity. A dream to build something bigger.";
+      let typingInterval = null;
+
+      const sparkObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            clearInterval(typingInterval);
+            if (typedContent) {
+              typedContent.textContent = '';
+              let index = 0;
+              typingInterval = setInterval(() => {
+                if (index < sparkText.length) {
+                  typedContent.textContent += sparkText.charAt(index);
+                  index++;
+                } else {
+                  clearInterval(typingInterval);
+                }
+              }, 50);
+            }
+          } else {
+            clearInterval(typingInterval);
+            if (typedContent) typedContent.textContent = '';
+          }
+        });
+      }, { threshold: 0.2 });
+
+      if (sparkSection) sparkObserver.observe(sparkSection);
+
+      // 2. Momentum Counter Animation
+      const momentumSection = document.getElementById('transition-momentum');
+      const counterYears = document.getElementById('counter-years');
+      const counterEvents = document.getElementById('counter-events');
+      const counterMinds = document.getElementById('counter-minds');
+
+      function animateCounter(element, start, end, suffix, duration) {
+        let startTime = null;
+        function update(currentTime) {
+          if (!startTime) startTime = currentTime;
+          const progress = Math.min((currentTime - startTime) / duration, 1);
+          const currentVal = Math.floor(progress * (end - start) + start);
+          element.textContent = currentVal.toLocaleString() + suffix;
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+        requestAnimationFrame(update);
+      }
+
+      let countersTriggered = false;
+      const momentumObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (!countersTriggered) {
+              countersTriggered = true;
+              if (counterYears) animateCounter(counterYears, 0, 15, '+', 1000);
+              if (counterEvents) animateCounter(counterEvents, 0, 500, '+', 1000);
+              if (counterMinds) animateCounter(counterMinds, 0, 10000, '+', 1000);
+            }
+          } else {
+            countersTriggered = false;
+            if (counterYears) counterYears.textContent = '0+';
+            if (counterEvents) counterEvents.textContent = '0+';
+            if (counterMinds) counterMinds.textContent = '0+';
+          }
+        });
+      }, { threshold: 0.15 });
+
+      if (momentumSection) momentumObserver.observe(momentumSection);
+
+      // 3. Blueprint Cards Illumination
+      const blueprintSection = document.getElementById('transition-blueprint');
+      const bpCards = document.querySelectorAll('.bp-card');
+
+      const blueprintObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            bpCards.forEach((card, idx) => {
+              card.style.opacity = '0';
+              card.style.transform = 'translateY(20px)';
+              setTimeout(() => {
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease, border-color 0.5s, box-shadow 0.5s';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+              }, idx * 100);
+            });
+          } else {
+            bpCards.forEach(card => {
+              card.style.opacity = '0.3';
+              card.style.transform = 'scale(0.95)';
+            });
+          }
+        });
+      }, { threshold: 0.15 });
+
+      if (blueprintSection) blueprintObserver.observe(blueprintSection);
     })();
   })();
   </script>
