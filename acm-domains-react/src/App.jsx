@@ -1,4 +1,5 @@
 import DomainsSection from './components/DomainsSection';
+import TypographyTransitions from './components/TypographyTransitions';
 
 export default function App() {
   return (
@@ -20,10 +21,13 @@ export default function App() {
             <span className="text-[#F95F4A]">ACM VNIT</span>
           </h1>
           <p className="mt-6 text-[#666] text-sm font-mono tracking-wide">
-            ↓ Scroll to see the card dealer
+            ↓ Scroll to discover the journey
           </p>
         </div>
       </div>
+
+      {/* ── Typography Transitions (Spark, Momentum, Blueprint) ── */}
+      <TypographyTransitions />
 
       {/* ── Domains Section ─────────────────────────── */}
       <DomainsSection />
